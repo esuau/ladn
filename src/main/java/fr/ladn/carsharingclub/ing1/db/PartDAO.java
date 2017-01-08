@@ -13,7 +13,7 @@ public class PartDAO {
         int availableQuantity = part.getAvailableQuantity();
         float price  = part.getPrice();
         
-        PreparedStatement ps = ConnectionDB.getConexao().prepareStatement("INSERT INTO pieces ( libelle_piece, fabricant, qte_dispo, valeur_piece ) VALUES ( ?, ?, ?, ? )");
+        PreparedStatement ps = ConnectionDB.getConnection().prepareStatement("INSERT INTO pieces ( libelle_piece, fabricant, qte_dispo, valeur_piece ) VALUES ( ?, ?, ?, ? )");
         ps.setString(1, reference);
         ps.setString(2, provider);
         ps.setInt(3, availableQuantity);
@@ -22,7 +22,7 @@ public class PartDAO {
     }
     
     public Part read(int id) throws Exception{
-        PreparedStatement ps = ConnectionDB.getConexao().prepareStatement("SELECT * FROM pieces WHERE id_piece = ?");
+        PreparedStatement ps = ConnectionDB.getConnection().prepareStatement("SELECT * FROM pieces WHERE id_piece = ?");
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         if(rs.next()){
@@ -41,7 +41,7 @@ public class PartDAO {
     }
     
     public void update(Part part) throws Exception{
-        PreparedStatement ps = ConnectionDB.getConexao().prepareStatement("UPDATE pieces SET libelle_piece = ?, fabricant = ?, qte_dispo = ?, valeur_piece = ? WHERE id_piece = ?");
+        PreparedStatement ps = ConnectionDB.getConnection().prepareStatement("UPDATE pieces SET libelle_piece = ?, fabricant = ?, qte_dispo = ?, valeur_piece = ? WHERE id_piece = ?");
         ps.setString(1, part.getReference());
         ps.setString(2, part.getProvider());
         ps.setInt(3, part.getAvailableQuantity());
@@ -50,7 +50,7 @@ public class PartDAO {
         ps.execute();
     }
     public void delete(Part part) throws Exception{
-        PreparedStatement ps = ConnectionDB.getConexao().prepareStatement("DELETE FROM pieces WHERE id_piece = ?");
+        PreparedStatement ps = ConnectionDB.getConnection().prepareStatement("DELETE FROM pieces WHERE id_piece = ?");
         ps.setInt(1, part.getId());
         ps.execute();
     }
