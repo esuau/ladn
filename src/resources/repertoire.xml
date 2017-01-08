@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<repertoire>
+    <!-- John DOE -->
+    <piece id="11402907">
+        <libelle_piece>Pneu</libelle_piece>
+        <fabricant>Michelin</fabricant>
+        <qte_dispo >235</qte_dispo>
+        <valeur_piece >60</valeur_piece>
+    </piece>    
+    <piece id="11362907">
+        <libelle_piece>Porte</libelle_piece>
+        <fabricant>Mercedes</fabricant>
+        <qte_dispo >35</qte_dispo>
+        <valeur_piece >350</valeur_piece>
+    </piece>  
+    <piece id="11504928">
+        <libelle_piece>Jante</libelle_piece>
+        <fabricant>Multibranche</fabricant>
+        <qte_dispo >55</qte_dispo>
+        <valeur_piece >903</valeur_piece>
+    </piece>  
+</repertoire>
