@@ -14,6 +14,9 @@ import java.awt.event.ActionListener;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
 
+/**
+ * Part update view
+ */
 public class Update extends JFrame {
     private JButton searchButton = new JButton("Search");
     private JButton updateButton = new JButton("Update");
@@ -33,6 +36,12 @@ public class Update extends JFrame {
 
     private Listener listener = new Listener();
 
+    /**
+     * Sets up UI for updating a part
+     * <p>
+     * It includes a form where the user can edit the information of an existing part. The current part data is first displayed in the appropriate fields. The user can then edit one or several of these fields.
+     * </p>
+     */
     public Update() {
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
@@ -59,6 +68,14 @@ public class Update extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * Listens for an action from the button <tt>searchButton</tt>
+     * <p>
+     * This method first acts like the <tt>Listener</tt> method from the <tt>Read</tt> class but submits the edited values to the database via a <tt>PartDAO</tt> object.
+     * </p>
+     *
+     * @see Read
+     */
     private class Listener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Integer id = Integer.parseInt(textId.getText());
