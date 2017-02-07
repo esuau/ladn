@@ -15,7 +15,11 @@ import java.awt.event.ActionListener;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
 
+/**
+ * Part reading view
+ */
 public class Read extends JFrame {
+
     private JButton readButton = new JButton("Read");
     private JLabel labelId = new JLabel("ID");
     private JLabel labelReference = new JLabel("Reference");
@@ -33,6 +37,9 @@ public class Read extends JFrame {
 
     private Listener listener = new Listener();
 
+    /**
+     * Sets up a UI to display part information.
+     */
     public Read() {
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
@@ -54,10 +61,14 @@ public class Read extends JFrame {
         readButton.addActionListener(listener);
         this.pack();
         this.setVisible(true);
-
-
     }
 
+    /**
+     * Listens for an action from the button <tt>readButton</tt>
+     * <p>
+     * This method gets part information from the database via an object <tt>PartDAO</tt> and
+     * </p>
+     */
     private class Listener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Integer id = Integer.parseInt(textId.getText());

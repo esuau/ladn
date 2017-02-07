@@ -7,12 +7,22 @@ import java.sql.ResultSet;
 import fr.ladn.carsharingclub.ing1.model.Part;
 
 public class PartDAO {
-    public void create(Part part) throws Exception{
+
+    /**
+     * Creates a part in the database.
+     * <p>
+     * Part appearing into the database are considered available in the stock.
+     * </p>
+     *
+     * @param part to add to the stock
+     * @throws Exception
+     */
+    public void create(Part part) throws Exception {
         String reference = part.getReference();
         String provider = part.getProvider();
         int availableQuantity = part.getAvailableQuantity();
-        float price  = part.getPrice();
-        
+        float price = part.getPrice();
+
         PreparedStatement ps = ConnectionDB.getConnection().prepareStatement("INSERT INTO pieces ( libelle_piece, fabricant, qte_dispo, valeur_piece ) VALUES ( ?, ?, ?, ? )");
         ps.setString(1, reference);
         ps.setString(2, provider);
@@ -20,27 +30,40 @@ public class PartDAO {
         ps.setFloat(4, price);
         ps.execute();
     }
-    
-    public Part read(int id) throws Exception{
+
+    /**
+     * Gets information from an existing part
+     *
+     * @param id of the part to be read
+     * @return part information
+     * @throws Exception
+     */
+    public Part read(int id) throws Exception {
         PreparedStatement ps = ConnectionDB.getConnection().prepareStatement("SELECT * FROM pieces WHERE id_piece = ?");
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
-        if(rs.next()){
-            
+        if (rs.next()) {
+
             String reference = rs.getString("reference");
             String provider = rs.getString("provider");
             int availableQuantity = rs.getInt("available quantity");
             float price = rs.getFloat("price");
-            
+
             return new Part(id, reference, provider, availableQuantity, price);
-            
-        }else{
+
+        } else {
             return null;
         }
-        
+
     }
-    
-    public void update(Part part) throws Exception{
+
+    /**
+     * Updates part information in the stock
+     *
+     * @param part to be updated
+     * @throws Exception
+     */
+    public void update(Part part) throws Exception {
         PreparedStatement ps = ConnectionDB.getConnection().prepareStatement("UPDATE pieces SET libelle_piece = ?, fabricant = ?, qte_dispo = ?, valeur_piece = ? WHERE id_piece = ?");
         ps.setString(1, part.getReference());
         ps.setString(2, part.getProvider());
@@ -49,11 +72,16 @@ public class PartDAO {
         ps.setInt(5, part.getId());
         ps.execute();
     }
-    public void delete(Part part) throws Exception{
+
+    /**
+     * Permanently removes a part from the database
+     *
+     * @param part to be removed from the stock
+     * @throws Exception
+     */
+    public void delete(Part part) throws Exception {
         PreparedStatement ps = ConnectionDB.getConnection().prepareStatement("DELETE FROM pieces WHERE id_piece = ?");
         ps.setInt(1, part.getId());
         ps.execute();
     }
-    
-    
 }

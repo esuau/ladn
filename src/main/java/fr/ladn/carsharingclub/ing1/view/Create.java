@@ -11,10 +11,13 @@ import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import fr.ladn.carsharingclub.ing1.model.Part;
 
-
-public class Create extends JFrame{
+/**
+ * Part creation view
+ */
+public class Create extends JFrame {
     private JButton createButton = new JButton("Create");
     private JLabel labelReference = new JLabel("Reference");
     private JLabel labelProvider = new JLabel("Provider");
@@ -26,10 +29,16 @@ public class Create extends JFrame{
     private JTextField textAvailableQuantity = new JTextField();
     private JTextField textPrice = new JTextField();
     private Listener listener = new Listener();
-    
-    public Create(){
-        
-        GridLayout layout = new GridLayout(5,2);
+
+    /**
+     * Sets up UI for part creation
+     * <p>
+     * It basically includes a form with a submit button <code>createButton</code>
+     * </p>
+     */
+    public Create() {
+
+        GridLayout layout = new GridLayout(5, 2);
         this.setLayout(layout);
         this.add(labelReference);
         this.add(textReference);
@@ -41,29 +50,37 @@ public class Create extends JFrame{
         this.add(textPrice);
         this.add(labelSpace);
         this.add(createButton);
-        
+
         createButton.addActionListener(listener);
         this.pack();
         this.setVisible(true);
     }
-    private class Listener implements ActionListener{
-        public void actionPerformed(ActionEvent e){
+
+    /**
+     * This method listens for an event from the createButton
+     * <p>
+     * Once the button is pressed, data in the form is transmitted to the <tt>PartDAO</tt> object to be written in the database.
+     * </p>
+     *
+     * @see PartDAO
+     */
+    private class Listener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
             String reference = String.valueOf(textReference.getText());
             String provider = String.valueOf(textProvider.getText());
             int availableQuantity = Integer.parseInt(String.valueOf(textAvailableQuantity.getText()));
             float price = Float.parseFloat(String.valueOf(textPrice.getText()));
-            
 
-                    if(e.getSource() == createButton){
-                    Part a = new Part(reference, provider, availableQuantity, price);
-                        try{
-                        new PartDAO().create(a);
-                        }catch(Exception err){
-                            System.out.println(err);
-                        }
-                    }
-                            
-        }            
+            if (e.getSource() == createButton) {
+                Part a = new Part(reference, provider, availableQuantity, price);
+                try {
+                    new PartDAO().create(a);
+                } catch (Exception err) {
+                    System.out.println(err);
+                }
+            }
+
+        }
     }
-   
+
 }
