@@ -40,3 +40,12 @@ buildNumber.properties
 # Exclude maven wrapper
 !/.mvn/wrapper/maven-wrapper.jar
 
+# Exclude hiden files MacOS
+.DS_Store
+	src/.DS_Store
+	src/main/.DS_Store
+	src/main/java/.DS_Store
+	src/main/java/fr/.DS_Store
+	src/main/java/fr/ladn/.DS_Store
+	src/main/java/fr/ladn/carsharingclub/.DS_Store
+	src/main/java/fr/ladn/carsharingclub/ing1/.DS_Store
