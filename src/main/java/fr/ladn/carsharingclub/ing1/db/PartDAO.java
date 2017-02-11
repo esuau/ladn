@@ -44,10 +44,10 @@ public class PartDAO {
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
 
-            String reference = rs.getString("reference");
-            String provider = rs.getString("provider");
-            int availableQuantity = rs.getInt("available quantity");
-            float price = rs.getFloat("price");
+            String reference = rs.getString("libelle_piece");
+            String provider = rs.getString("fabricant");
+            int availableQuantity = rs.getInt("qte_dispo");
+            float price = rs.getFloat("valeur_piece");
 
             return new Part(id, reference, provider, availableQuantity, price);
 
