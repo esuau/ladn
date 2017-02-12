@@ -30,15 +30,25 @@ public class Client {
 		String serverAdress = properties.getProperty("serverAdress");
 		int serverPort = Integer.parseInt(properties.getProperty("serverPort"));
 		
-		System.out.println("serverAdress : " + serverAdress + " serverPort : " + serverPort);
-		
 		try {
 			Socket socketClient = new Socket(serverAdress, serverPort);
+			System.out.println("Connected to server : " + serverAdress + " on port : " + serverPort);
+			in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
+			out = new PrintWriter(socketClient.getOutputStream(), true);
 			socketClient.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public String getData() {
+		try {
+			return classeDeLectureXMLdeNoel.fonctionDeLecture(in.readLine());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

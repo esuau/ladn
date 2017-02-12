@@ -26,7 +26,7 @@ public class ConnectionDB {
         String user = "guest";
         String password = "password";
 
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         Connection conn = DriverManager.getConnection(url, user, password);
 
         return conn;
