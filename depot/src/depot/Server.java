@@ -14,7 +14,7 @@ import java.net.*;
 public class Server {
 	private BufferedReader in;
 	private PrintWriter out;
-	ConnectionPool pool = new ConnectionPool();
+	//ConnectionPool pool = new ConnectionPool();
 	
 	public Server() {
 		Properties properties = new Properties();
