@@ -60,7 +60,7 @@ public class Server {
 		}
 		
 		public void sendData(Piece p) {
-			out.println(WriteXMLFile.writterXML(p));
+			out.println(WriteXMLFile.factoryXML(p));
 		}
 	}
 }

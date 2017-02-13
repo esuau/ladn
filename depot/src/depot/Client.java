@@ -53,6 +53,6 @@ public class Client {
 	}
 	
 	public void sendData(Piece p) {
-		out.println(WriteXMLFile.writterXML(p));
+		out.println(WriteXMLFile.factoryXML(p));
 	}
 }
