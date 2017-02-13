@@ -45,10 +45,14 @@ public class Client {
 	
 	public String getData() {
 		try {
-			return classeDeLectureXMLdeNoel.fonctionDeLecture(in.readLine());
+			return ReadXMLFile.parserXML(in.readLine());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void sendData(Piece p) {
+		out.println(WriteXMLFile.writterXML(p));
 	}
 }

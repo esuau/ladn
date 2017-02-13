@@ -42,12 +42,25 @@ public class Server {
 			while(true) {
 				Socket socketClient = serverSocket.accept();
 				System.out.println("Client " + socketClient.getInetAddress() + " connected");
-				
-				//serverSocket.close();
-				//socketClient.close();
 			}
 		} catch(IOException e) {
 			e.printStackTrace();
+		}
+		
+		//serverSocket.close();
+		//socketClient.close();
+		
+		public String getData() {
+			try {
+				return ReadXMLFile.parserXML(in.readLine());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		public void sendData(Piece p) {
+			out.println(WriteXMLFile.writterXML(p));
 		}
 	}
 }
