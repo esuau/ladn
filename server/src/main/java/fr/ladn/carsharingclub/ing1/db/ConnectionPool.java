@@ -1,5 +1,6 @@
 package fr.ladn.carsharingclub.ing1.db;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -53,15 +54,26 @@ public class ConnectionPool {
 	 * @return connection as created connection in the pool
 	 */
 	private Connection createConnection() {
-		Connection connection;
-		String url = "jdbc:mysql://localhost:8889/depot";
-		String user = "root";
-		String password = "root";
+        Properties properties = new Properties();
+
+        try {
+            FileInputStream input = new FileInputStream("configServer.properties");
+            properties.load(input);
+            input.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Connection connection;
+        String url = properties.getProperty("db");
+        String driver = properties.getProperty("dbDriver");
+        String user = properties.getProperty("dbUsername");
+        String password = properties.getProperty("dbPassword");
 
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection(url, user, password);
-			System.out.println("Connection: " + connection);
+            Class.forName(driver);
+            connection = DriverManager.getConnection(url, user, password);
+            System.out.println("Connection: " + connection);
 		} catch (SQLException e) {
 			System.err.println("SQLException: " + e);
 			return null;

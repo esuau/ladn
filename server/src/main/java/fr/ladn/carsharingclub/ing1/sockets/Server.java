@@ -16,7 +16,6 @@ import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 public class Server {
     private BufferedReader in;
     private PrintWriter out;
-    // ConnectionPool pool = new ConnectionPool();
 
     public Server() {
         Properties properties = new Properties();
@@ -29,25 +28,21 @@ public class Server {
             e.printStackTrace();
         }
 
-        String db = properties.getProperty("db");
-        String dbDriver = properties.getProperty("dbDriver");
-        String dbUsername = properties.getProperty("dbUsername");
-        String dbPassword = properties.getProperty("dbPassword");
-        int serverPort = Integer.parseInt(properties.getProperty("serverPort"));
+        ConnectionPool pool = new ConnectionPool();
 
-        //System.out.println("serverAdress : " + serverAdress + " serverPort : " + serverPort);
+        int serverPort = Integer.parseInt(properties.getProperty("serverPort"));
 
         try {
             System.out.println("Server started on port " + serverPort);
             ServerSocket serverSocket = new ServerSocket(serverPort);
 
-            while (true) {
-                Socket socketClient = serverSocket.accept();
-                System.out.println("Client " + socketClient.getInetAddress() + " connected");
+            Socket socketClient = serverSocket.accept();
+            System.out.println("Client " + socketClient.getInetAddress() + " connected");
 
-                // socketClient.close();
-                // serverSocket.close();
-            }
+            socketClient.close();
+            System.out.println("Closed connection with client");
+            serverSocket.close();
+            System.out.println("Closed server socket");
         } catch (IOException e) {
             e.printStackTrace();
         }
