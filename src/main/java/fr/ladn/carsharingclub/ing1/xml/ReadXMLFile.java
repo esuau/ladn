@@ -1,55 +1,46 @@
-package com.mkyong.seo;
 
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringReader;
+
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
-import java.io.File;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
-public class ReadXMLFile2 {
+public class ReadXMLFile {
 
-  public static void main(String argv[]) {
+  public Part parserXML(String xml) {
+	  
 
     try {
-
-	File fXmlFile = new File("repertoire.xml");
+    //String xmlString="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><piece id=\"11402907\"><libelle_piece>Pneu</libelle_piece><fabricant>Michelin</fabricant><qte_dispo >235</qte_dispo><valeur_piece >60</valeur_piece></piece>";
 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	Document doc = dBuilder.parse(fXmlFile);
+	Document doc = dBuilder.parse(new InputSource(new StringReader(xml)));
 
-	//optional, but recommended
-	//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 	doc.getDocumentElement().normalize();
-
-	System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
 	NodeList nList = doc.getElementsByTagName("piece");
-
-	System.out.println("----------------------------");
 
 	for (int temp = 0; temp < nList.getLength(); temp++) {
 
 		Node nNode = nList.item(temp);
 
-		System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
 		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 			Element eElement = (Element) nNode;
 
-			System.out.println("id : " + eElement.getAttribute("id"));
-			System.out.println("libelle_piece : " + eElement.getElementsByTagName("libelle_piece").item(0).getTextContent());
-			System.out.println("fabricant : " + eElement.getElementsByTagName("fabricant").item(0).getTextContent());
-			System.out.println("qte_dispo : " + eElement.getElementsByTagName("qte_dispo").item(0).getTextContent());
-			System.out.println("valeur_piece : " + eElement.getElementsByTagName("valeur_piece").item(0).getTextContent());
-
+			Part p = new Part(Integer.parseInt(eElement.getAttribute("id")),eElement.getElementsByTagName("libelle_piece").item(0).getTextContent(),eElement.getElementsByTagName("fabricant").item(0).getTextContent(),Integer.parseInt(eElement.getElementsByTagName("qte_dispo").item(0).getTextContent()),Float.valueOf(eElement.getElementsByTagName("valeur_piece").item(0).getTextContent()));
+			System.out.println("La piece a bien été retournée \n");
+			return p; 
 		}
 	}
     } catch (Exception e) {
 	e.printStackTrace();
     }
+   return null;
   }
-
+ 
 }
