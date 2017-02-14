@@ -100,8 +100,4 @@ public class Part {
         this.availableQuantity = availableQuantity;
     }
 
-    public String toString() {
-        return "Part #" + id;
-    }
-
 }

@@ -4,41 +4,80 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.IOException;
-import java.io.File;
 import java.io.FileInputStream;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 import java.io.*;
 import java.net.*;
 
+import fr.ladn.carsharingclub.ing1.model.Part;
+import fr.ladn.carsharingclub.ing1.xml.ReadXMLFile;
+import fr.ladn.carsharingclub.ing1.xml.WriteXMLFile;
+
+/**
+ * Client
+ */
 public class Client {
-	private BufferedReader in;
-	private PrintWriter out;
-	
-	public Client() {
-		Properties properties = new Properties();
-		
-		try {
-			FileInputStream input = new FileInputStream("configClient.properties");
-			properties.load(input);
-			input.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		
-		String serverAdress = properties.getProperty("serverAdress");
-		int serverPort = Integer.parseInt(properties.getProperty("serverPort"));
-		
-		System.out.println("serverAdress : " + serverAdress + " serverPort : " + serverPort);
-		
-		try {
-			Socket socketClient = new Socket(serverAdress, serverPort);
-			socketClient.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    private BufferedReader in;
+    private PrintWriter out;
+
+    /**
+     * Client default constructor.
+     * <p>
+     * When starting, the client uses the file <tt>configClient.properties</tt> stored in src/main/resources/.
+     * In our case, the client sends a part's information to the server.
+     * </p>
+     *
+     * @param p the part to be sent to the client
+     */
+    public Client(Part p) {
+        Properties properties = new Properties();
+
+        try {
+            FileInputStream input = new FileInputStream("configClient.properties");
+            properties.load(input);
+            input.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String serverAdress = properties.getProperty("serverAdress");
+        int serverPort = Integer.parseInt(properties.getProperty("serverPort"));
+
+        try {
+            Socket socketClient = new Socket(serverAdress, serverPort);
+            System.out.println("Connected to server : " + serverAdress + " on port : " + serverPort);
+            in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
+            out = new PrintWriter(socketClient.getOutputStream(), true);
+            sendData(p);
+            socketClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Converts the text (XML) data sent by the server into an object
+     *
+     * @return Part object
+     * @see ReadXMLFile
+     */
+    public Part getData() {
+        try {
+            return ReadXMLFile.parserXML(in.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Converts an object into a XML formatted string and sends it to the server
+     *
+     * @param p the part object to be turned into XML
+     * @see WriteXMLFile
+     */
+    private void sendData(Part p) {
+        System.out.println(WriteXMLFile.factoryXML(p));
+        out.println(WriteXMLFile.factoryXML(p));
+    }
 }

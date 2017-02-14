@@ -13,9 +13,17 @@ import java.io.StringReader;
 
 public class ReadXMLFile {
 
+    /**
+     * XML parser.
+     * <p>
+     * This function parses the XML
+     * </p>
+     *
+     * @param xml the string to be parsed.
+     * @return a Part object
+     */
     public static Part parserXML(String xml) {
         try {
-            //String xmlString="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><piece id=\"11402907\"><libelle_piece>Pneu</libelle_piece><fabricant>Michelin</fabricant><qte_dispo >235</qte_dispo><valeur_piece >60</valeur_piece></piece>";
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(new InputSource(new StringReader(xml)));

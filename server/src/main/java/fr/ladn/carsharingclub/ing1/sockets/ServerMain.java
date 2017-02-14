@@ -1,7 +1,10 @@
 package fr.ladn.carsharingclub.ing1.sockets;
 
+/**
+ * Starts the server
+ */
 class ServerMain {
-	public static void main(String[] args) {
-		Server serveur = new Server();
-	}
+    public static void main(String[] args) {
+        Server server = new Server();
+    }
 }
