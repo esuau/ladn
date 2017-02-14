@@ -1,11 +1,9 @@
-
 package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
 
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -22,21 +20,11 @@ import fr.ladn.carsharingclub.ing1.model.Part;
 public class Update extends JPanel {
     private JButton searchButton = new JButton("Search");
     private JButton updateButton = new JButton("Update");
-    private JLabel labelId = new JLabel("Part number");
-    private JLabel labelReference = new JLabel("Reference");
-    private JLabel labelProvider = new JLabel("Provider");
-    private JLabel labelAvailableQuantity = new JLabel("Available quantity");
-    private JLabel labelPrice = new JLabel("Price");
-    private JLabel space = new JLabel(" ");
-    private JLabel space2 = new JLabel(" ");
-    private JLabel space3 = new JLabel(" ");
     private JTextField textId = new JTextField();
     private JTextField textReference = new JTextField();
     private JTextField textProvider = new JTextField();
     private JTextField textAvailableQuantity = new JTextField();
     private JTextField textPrice = new JTextField();
-
-    private Listener listener = new Listener();
 
     /**
      * Sets up UI for updating a part
@@ -45,27 +33,36 @@ public class Update extends JPanel {
      * </p>
      */
     public Update() {
-    	//this.setSize(10, 20);
+        //this.setSize(10, 20);
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
+        JLabel labelId = new JLabel("Part number");
         this.add(labelId);
         this.add(textId);
         this.add(searchButton);
+        JLabel labelReference = new JLabel("Reference");
         this.add(labelReference);
         this.add(textReference);
+        JLabel space = new JLabel(" ");
         this.add(space);
+        JLabel labelProvider = new JLabel("Provider");
         this.add(labelProvider);
         this.add(textProvider);
+        JLabel space2 = new JLabel(" ");
         this.add(space2);
+        JLabel labelAvailableQuantity = new JLabel("Available quantity");
         this.add(labelAvailableQuantity);
         this.add(textAvailableQuantity);
+        JLabel space3 = new JLabel(" ");
         this.add(space3);
+        JLabel labelPrice = new JLabel("Price");
         this.add(labelPrice);
         this.add(textPrice);
         this.add(updateButton);
         updateButton.setVisible(false);
-       
 
+
+        Listener listener = new Listener();
         searchButton.addActionListener(listener);
         updateButton.addActionListener(listener);
 
@@ -84,8 +81,6 @@ public class Update extends JPanel {
     private class Listener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int id = Integer.parseInt(textId.getText());
-            
-
 
             if (e.getSource() == searchButton) {
 
@@ -98,22 +93,21 @@ public class Update extends JPanel {
                     searchButton.setVisible(false);
                     updateButton.setVisible(true);
                 } catch (Exception err) {
-                    System.out.println(err);
-                    JOptionPane.showMessageDialog(null,"La pièce n'existe pas!!!!");
+                    System.out.println("Exception: " + err.getMessage());
+                    JOptionPane.showMessageDialog(null, "La piÃ¨ce n'existe pas!!!!");
                 }
 
             }
             if (e.getSource() == updateButton) {
-            	String reference = textReference.getText();
+                String reference = textReference.getText();
                 String provider = textProvider.getText();
                 int availableQuantity = Integer.parseInt(textAvailableQuantity.getText());
                 float price = Float.parseFloat(textPrice.getText());
                 Part a = new Part(id, reference, provider, availableQuantity, price);
                 try {
-                	System.out.println("djodjo");
-                  new PartDAO().update(a);
+                    new PartDAO().update(a);
                 } catch (Exception err) {
-                    System.out.println(err);
+                    System.out.println("Exception: " + err.getMessage());
                 }
             }
 

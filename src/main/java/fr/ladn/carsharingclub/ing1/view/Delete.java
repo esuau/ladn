@@ -4,7 +4,6 @@ import fr.ladn.carsharingclub.ing1.db.PartDAO;
 
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -19,10 +18,8 @@ import fr.ladn.carsharingclub.ing1.model.Part;
  */
 public class Delete extends JPanel {
 
-    private JLabel labelId = new JLabel("ID");
     private JTextField textId = new JTextField();
     private JButton deleteButton = new JButton("Delete");
-    private Listener listener = new Listener();
 
     /**
      * Sets up UI for part deletion
@@ -37,13 +34,14 @@ public class Delete extends JPanel {
     public Delete() {
         GridLayout layout = new GridLayout(1, 3);
         this.setLayout(layout);
+        JLabel labelId = new JLabel("ID");
         this.add(labelId);
         this.add(textId);
         this.add(deleteButton);
 
+        Listener listener = new Listener();
         deleteButton.addActionListener(listener);
 
-       // this.pack();
         this.setVisible(true);
     }
 
@@ -64,7 +62,7 @@ public class Delete extends JPanel {
                     Part a = new PartDAO().read(id);
                     new PartDAO().delete(a);
                 } catch (Exception err) {
-                    System.out.println(err);
+                    System.out.println("Exception:" + err.getMessage());
                 }
             }
         }

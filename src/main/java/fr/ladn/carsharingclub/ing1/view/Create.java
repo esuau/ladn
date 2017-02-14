@@ -5,7 +5,6 @@ import fr.ladn.carsharingclub.ing1.db.PartDAO;
 
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -20,16 +19,10 @@ import fr.ladn.carsharingclub.ing1.model.Part;
  */
 public class Create extends JPanel {
     private JButton createButton = new JButton("Create");
-    private JLabel labelReference = new JLabel("Reference");
-    private JLabel labelProvider = new JLabel("Provider");
-    private JLabel labelAvailableQuantity = new JLabel("Available quantity");
-    private JLabel labelPrice = new JLabel("Price");
-    private JLabel labelSpace = new JLabel("");
     private JTextField textReference = new JTextField();
     private JTextField textProvider = new JTextField();
     private JTextField textAvailableQuantity = new JTextField();
     private JTextField textPrice = new JTextField();
-    private Listener listener = new Listener();
 
     /**
      * Sets up UI for part creation
@@ -41,19 +34,24 @@ public class Create extends JPanel {
 
         GridLayout layout = new GridLayout(5, 2);
         this.setLayout(layout);
+        JLabel labelReference = new JLabel("Reference");
         this.add(labelReference);
         this.add(textReference);
+        JLabel labelProvider = new JLabel("Provider");
         this.add(labelProvider);
         this.add(textProvider);
+        JLabel labelAvailableQuantity = new JLabel("Available quantity");
         this.add(labelAvailableQuantity);
         this.add(textAvailableQuantity);
+        JLabel labelPrice = new JLabel("Price");
         this.add(labelPrice);
         this.add(textPrice);
+        JLabel labelSpace = new JLabel("");
         this.add(labelSpace);
         this.add(createButton);
 
+        Listener listener = new Listener();
         createButton.addActionListener(listener);
-       // this.pack();
         this.setVisible(true);
     }
 
@@ -77,7 +75,7 @@ public class Create extends JPanel {
                 try {
                     new PartDAO().create(a);
                 } catch (Exception err) {
-                    System.out.println(err);
+                    System.out.println("Exception: " + err.getMessage());
                 }
             }
 

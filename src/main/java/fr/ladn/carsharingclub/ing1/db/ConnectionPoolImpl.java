@@ -1,12 +1,9 @@
 package fr.ladn.carsharingclub.ing1.db;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 /**
  * Brings essential utilities for connection pooling
@@ -17,7 +14,7 @@ import java.util.Properties;
  */
 public class ConnectionPoolImpl implements ConnectionPool {
     final int MAX_POOL_SIZE = 10;
-    ArrayList<Connection> connectionsList = new ArrayList<Connection>();
+    private ArrayList<Connection> connectionsList = new ArrayList<>();
 
     public ConnectionPoolImpl() {
         initialize();
@@ -37,6 +34,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     /**
      * Indicates the filling state of the pool.
+     *
      * @return true if the number of connections reaches the pool size
      */
     private synchronized boolean isFull() {
@@ -46,14 +44,15 @@ public class ConnectionPoolImpl implements ConnectionPool {
     /**
      * Creates a connection to the database.
      * <p>
-     *     This function uses JDBC API to connect to a MySQL database.
-     *     <br>
-     *     Credentials and other parameters are located in a file <tt>dbconnection.properties</tt> to be easily modified.
+     * This function uses JDBC API to connect to a MySQL database.
+     * <br>
+     * Credentials and other parameters are located in a file <tt>dbconnection.properties</tt> to be easily modified.
      * </p>
+     *
      * @return connection as created connection in the pool
      */
     private Connection createConnection() {
-        Connection connection = null;
+        Connection connection;
         String url = "jdbc:mysql://localhost:3306/deposit?useLegacyDatetimeCode=false&serverTimezone=UTC";
         String user = "guest";
         String password = "password";
@@ -74,6 +73,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     /**
      * Calls a connection from the pool in order to be used by a method.
+     *
      * @return a connection of the pool
      */
     public synchronized Connection getConnection() {
@@ -91,8 +91,9 @@ public class ConnectionPoolImpl implements ConnectionPool {
     /**
      * Give back the connection to the pool.
      * <p>
-     *     Once a connection has been used, it is reintegrated inside the connection pool for further reuse.
+     * Once a connection has been used, it is reintegrated inside the connection pool for further reuse.
      * </p>
+     *
      * @param connection to be reintegrated within the pool
      */
     public synchronized void returnConnection(Connection connection) {
@@ -101,6 +102,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     /**
      * Gets the size of the connection pool
+     *
      * @return the maximum number of connections in the pool
      */
     public synchronized int getSize() {
