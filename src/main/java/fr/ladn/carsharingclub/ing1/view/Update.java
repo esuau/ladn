@@ -24,7 +24,7 @@ public class Update extends JFrame {
     private JLabel labelReference = new JLabel("Reference");
     private JLabel labelProvider = new JLabel("Provider");
     private JLabel labelAvailableQuantity = new JLabel("Available quantity");
-    private JLabel labelPrice = new JLabel("Available quantity");
+    private JLabel labelPrice = new JLabel("Price");
     private JLabel space = new JLabel(" ");
     private JLabel space2 = new JLabel(" ");
     private JLabel space3 = new JLabel(" ");

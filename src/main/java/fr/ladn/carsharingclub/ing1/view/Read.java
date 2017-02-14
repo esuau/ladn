@@ -80,6 +80,7 @@ public class Read extends JFrame {
                     Part a = new PartDAO().read(id);
                     textReference.setText(a.getReference());
                     textProvider.setText(a.getProvider());
+                    textPrice.setText(""+a.getPrice());
                     textAvailableQuantity.setText("" + a.getAvailableQuantity());
                 } catch (Exception err) {
                     System.out.println(err);
