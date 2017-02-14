@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
@@ -18,7 +19,7 @@ import fr.ladn.carsharingclub.ing1.model.Part;
 /**
  * Part update view
  */
-public class Update extends JFrame {
+public class Update extends JPanel {
     private JButton searchButton = new JButton("Search");
     private JButton updateButton = new JButton("Update");
     private JLabel labelId = new JLabel("Part number");
@@ -44,6 +45,7 @@ public class Update extends JFrame {
      * </p>
      */
     public Update() {
+    	//this.setSize(10, 20);
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
         this.add(labelId);
@@ -67,7 +69,7 @@ public class Update extends JFrame {
         searchButton.addActionListener(listener);
         updateButton.addActionListener(listener);
 
-        this.pack();
+        //this.pack();
         this.setVisible(true);
     }
 

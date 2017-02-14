@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
@@ -17,7 +18,7 @@ import fr.ladn.carsharingclub.ing1.model.Part;
 /**
  * Part creation view
  */
-public class Create extends JFrame {
+public class Create extends JPanel {
     private JButton createButton = new JButton("Create");
     private JLabel labelReference = new JLabel("Reference");
     private JLabel labelProvider = new JLabel("Provider");
@@ -52,7 +53,7 @@ public class Create extends JFrame {
         this.add(createButton);
 
         createButton.addActionListener(listener);
-        this.pack();
+       // this.pack();
         this.setVisible(true);
     }
 

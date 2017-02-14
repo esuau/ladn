@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
@@ -16,7 +17,7 @@ import fr.ladn.carsharingclub.ing1.model.Part;
 /**
  * Part deletion view
  */
-public class Delete extends JFrame {
+public class Delete extends JPanel {
 
     private JLabel labelId = new JLabel("ID");
     private JTextField textId = new JTextField();
@@ -42,7 +43,7 @@ public class Delete extends JFrame {
 
         deleteButton.addActionListener(listener);
 
-        this.pack();
+       // this.pack();
         this.setVisible(true);
     }
 
