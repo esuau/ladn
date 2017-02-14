@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
@@ -60,6 +61,8 @@ public class Update extends JFrame {
         this.add(labelPrice);
         this.add(textPrice);
         this.add(updateButton);
+        updateButton.setVisible(false);
+       
 
         searchButton.addActionListener(listener);
         updateButton.addActionListener(listener);
@@ -78,11 +81,8 @@ public class Update extends JFrame {
      */
     private class Listener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Integer id = Integer.parseInt(textId.getText());
-            String reference = String.valueOf(textReference.getText());
-            String provider = String.valueOf(textProvider.getText());
-            int availableQuantity = Integer.parseInt(String.valueOf(textAvailableQuantity.getText()));
-            float price = Float.parseFloat(String.valueOf(textPrice.getText()));
+            int id = Integer.parseInt(textId.getText());
+            
 
 
             if (e.getSource() == searchButton) {
@@ -93,15 +93,23 @@ public class Update extends JFrame {
                     textProvider.setText(a.getProvider());
                     textAvailableQuantity.setText("" + a.getAvailableQuantity());
                     textPrice.setText("" + a.getPrice());
+                    searchButton.setVisible(false);
+                    updateButton.setVisible(true);
                 } catch (Exception err) {
                     System.out.println(err);
+                    JOptionPane.showMessageDialog(null,"La pièce n'existe pas!!!!");
                 }
 
             }
             if (e.getSource() == updateButton) {
+            	String reference = textReference.getText();
+                String provider = textProvider.getText();
+                int availableQuantity = Integer.parseInt(textAvailableQuantity.getText());
+                float price = Float.parseFloat(textPrice.getText());
                 Part a = new Part(id, reference, provider, availableQuantity, price);
                 try {
-                    new PartDAO().update(a);
+                	System.out.println("djodjo");
+                  new PartDAO().update(a);
                 } catch (Exception err) {
                     System.out.println(err);
                 }

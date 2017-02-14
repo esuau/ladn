@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
@@ -41,6 +42,7 @@ public class Read extends JFrame {
      * Sets up a UI to display part information.
      */
     public Read() {
+    	this.setTitle("Read");
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
         this.add(labelId);
@@ -83,6 +85,7 @@ public class Read extends JFrame {
                     textPrice.setText(""+a.getPrice());
                     textAvailableQuantity.setText("" + a.getAvailableQuantity());
                 } catch (Exception err) {
+                	JOptionPane.showMessageDialog(null,"La pièce n'existe pas!!!!");
                     System.out.println(err);
                 }
 
