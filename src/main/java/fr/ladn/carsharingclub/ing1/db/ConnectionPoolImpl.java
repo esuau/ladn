@@ -1,9 +1,12 @@
 package fr.ladn.carsharingclub.ing1.db;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Brings essential utilities for connection pooling
@@ -13,7 +16,7 @@ import java.util.ArrayList;
  * @see ConnectionPool
  */
 public class ConnectionPoolImpl implements ConnectionPool {
-    final int MAX_POOL_SIZE = 10;
+    private final int MAX_POOL_SIZE = 10;
     private ArrayList<Connection> connectionsList = new ArrayList<>();
 
     public ConnectionPoolImpl() {
@@ -25,11 +28,10 @@ public class ConnectionPoolImpl implements ConnectionPool {
      */
     private void initialize() {
         while (!isFull()) {
-            System.out.println("Connection Pool is NOT full. Proceeding with adding new connections");
-            // Adding new connection instance until the pool is full
+            System.out.println("Add new connection: ");
             connectionsList.add(createConnection());
         }
-        System.out.println("Connection Pool is full. " + connectionsList.size() + " connections created");
+        System.out.println("Connection pool is full. " + connectionsList.size() + " connections created.");
     }
 
     /**
@@ -45,27 +47,39 @@ public class ConnectionPoolImpl implements ConnectionPool {
      * Creates a connection to the database.
      * <p>
      * This function uses JDBC API to connect to a MySQL database.
-     * <br>
-     * Credentials and other parameters are located in a file <tt>dbconnection.properties</tt> to be easily modified.
+     * Database server information and Credentials are located in a file <tt>dbconfig.properties</tt> to be easily modified.
      * </p>
      *
-     * @return connection as created connection in the pool
+     * @return a new connection in the pool
      */
     private Connection createConnection() {
-        Connection connection;
-        String url = "jdbc:mysql://localhost:3306/deposit?useLegacyDatetimeCode=false&serverTimezone=UTC";
-        String user = "guest";
-        String password = "password";
+
+        Properties properties = new Properties();
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            FileInputStream input = new FileInputStream("dbconfig.properties");
+            properties.load(input);
+            input.close();
+        } catch (IOException e) {
+            System.out.println("IOException: " + e.getMessage());
+        }
+
+        Connection connection;
+
+        String url = properties.getProperty("dbHost");
+        String driver = properties.getProperty("dbDriver");
+        String user = properties.getProperty("dbUsername");
+        String password = properties.getProperty("dbPassword");
+
+        try {
+            Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
             System.out.println("Connection: " + connection);
         } catch (SQLException e) {
-            System.err.println("SQLException: " + e);
+            System.out.println("SQLException: " + e.getMessage());
             return null;
         } catch (ClassNotFoundException e) {
-            System.err.println("ClassNotFoundException: " + e);
+            System.out.println("ClassNotFoundException: " + e.getMessage());
             return null;
         }
         return connection;
@@ -79,12 +93,10 @@ public class ConnectionPoolImpl implements ConnectionPool {
     public synchronized Connection getConnection() {
         Connection connection = null;
 
-        //Check if there is a connection available. There are times when all the connections in the pool may be used up
         if (connectionsList.size() > 0) {
             connection = connectionsList.get(0);
             connectionsList.remove(0);
         }
-        //Giving away the connection from the connection pool
         return connection;
     }
 

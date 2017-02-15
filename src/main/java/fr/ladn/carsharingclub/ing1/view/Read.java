@@ -10,14 +10,16 @@ import javax.swing.JTextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
 
 /**
  * Part reading view
  */
-public class Read extends JPanel {
+class Read extends JPanel {
 
+    private ConnectionPool pool;
     private JButton readButton = new JButton("Read");
     private JTextField textId = new JTextField();
     private JTextField textReference = new JTextField();
@@ -28,7 +30,8 @@ public class Read extends JPanel {
     /**
      * Sets up a UI to display part information.
      */
-    public Read() {
+    Read(ConnectionPool p) {
+        pool = p;
         this.setName("Read");
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
@@ -75,13 +78,13 @@ public class Read extends JPanel {
             if (e.getSource() == readButton) {
 
                 try {
-                    Part a = new PartDAO().read(id);
+                    Part a = new PartDAO(pool).read(id);
                     textReference.setText(a.getReference());
                     textProvider.setText(a.getProvider());
                     textPrice.setText("" + a.getPrice());
                     textAvailableQuantity.setText("" + a.getAvailableQuantity());
                 } catch (Exception err) {
-                    JOptionPane.showMessageDialog(null, "La pièce n'existe pas!!!!");
+                    JOptionPane.showMessageDialog(null, "La pièce n'existe pas.");
                     System.out.println("Exception: " + err.getMessage());
                 }
 

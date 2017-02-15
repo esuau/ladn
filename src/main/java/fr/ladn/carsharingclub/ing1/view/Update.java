@@ -1,5 +1,6 @@
 package fr.ladn.carsharingclub.ing1.view;
 
+import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
 
 import java.awt.GridLayout;
@@ -13,11 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
+import sun.text.resources.no.CollationData_no;
 
 /**
  * Part update view
  */
-public class Update extends JPanel {
+class Update extends JPanel {
+
+    private ConnectionPool pool;
     private JButton searchButton = new JButton("Search");
     private JButton updateButton = new JButton("Update");
     private JTextField textId = new JTextField();
@@ -32,7 +36,8 @@ public class Update extends JPanel {
      * It includes a form where the user can edit the information of an existing part. The current part data is first displayed in the appropriate fields. The user can then edit one or several of these fields.
      * </p>
      */
-    public Update() {
+    Update(ConnectionPool p) {
+        pool = p;
         //this.setSize(10, 20);
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
@@ -85,7 +90,7 @@ public class Update extends JPanel {
             if (e.getSource() == searchButton) {
 
                 try {
-                    Part a = new PartDAO().read(id);
+                    Part a = new PartDAO(pool).read(id);
                     textReference.setText(a.getReference());
                     textProvider.setText(a.getProvider());
                     textAvailableQuantity.setText("" + a.getAvailableQuantity());
@@ -105,7 +110,7 @@ public class Update extends JPanel {
                 float price = Float.parseFloat(textPrice.getText());
                 Part a = new Part(id, reference, provider, availableQuantity, price);
                 try {
-                    new PartDAO().update(a);
+                    new PartDAO(pool).update(a);
                 } catch (Exception err) {
                     System.out.println("Exception: " + err.getMessage());
                 }

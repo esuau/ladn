@@ -1,6 +1,7 @@
 
 package fr.ladn.carsharingclub.ing1.view;
 
+import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
 
 import java.awt.GridLayout;
@@ -17,7 +18,9 @@ import fr.ladn.carsharingclub.ing1.model.Part;
 /**
  * Part creation view
  */
-public class Create extends JPanel {
+class Create extends JPanel {
+
+    private ConnectionPool pool;
     private JButton createButton = new JButton("Create");
     private JTextField textReference = new JTextField();
     private JTextField textProvider = new JTextField();
@@ -30,8 +33,8 @@ public class Create extends JPanel {
      * It basically includes a form with a submit button <code>createButton</code>
      * </p>
      */
-    public Create() {
-
+    Create(ConnectionPool p) {
+        pool = p;
         GridLayout layout = new GridLayout(5, 2);
         this.setLayout(layout);
         JLabel labelReference = new JLabel("Reference");
@@ -73,7 +76,7 @@ public class Create extends JPanel {
             if (e.getSource() == createButton) {
                 Part a = new Part(reference, provider, availableQuantity, price);
                 try {
-                    new PartDAO().create(a);
+                    new PartDAO(pool).create(a);
                 } catch (Exception err) {
                     System.out.println("Exception: " + err.getMessage());
                 }

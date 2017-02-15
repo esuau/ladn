@@ -1,5 +1,6 @@
 package fr.ladn.carsharingclub.ing1.view;
 
+import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
 
 import java.awt.GridLayout;
@@ -16,8 +17,9 @@ import fr.ladn.carsharingclub.ing1.model.Part;
 /**
  * Part deletion view
  */
-public class Delete extends JPanel {
+class Delete extends JPanel {
 
+    private ConnectionPool pool;
     private JTextField textId = new JTextField();
     private JButton deleteButton = new JButton("Delete");
 
@@ -31,7 +33,8 @@ public class Delete extends JPanel {
      *
      * @see PartDAO
      */
-    public Delete() {
+    Delete(ConnectionPool p) {
+        pool = p;
         GridLayout layout = new GridLayout(1, 3);
         this.setLayout(layout);
         JLabel labelId = new JLabel("ID");
@@ -59,8 +62,8 @@ public class Delete extends JPanel {
             if (e.getSource() == deleteButton) {
 
                 try {
-                    Part a = new PartDAO().read(id);
-                    new PartDAO().delete(a);
+                    Part a = new PartDAO(pool).read(id);
+                    new PartDAO(pool).delete(a);
                 } catch (Exception err) {
                     System.out.println("Exception:" + err.getMessage());
                 }
