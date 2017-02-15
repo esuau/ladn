@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
-import sun.text.resources.no.CollationData_no;
 
 /**
  * Part update view

@@ -4,11 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <packaging>jar</packaging>
-
     <groupId>fr.ladn.carsharingclub.ing1</groupId>
     <artifactId>pds-ing1</artifactId>
     <version>0.1-SNAPSHOT</version>
+    <name>CarSharingClub</name>
+    <description>Application du projet de synthèse ING 1 A/FA du groupe LADN</description>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -31,6 +37,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Build an executable JAR -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -54,7 +61,7 @@
                 </executions>
             </plugin>
 
-            <!-- Load dbconfig.properties file -->
+            <!-- Copy dbconfig.properties file -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
@@ -77,6 +84,7 @@
                 </executions>
             </plugin>
 
+            <!-- Allow execution with mvn exec:exec -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -93,7 +101,8 @@
                             <workingDirectory>target</workingDirectory>
                             <arguments>
                                 <argument>-jar</argument>
-                                <argument>${basedir}/target/pds-ing1-${project.version}-jar-with-dependencies.jar
+                                <argument>
+                                    ${basedir}/target/${project.artifactId}-${project.version}-jar-with-dependencies.jar
                                 </argument>
                             </arguments>
                         </configuration>

@@ -2,7 +2,6 @@ package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 
-import javax.naming.CompositeName;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -24,24 +23,20 @@ public class AppView extends JPanel {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         JPanel panel1 = new Read(pool);
-        tabbedPane.addTab("Consulter une pièce", null, panel1,
-                "Does nothing");
+        tabbedPane.addTab("Consulter une pièce", null, panel1, "Consulter les information d'une pièce existante.");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
         JPanel panel2 = new Create(pool);
-        tabbedPane.addTab("Ajouter une pièce", null, panel2,
-                "Does twice as much nothing");
+        tabbedPane.addTab("Ajouter une pièce", null, panel2, "Créer une nouvelle référence de pièce.");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
         JPanel panel3 = new Update(pool);
-        tabbedPane.addTab("modifier une piece", null, panel3,
-                "Still does nothing");
+        tabbedPane.addTab("Modifier une pièce", null, panel3, "Modifier une référence de pièce existante.");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         JPanel panel4 = new Delete(pool);
         panel4.setPreferredSize(new Dimension(410, 50));
-        tabbedPane.addTab("supprimer une pièce", null, panel4,
-                "Does nothing at all");
+        tabbedPane.addTab("Supprimer une pièce", null, panel4, "Supprimer une ou plusieurs pièces.");
         tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
 
         // Add the tabbed pane to this panel.
