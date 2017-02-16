@@ -13,12 +13,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
+import org.apache.log4j.Logger;
 
 /**
  * Part creation view
  */
 class Create extends JPanel {
 
+    private final static Logger logger = Logger.getLogger(Create.class.getName());
     private ConnectionPool pool;
     private JButton createButton = new JButton("Create");
     private JTextField textReference = new JTextField();
@@ -55,6 +57,7 @@ class Create extends JPanel {
         Listener listener = new Listener();
         createButton.addActionListener(listener);
         this.setVisible(true);
+        logger.info("Displayed creation tab.");
     }
 
     /**
@@ -66,7 +69,9 @@ class Create extends JPanel {
      * @see PartDAO
      */
     private class Listener implements ActionListener {
+
         public void actionPerformed(ActionEvent e) {
+
             String reference = String.valueOf(textReference.getText());
             String provider = String.valueOf(textProvider.getText());
             int availableQuantity = Integer.parseInt(String.valueOf(textAvailableQuantity.getText()));
@@ -75,12 +80,12 @@ class Create extends JPanel {
             if (e.getSource() == createButton) {
                 Part a = new Part(reference, provider, availableQuantity, price);
                 try {
+                    logger.info("Attempting to create part #" + a.getId() + " in database...");
                     new PartDAO(pool).create(a);
                 } catch (Exception err) {
-                    System.out.println("Exception: " + err.getMessage());
+                    logger.error("Failed to create part #" + a.getId() + " in database. \nException: " + err.getMessage());
                 }
             }
-
         }
     }
 

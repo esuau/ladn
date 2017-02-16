@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 /**
  * Brings essential utilities for connection pooling
  * <br>
@@ -19,7 +21,10 @@ public class ConnectionPoolImpl implements ConnectionPool {
     private final int MAX_POOL_SIZE = 10;
     private ArrayList<Connection> connectionsList = new ArrayList<>();
 
+    private final static Logger logger = Logger.getLogger(ConnectionPoolImpl.class.getName());
+
     public ConnectionPoolImpl() {
+        logger.info("Initializing connection pool...");
         initialize();
     }
 
@@ -28,10 +33,10 @@ public class ConnectionPoolImpl implements ConnectionPool {
      */
     private void initialize() {
         while (!isFull()) {
-            System.out.println("Add new connection: ");
+            logger.info("Adding new connection...");
             connectionsList.add(createConnection());
         }
-        System.out.println("Connection pool is full. " + connectionsList.size() + " connections created.");
+        logger.info("Connection pool filled successfully. " + connectionsList.size() + "/" + MAX_POOL_SIZE + " connections created.");
     }
 
     /**
@@ -57,11 +62,13 @@ public class ConnectionPoolImpl implements ConnectionPool {
         Properties properties = new Properties();
 
         try {
+            logger.info("Loading dbconfig.properties...");
             FileInputStream input = new FileInputStream("dbconfig.properties");
             properties.load(input);
             input.close();
+            logger.info("Configuration file dbconfig.properties successfully loaded.");
         } catch (IOException e) {
-            System.out.println("IOException: " + e.getMessage());
+            logger.error("IOException: " + e.getMessage());
         }
 
         Connection connection;
@@ -74,12 +81,12 @@ public class ConnectionPoolImpl implements ConnectionPool {
         try {
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
-            System.out.println("Connection: " + connection);
+            logger.info("New connection successfully added: " + connection);
         } catch (SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
+            logger.error("SQLException: " + e.getMessage());
             return null;
         } catch (ClassNotFoundException e) {
-            System.out.println("ClassNotFoundException: " + e.getMessage());
+            logger.error("ClassNotFoundException: " + e.getMessage());
             return null;
         }
         return connection;

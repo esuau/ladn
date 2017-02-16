@@ -13,12 +13,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
+import org.apache.log4j.Logger;
 
 /**
  * Part deletion view
  */
 class Delete extends JPanel {
 
+    private final static Logger logger = Logger.getLogger(Delete.class.getName());
     private ConnectionPool pool;
     private JTextField textId = new JTextField();
     private JButton deleteButton = new JButton("Delete");
@@ -46,6 +48,7 @@ class Delete extends JPanel {
         deleteButton.addActionListener(listener);
 
         this.setVisible(true);
+        logger.info("Displayed deletion tab.");
     }
 
     /**
@@ -63,9 +66,10 @@ class Delete extends JPanel {
 
                 try {
                     Part a = new PartDAO(pool).read(id);
+                    logger.info("Attempting to delete part #" + a.getId() + " in database...");
                     new PartDAO(pool).delete(a);
                 } catch (Exception err) {
-                    System.out.println("Exception:" + err.getMessage());
+                    System.out.println("Failed to delete part in database. Exception:" + err.getMessage());
                 }
             }
         }

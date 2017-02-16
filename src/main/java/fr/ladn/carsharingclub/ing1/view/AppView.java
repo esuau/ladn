@@ -1,6 +1,7 @@
 package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
@@ -10,6 +11,7 @@ import java.awt.event.KeyEvent;
 
 public class AppView extends JPanel {
 
+    private final static Logger logger = Logger.getLogger(AppView.class.getName());
     private ConnectionPool pool;
 
     /**
@@ -20,6 +22,7 @@ public class AppView extends JPanel {
 
         pool = p;
 
+        logger.info("Initializing application UI.");
         JTabbedPane tabbedPane = new JTabbedPane();
 
         JPanel panel1 = new Read(pool);
@@ -75,6 +78,7 @@ public class AppView extends JPanel {
         frame.pack();
 
         frame.setVisible(true);
+        logger.info("Displayed application GUI.");
     }
 
 }

@@ -14,12 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
+import org.apache.log4j.Logger;
 
 /**
  * Part update view
  */
 class Update extends JPanel {
 
+    private final static Logger logger = Logger.getLogger(Delete.class.getName());
     private ConnectionPool pool;
     private JButton searchButton = new JButton("Search");
     private JButton updateButton = new JButton("Update");
@@ -72,6 +74,7 @@ class Update extends JPanel {
 
         //this.pack();
         this.setVisible(true);
+        logger.info("Displayed updating tab.");
     }
 
     /**
@@ -97,8 +100,8 @@ class Update extends JPanel {
                     searchButton.setVisible(false);
                     updateButton.setVisible(true);
                 } catch (Exception err) {
-                    System.out.println("Exception: " + err.getMessage());
-                    JOptionPane.showMessageDialog(null, "La pièce n'existe pas!!!!");
+                    logger.error("Failed to update part #" + id + " in database. Exception: " + err.getMessage());
+                    JOptionPane.showMessageDialog(null, "La pièce n'existe pas.");
                 }
 
             }
