@@ -92,10 +92,11 @@ public class ConnectionPoolImpl implements ConnectionPool {
      */
     public synchronized Connection getConnection() {
         Connection connection = null;
-
+        
         if (connectionsList.size() > 0) {
             connection = connectionsList.get(0);
             connectionsList.remove(0);
+            
         }
         return connection;
     }

@@ -74,7 +74,15 @@ class Update extends JPanel {
         //this.pack();
         this.setVisible(true);
     }
-
+   public void refresh(){
+	   textId.setText("");
+	   textReference.setText("");
+       textProvider.setText("");
+       textAvailableQuantity.setText("");
+       textPrice.setText("");
+       this.setVisible(true);
+	   
+   }
     /**
      * Listens for an action from the button <tt>searchButton</tt>
      * <p>
@@ -90,11 +98,11 @@ class Update extends JPanel {
             if (e.getSource() == searchButton) {
 
                 try {
-                    Part a = new PartDAO(pool).read(id);
-                    textReference.setText(a.getReference());
-                    textProvider.setText(a.getProvider());
-                    textAvailableQuantity.setText("" + a.getAvailableQuantity());
-                    textPrice.setText("" + a.getPrice());
+                    String[][] a = new PartDAO(pool).read(id);
+                    textReference.setText(a[0][1]);
+                    textProvider.setText(a[0][2]);
+                    textAvailableQuantity.setText(a[0][3]);
+                    textPrice.setText(a[0][4]);
                     searchButton.setVisible(false);
                     updateButton.setVisible(true);
                 } catch (Exception err) {
@@ -109,6 +117,8 @@ class Update extends JPanel {
                 int availableQuantity = Integer.parseInt(textAvailableQuantity.getText());
                 float price = Float.parseFloat(textPrice.getText());
                 Part a = new Part(id, reference, provider, availableQuantity, price);
+                Update.this.refresh();
+               // this.add(textId);
                 try {
                     new PartDAO(pool).update(a);
                 } catch (Exception err) {

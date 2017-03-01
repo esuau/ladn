@@ -12,24 +12,25 @@ import java.awt.event.KeyEvent;
 public class AppView extends JPanel {
 
     private ConnectionPool pool;
+    JFrame fen;
 
     /**
      * AppView constructor.
      */
-    public AppView(ConnectionPool p) {
+    public AppView(ConnectionPool p,JFrame fen) {
         super(new GridLayout(1, 1));
-
+        this.fen=fen;
         pool = p;
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        JPanel panel1 = new Read(pool);
-        tabbedPane.addTab("Consulter une pièce", null, panel1,
+        JPanel panel1 = new Read(pool,fen);
+        tabbedPane.addTab("Consulter une piece", null, panel1,
                 "Does nothing");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
         JPanel panel2 = new Create(pool);
-        tabbedPane.addTab("Ajouter une pièce", null, panel2,
+        tabbedPane.addTab("Ajouter une piece", null, panel2,
                 "Does twice as much nothing");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
@@ -40,7 +41,7 @@ public class AppView extends JPanel {
 
         JPanel panel4 = new Delete(pool);
         panel4.setPreferredSize(new Dimension(410, 50));
-        tabbedPane.addTab("supprimer une pièce", null, panel4,
+        tabbedPane.addTab("supprimer une piece", null, panel4,
                 "Does nothing at all");
         tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
 
@@ -58,6 +59,7 @@ public class AppView extends JPanel {
             //Turn off metal's use of bold fonts
             UIManager.put("swing.boldMetal", Boolean.FALSE);
             createAndShowGUI();
+            
         });
     }
 
@@ -68,18 +70,17 @@ public class AppView extends JPanel {
      */
     private void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("MAINTENANCE WORLD");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        AppView m = new AppView(pool);
+       
+        fen.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        AppView m = new AppView(pool,fen);
         //  m.setSize(50,100);
         //Add content to the window.
-        frame.add(m, BorderLayout.CENTER);
+        fen.add(m, BorderLayout.CENTER);
 
         //Display the window.
-        frame.setSize(50, 200);
-        frame.pack();
-
-        frame.setVisible(true);
+        fen.setSize(50, 200);
+        fen.pack();
+        fen.setVisible(true);
     }
 
 }

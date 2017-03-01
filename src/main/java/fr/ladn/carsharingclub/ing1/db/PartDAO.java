@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.swing.JOptionPane;
+
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
+
 import fr.ladn.carsharingclub.ing1.model.Part;
 
 public class PartDAO {
@@ -46,7 +50,7 @@ public class PartDAO {
      * @return part information
      * @throws Exception
      */
-    public Part read(int id) throws Exception {
+   /* public Part read(int id) throws Exception {
         Connection conn = pool.getConnection();
         PreparedStatement ps = conn.prepareStatement("SELECT * FROM pieces WHERE id_piece = ?");
         ps.setInt(1, id);
@@ -64,7 +68,84 @@ public class PartDAO {
         } else {
             return null;
         }
+    }*/
+    
+    public  String[][] read(int id) throws Exception {
+    	
+            Connection conn = pool.getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM pieces WHERE id_piece = ?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            pool.returnConnection(conn);
+            
+            	
+            	ResultSetMetaData rsmd = (ResultSetMetaData) rs.getMetaData();
+            	rs.last(); 
+            	int nbLignes = rs.getRow(); 
+            	rs.beforeFirst(); 
+            	
+            	int nbCols = rsmd.getColumnCount();
+            	int j=0;
+            	String[][] p=new String[nbLignes][nbCols];
+            	while (rs.next()) {
+       
+            	for (int i = 1; i <= nbCols; i++){
+            	p[j][i-1] = rs.getString(i);}
+            	j=j+1;
+            	}
+            	
+            	rs.close();
+            	 return p;
+            
+        }
+    	
+    public String[][]  read_t() throws Exception {
+        Connection conn = pool.getConnection();
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM pieces");
+       
+        ResultSet rs = ps.executeQuery();
+        pool.returnConnection(conn);
+        
+        	
+        	ResultSetMetaData rsmd = (ResultSetMetaData) rs.getMetaData();
+        	rs.last(); 
+        	//on récupère le numéro de la ligne 
+        	int nbLignes = rs.getRow(); 
+        	//on replace le curseur avant la première ligne 
+        	rs.beforeFirst(); 
+        	
+        	int nbCols = rsmd.getColumnCount();
+        	int j=0;
+        	String[][] p=new String[nbLignes][nbCols];
+        	while (rs.next()) {
+   
+        	for (int i = 1; i <= nbCols; i++){
+        	p[j][i-1] = rs.getString(i);}
+        	j=j+1;
+        	}
+        	
+        	rs.close();
+        	/*for (int i =j ; i < p[0].length; i++){
+        		for (int k = nbCols+1; k < p.length; k++){
+        			p[k][i] = " ";}
+        		}*/
+            	
+            	
+        	
+       /* Object[][] p=new String[10][10];
+        int i=0;
+        if (rs.next()) {
+        	p[i][0] = rs.getInt("id_piece");
+        	p[i][1] = rs.getString("libelle_piece");
+        	p[i][2] = rs.getString("fabricant");
+        	p[i][3] = rs.getInt("qte_dispo");
+        	p[i][4] = rs.getFloat("valeur_piece");
+            i=i++;
+        }
+        System.out.println("coucoubhjjvhvjh"+p[0][0]);*/
+        return p;
     }
+
 
     /**
      * Updates part information in the stock
