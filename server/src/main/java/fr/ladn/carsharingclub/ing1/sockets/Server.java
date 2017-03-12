@@ -25,10 +25,6 @@ import fr.ladn.carsharingclub.ing1.model.Part;
  * @see ServerMain
  */
 public class Server {
-    private BufferedReader in;
-    private PrintWriter out;
-    ConnectionPool pool = new ConnectionPool();
-
     /**
      * Server constructor.
      * <p>
@@ -56,46 +52,12 @@ public class Server {
         int serverPort = Integer.parseInt(properties.getProperty("serverPort"));
 
         try {
-            System.out.println("Server started on port " + serverPort);
             ServerSocket serverSocket = new ServerSocket(serverPort);
-
-            Socket socketClient = serverSocket.accept();
-            in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
-            System.out.println("Client " + socketClient.getInetAddress() + " connected");
-            Part p = getData(in.readLine());
-            System.out.println(p.toString() + " added");
-            socketClient.close();
-            serverSocket.close();
+            Thread connect = new Thread(new Connect(serverSocket));
+            connect.start();
+             System.out.println("Server started on port " + serverPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Turns the XML sent by the client into a Part object
-     *
-     * @param str the string (XML) sent by the client
-     * @return a part
-     * @see ReadXMLFile
-     * @see Part
-     */
-    public Part getData(String str) {
-        try {
-            return ReadXMLFile.parserXML(str);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Sends object data to a client via the socket connection
-     *
-     * @param p the Part object to be send
-     * @see WriteXMLFile
-     */
-    public void sendData(Part p) {
-        out.println(WriteXMLFile.factoryXML(p));
-    }
-
 }
