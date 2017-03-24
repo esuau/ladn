@@ -11,6 +11,11 @@
             <artifactId>annotations</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>fr.ladn.carsharingclub.ing1</groupId>
+            <artifactId>pds-ing1</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <parent>
@@ -41,7 +46,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.ladn.carsharingclub.ing1.sockets.ClientMain</mainClass>
+                            <mainClass>fr.ladn.carsharingclub.ing1.controller.Controller</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

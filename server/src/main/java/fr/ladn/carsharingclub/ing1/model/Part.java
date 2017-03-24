@@ -1,9 +1,13 @@
 package fr.ladn.carsharingclub.ing1.model;
 
+import org.apache.log4j.Logger;
+
 /**
  * Part business object
  */
 public class Part {
+
+    private final static Logger logger = Logger.getLogger(Part.class.getName());
 
     private int id;
     private String reference;
@@ -21,6 +25,7 @@ public class Part {
      * @param price             (cost) of the part
      */
     public Part(int id, String reference, String provider, int availableQuantity, float price) {
+        logger.info("Creating new part instance with custom ID...");
         this.id = id;
         this.reference = reference;
         this.provider = provider;
@@ -37,6 +42,7 @@ public class Part {
      * @param price             or cost of the part
      */
     public Part(String reference, String provider, int availableQuantity, float price) {
+        logger.info("Creating new part instance...");
         this.reference = reference;
         this.provider = provider;
         this.availableQuantity = availableQuantity;

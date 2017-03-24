@@ -12,7 +12,7 @@ import org.xml.sax.InputSource;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
 
-public class ReadXMLFile {
+public abstract class ReadXMLFile {
 
     public static Part parserXML(String xml) {
         try {

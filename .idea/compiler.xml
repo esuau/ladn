@@ -14,8 +14,6 @@
       <module name="pds-client" target="1.8" />
       <module name="pds-ing1" target="1.5" />
       <module name="pds-server" target="1.8" />
-      <module name="socket-client" target="1.5" />
-      <module name="socket-server" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
