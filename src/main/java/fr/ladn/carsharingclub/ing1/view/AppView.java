@@ -23,7 +23,12 @@ public class AppView extends JPanel {
         pool = p;
 
         JTabbedPane tabbedPane = new JTabbedPane();
-
+        
+        JPanel panel5 = new Tech_view(pool);
+        tabbedPane.addTab("ajouter technicien ", null, panel5,
+                "Does nothing");
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+        
         JPanel panel1 = new Read(pool,fen);
         tabbedPane.addTab("Consulter une piece", null, panel1,
                 "Does nothing");
