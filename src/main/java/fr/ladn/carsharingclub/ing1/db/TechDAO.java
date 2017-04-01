@@ -11,9 +11,9 @@ import fr.ladn.carsharingclub.ing1.model.Tech;
 
 public class TechDAO {
 	
-	ConnectionPool pool;
+	private ConnectionPool pool;
 	public TechDAO(ConnectionPool poolc){
-		pool=poolc;
+		pool = poolc;
 	}
 	
 	public void create(Tech tech) throws Exception {
@@ -83,9 +83,9 @@ public class TechDAO {
         	
         	ResultSetMetaData rsmd = (ResultSetMetaData) rs.getMetaData();
         	rs.last(); 
-        	//on récupère le numéro de la ligne 
+        	//on rÃ©cupÃ¨re le numÃ©ro de la ligne
         	int nbLignes = rs.getRow(); 
-        	//on replace le curseur avant la première ligne 
+        	//on replace le curseur avant la premiÃ¨re ligne
         	rs.beforeFirst(); 
         	
         	int nbCols = rsmd.getColumnCount();
@@ -107,7 +107,7 @@ public class TechDAO {
     /**
      * Updates part information in the stock
      *
-     * @param part to be updated
+     * @param tech to be updated
      * @throws Exception
      */
     public void update_tech(Tech tech) throws Exception {
@@ -125,7 +125,7 @@ public class TechDAO {
     /**
      * Permanently removes a part from the database
      *
-     * @param part to be removed from the stock
+     * @param tech the technician to be removed from the stock
      * @throws Exception
      */
     public void delete(Tech tech) throws Exception {

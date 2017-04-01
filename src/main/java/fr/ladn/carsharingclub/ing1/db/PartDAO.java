@@ -109,9 +109,9 @@ public class PartDAO {
         	
         	ResultSetMetaData rsmd = (ResultSetMetaData) rs.getMetaData();
         	rs.last(); 
-        	//on récupère le numéro de la ligne 
+        	//on rÃ©cupÃ¨re le numÃ©ro de la ligne
         	int nbLignes = rs.getRow(); 
-        	//on replace le curseur avant la première ligne 
+        	//on replace le curseur avant la premiÃ¨re ligne
         	rs.beforeFirst(); 
         	
         	int nbCols = rsmd.getColumnCount();
