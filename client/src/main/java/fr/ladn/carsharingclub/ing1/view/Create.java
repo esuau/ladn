@@ -1,7 +1,5 @@
 package fr.ladn.carsharingclub.ing1.view;
 
-import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
-import fr.ladn.carsharingclub.ing1.db.PartDAO;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
 
@@ -16,7 +14,6 @@ import java.awt.event.ActionListener;
 class Create extends JPanel {
 
     private final static Logger logger = Logger.getLogger(Create.class.getName());
-    private ConnectionPool pool;
     private JButton createButton = new JButton("Create");
     private JTextField textReference = new JTextField();
     private JTextField textProvider = new JTextField();
@@ -59,8 +56,6 @@ class Create extends JPanel {
      * <p>
      * Once the button is pressed, data in the form is transmitted to the <tt>PartDAO</tt> object to be written in the database.
      * </p>
-     *
-     * @see PartDAO
      */
     private class Listener implements ActionListener {
 

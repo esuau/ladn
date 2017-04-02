@@ -1,7 +1,5 @@
 package fr.ladn.carsharingclub.ing1.view;
 
-import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
-import fr.ladn.carsharingclub.ing1.db.PartDAO;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
 
@@ -16,7 +14,6 @@ import java.awt.event.ActionListener;
 class Update extends JPanel {
 
     private final static Logger logger = Logger.getLogger(Delete.class.getName());
-    private ConnectionPool pool;
     private JButton searchButton = new JButton("Search");
     private JButton updateButton = new JButton("Update");
     private JTextField textId = new JTextField();
@@ -107,7 +104,7 @@ class Update extends JPanel {
                 float price = Float.parseFloat(textPrice.getText());
                 Part a = new Part(id, reference, provider, availableQuantity, price);
                 try {
-                    new PartDAO(pool).update(a);
+                    // TODO implement communication method for update
                 } catch (Exception err) {
                     System.out.println("Exception: " + err.getMessage());
                 }

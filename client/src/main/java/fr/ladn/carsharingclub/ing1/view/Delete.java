@@ -1,9 +1,7 @@
 package fr.ladn.carsharingclub.ing1.view;
 
-import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
-import fr.ladn.carsharingclub.ing1.db.PartDAO;
-import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.xml.ReadXMLFile;
+// import fr.ladn.carsharingclub.ing1.model.Part;
+// import fr.ladn.carsharingclub.ing1.xml.ReadXMLFile;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -27,8 +25,6 @@ class Delete extends JPanel {
      * <br>
      * It also includes a button to operate the deletion action.
      * </p>
-     *
-     * @see PartDAO
      */
     Delete() {
         GridLayout layout = new GridLayout(1, 3);

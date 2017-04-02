@@ -1,8 +1,6 @@
 package fr.ladn.carsharingclub.ing1.view;
 
-import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
-import fr.ladn.carsharingclub.ing1.db.PartDAO;
-import fr.ladn.carsharingclub.ing1.model.Part;
+// import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
