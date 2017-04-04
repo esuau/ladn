@@ -2,14 +2,24 @@
 
 ## École Supérieure d'Ingénieurs de Paris-Est Créteil
 
+## Active branch
+
+The current dev branch is [`wip/r2/kernel`](https://gitlab.com/louisendelicher/pds_ing1_ladn/tree/wip/r2/kernel).
+
+Check it out:
+```
+$ git fetch --all
+$ git checkout wip/r2/kernel 
+```
+
 ### Instructions using Maven
 
-To "compile" :
+To "compile":
 ```
 $ mvn install
 ```
 
-To run :
+To run:
 ```
 $ mvn exec:exec
 ```
