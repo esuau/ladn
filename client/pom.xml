@@ -13,15 +13,13 @@
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>fr.ladn.carsharingclub.ing1</groupId>
-                <artifactId>pds-ing1</artifactId>
-                <version>0.1-SNAPSHOT</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>fr.ladn.carsharingclub.ing1</groupId>
+            <artifactId>pds-ing1</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
