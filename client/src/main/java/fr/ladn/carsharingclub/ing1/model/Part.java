@@ -1,26 +1,41 @@
 package fr.ladn.carsharingclub.ing1.model;
 
+import org.apache.log4j.Logger;
+
 /**
  * Part business object
  */
 public class Part {
 
+    /** The logger. */
+    private final static Logger logger = Logger.getLogger(Part.class.getName());
+
+    /** The identifier of the part. */
     private int id;
+
+    /** The name or reference of the part. */
     private String reference;
+
+    /** The name of the privoder or supplier of the part. */
     private String provider;
+
+    /** The number of part corresponding to this reference in the stock. */
     private int availableQuantity;
+
+    /** The unit price or cost of the part. */
     private float price;
 
     /**
-     * Default constructor
+     * Default constructor.
      *
-     * @param id                of the part
-     * @param reference         (name) of the part
-     * @param provider          or supplier of the part
-     * @param availableQuantity of this part reference in the stock
-     * @param price             (cost) of the part
+     * @param id                The identifier of the part.
+     * @param reference         The name/reference of the part
+     * @param provider          The name of the provider or supplier of the part.
+     * @param availableQuantity The number of this part reference in the stock.
+     * @param price             The unit cost of the part.
      */
     public Part(int id, String reference, String provider, int availableQuantity, float price) {
+        logger.info("Creating new part instance with custom ID...");
         this.id = id;
         this.reference = reference;
         this.provider = provider;
@@ -29,7 +44,8 @@ public class Part {
     }
 
     /**
-     * Custom constructor (ID is not defined)
+     * Custom constructor.
+     * Used with undefined ID.
      *
      * @param reference         (name) of the part
      * @param provider          or supplier of the part
@@ -37,6 +53,7 @@ public class Part {
      * @param price             or cost of the part
      */
     public Part(String reference, String provider, int availableQuantity, float price) {
+        logger.info("Creating new part instance...");
         this.reference = reference;
         this.provider = provider;
         this.availableQuantity = availableQuantity;
@@ -46,7 +63,7 @@ public class Part {
     /**
      * Gets part ID.
      *
-     * @return id of a part
+     * @return the identifier of the part.
      */
     public int getId() {
         return id;
@@ -55,7 +72,7 @@ public class Part {
     /**
      * Gets part name.
      *
-     * @return reference of a part
+     * @return the reference of the part.
      */
     public String getReference() {
         return reference;
@@ -68,12 +85,17 @@ public class Part {
     /**
      * Gets part provider or supplier.
      *
-     * @return the provider name of a part
+     * @return the provider name of a part.
      */
     public String getProvider() {
         return provider;
     }
 
+    /**
+     * Set provider name.
+     *
+     * @param provider The provider of the part.
+     */
     public void setProvider(String provider) {
         this.provider = provider;
     }
@@ -81,24 +103,28 @@ public class Part {
     /**
      * Gets part cost or price.
      *
-     * @return cost of a part
+     * @return cost of a part.
      */
     public float getPrice() {
         return price;
     }
 
     /**
-     * Gets the available quantity of a part.
+     * Gets the available quantity of the part.
      *
-     * @return the number of available items for a given part
+     * @return the number of available items for a given part.
      */
     public int getAvailableQuantity() {
         return availableQuantity;
     }
 
+    /**
+     * Updates the available quantity of the part.
+     *
+     * @param availableQuantity The updated available quantity of the part.
+     */
     public void setAvailableQuantity(int availableQuantity) {
         this.availableQuantity = availableQuantity;
     }
-
 
 }

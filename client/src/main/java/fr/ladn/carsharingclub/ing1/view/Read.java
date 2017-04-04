@@ -9,20 +9,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Part reading view
+ * The view for Part reading.
  */
 class Read extends JPanel {
 
     private final static Logger logger = Logger.getLogger(Delete.class.getName());
+
+    /** The "read" button. */
     private JButton readButton = new JButton("Read");
+
+    /** The text field for the part ID. */
     private JTextField textId = new JTextField();
-    private JTextField textReference = new JTextField();
-    private JTextField textProvider = new JTextField();
-    private JTextField textAvailableQuantity = new JTextField();
-    private JTextField textPrice = new JTextField();
 
     /**
-     * Sets up a UI to display part information.
+     * Sets up a UI to display the information of the Part object.
      */
     Read() {
         this.setName("Read");
@@ -34,21 +34,25 @@ class Read extends JPanel {
         this.add(readButton);
         JLabel labelReference = new JLabel("Reference");
         this.add(labelReference);
+        JTextField textReference = new JTextField();
         this.add(textReference);
         JLabel space = new JLabel(" ");
         this.add(space);
         JLabel labelProvider = new JLabel("Provider");
         this.add(labelProvider);
+        JTextField textProvider = new JTextField();
         this.add(textProvider);
         JLabel space2 = new JLabel(" ");
         this.add(space2);
         JLabel labelPrice = new JLabel("Price");
         this.add(labelPrice);
+        JTextField textPrice = new JTextField();
         this.add(textPrice);
         JLabel space3 = new JLabel(" ");
         this.add(space3);
         JLabel labelAvailableQuantity = new JLabel("Available quantity");
         this.add(labelAvailableQuantity);
+        JTextField textAvailableQuantity = new JTextField();
         this.add(textAvailableQuantity);
 
         Listener listener = new Listener();
@@ -59,17 +63,20 @@ class Read extends JPanel {
     }
 
     /**
-     * Listens for an action from the button <tt>readButton</tt>
-     * <p>
-     * This method gets part information from the database via an object <tt>PartDAO</tt> and
-     * </p>
+     * The listener for the "read" button.
      */
     private class Listener implements ActionListener {
+
+        /**
+         * Listens for an action on the "read" button.
+         * This method gets part information from the database via the server.
+         *
+         * @param e The information on the action performed on the "read" button.
+         */
         public void actionPerformed(ActionEvent e) {
             Integer id = Integer.parseInt(textId.getText());
 
             if (e.getSource() == readButton) {
-
                 try {
                     // TODO Implement client-side read
                     /*
@@ -82,7 +89,6 @@ class Read extends JPanel {
                     JOptionPane.showMessageDialog(null, "La pièce n'existe pas.");
                     logger.error("Failed to read part #" + id + ". Exception: " + err.getMessage());
                 }
-
             }
 
         }

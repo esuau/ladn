@@ -13,56 +13,77 @@ import fr.ladn.carsharingclub.ing1.xml.ReadXMLFile;
 import fr.ladn.carsharingclub.ing1.xml.WriteXMLFile;
 import fr.ladn.carsharingclub.ing1.model.Part;
 
+/**
+ * The Connect class.
+ * This class provides the listening part of the server.
+ * It manages the connection attempts to the server.
+ *
+ * @see Server
+ */
 public class Connect extends Thread {
-	ServerSocket serverSocket;
-	Socket socketClient;
-	private BufferedReader in;
-	private PrintWriter out;
-	ConnectionPool pool = new ConnectionPool();
-	
-	public Connect(ServerSocket serverSocket) {
-		this.serverSocket = serverSocket;
-	}
-	
-	public void run() {
-		try {
-			while(true) {
-				socketClient = serverSocket.accept();
-				in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
-				System.out.println("Client " + socketClient.getInetAddress() + " connected");
-				Part p = getData(in.readLine());
-				System.out.println(p.toString() + " added");
-				socketClient.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Turns the XML sent by the client into a Part object
-	 *
-	 * @param str the string (XML) sent by the client
-	 * @return a part
-	 * @see ReadXMLFile
-	 * @see Part
-	 */
-	public Part getData(String str) {
-		try {
-			return ReadXMLFile.parserXML(str);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 
-	/**
-	 * Sends object data to a client via the socket connection
-	 *
-	 * @param p the Part object to be send
-	 * @see WriteXMLFile
-	 */
-	public void sendData(Part p) {
-		out.println(WriteXMLFile.factoryXML(p));
-	}
+    /** The socket of the server. */
+    private ServerSocket serverSocket;
+
+    /** The output stream. */
+    private PrintWriter out;
+
+    /** The connection pool. */
+    ConnectionPool pool = new ConnectionPool();
+
+    /**
+     * Gets the socket initialized by the server.
+     *
+     * @param serverSocket the socket provided by the server
+     * @see Server
+     */
+    Connect(ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
+    }
+
+    /**
+     * Listens for connection attempts to the server.
+     */
+    public void run() {
+        try {
+            while (true) {
+                Socket socketClient = serverSocket.accept();
+                BufferedReader in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
+                System.out.println("Client " + socketClient.getInetAddress() + " connected");
+                Part p = getData(in.readLine());
+                assert p != null;
+                System.out.println(p.toString() + " added");
+                socketClient.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Turns the XML sent by the client into a Part object
+     *
+     * @param str the string (XML) sent by the client
+     * @return a part
+     * @see ReadXMLFile
+     * @see Part
+     */
+    private Part getData(String str) {
+        try {
+            return ReadXMLFile.parserXML(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Sends object data to a client via the socket connection
+     *
+     * @param p the Part object to be send
+     * @see WriteXMLFile
+     */
+    public void sendData(Part p) {
+        out.println(WriteXMLFile.factoryXML(p));
+    }
 }

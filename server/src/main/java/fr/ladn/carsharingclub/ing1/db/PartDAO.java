@@ -1,17 +1,33 @@
 package fr.ladn.carsharingclub.ing1.db;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
+
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * DOA Object for Part.
+ * Contains SQL statements for CRUD in database.
+ *
+ * @see Part
+ */
 public class PartDAO {
 
+    /** The connection pool. */
     private ConnectionPool pool;
+
+    /** The logger. */
     private final static Logger logger = Logger.getLogger(PartDAO.class.getName());
 
+    /**
+     * Constructor. References connection pool.
+     *
+     * @param p The connection pool.
+     * @see ConnectionPool
+     */
     public PartDAO(ConnectionPool p) {
         logger.info("Creating PartDAO object...");
         pool = p;
@@ -20,9 +36,7 @@ public class PartDAO {
 
     /**
      * Creates a part in the database.
-     * <p>
      * Part appearing into the database are considered available in the stock.
-     * </p>
      *
      * @param part to add to the stock
      * @throws Exception if connection issue encountered
@@ -49,7 +63,7 @@ public class PartDAO {
     }
 
     /**
-     * Gets information from an existing part
+     * Gets information from an existing part.
      *
      * @param id of the part to be read
      * @return part information
@@ -84,7 +98,7 @@ public class PartDAO {
     }
 
     /**
-     * Updates part information in the stock
+     * Updates part information in the stock.
      *
      * @param part to be updated
      * @throws Exception if connection issue encountered
@@ -108,7 +122,7 @@ public class PartDAO {
     }
 
     /**
-     * Permanently removes a part from the database
+     * Permanently removes a part from the database.
      *
      * @param part to be removed from the stock
      * @throws Exception if connection issue encountered

@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.util.Properties;
-import java.io.*;
 import java.net.*;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
@@ -15,26 +14,22 @@ import fr.ladn.carsharingclub.ing1.model.Part;
 
 /**
  * Server class.
- * <p>
  * The server communicates with the clients.
  * Its is connected to the database server via the connection pool.
  * In this test version, the server stops after a single connection.
- * </p>
  *
  * @see ConnectionPool
  * @see ServerMain
  */
-public class Server {
+class Server {
     /**
      * Server constructor.
-     * <p>
      * When starting, the server initializes the connection pool.
      * Then, the server waits for a message from a client. The server stops when getting a connection.
-     * </p>
      *
      * @see ConnectionPool
      */
-    public Server() {
+    Server() {
         Properties properties = new Properties();
 
         try {

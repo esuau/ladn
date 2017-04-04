@@ -11,16 +11,17 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
 
+/**
+ * The XML parser.
+ */
 public class ReadXMLFile {
 
     /**
-     * XML parser.
-     * <p>
-     * This function parses the XML
-     * </p>
+     * The XML parser.
+     * This function parses the string received under XML format via the input stream.
      *
-     * @param xml the string to be parsed.
-     * @return a Part object
+     * @param xml The string to be parsed.
+     * @return a new Part object.
      */
     public static Part parserXML(String xml) {
         try {

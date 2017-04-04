@@ -14,7 +14,7 @@ import fr.ladn.carsharingclub.ing1.xml.ReadXMLFile;
 import fr.ladn.carsharingclub.ing1.xml.WriteXMLFile;
 
 /**
- * Client
+ * The class Client.
  */
 public class Client {
     private BufferedReader in;
@@ -22,12 +22,9 @@ public class Client {
 
     /**
      * Client default constructor.
-     * <p>
      * When starting, the client uses the file <tt>configClient.properties</tt> stored in src/main/resources/.
-     * In our case, the client sends a part's information to the server.
-     * </p>
      *
-     * @param p the part to be sent to the client
+     * @param p The part to be sent to the server.
      */
     public Client(Part p) {
         Properties properties = new Properties();
@@ -56,9 +53,9 @@ public class Client {
     }
 
     /**
-     * Converts the text (XML) data sent by the server into an object
+     * Converts the text (XML) data sent by the server into an Part object.
      *
-     * @return Part object
+     * @return a Part object.
      * @see ReadXMLFile
      */
     public Part getData() {
@@ -71,9 +68,9 @@ public class Client {
     }
 
     /**
-     * Converts an object into a XML formatted string and sends it to the server
+     * Converts an object into a XML formatted string and sends it to the server.
      *
-     * @param p the part object to be turned into XML
+     * @param p The part object to be turned into XML.
      * @see WriteXMLFile
      */
     private void sendData(Part p) {
