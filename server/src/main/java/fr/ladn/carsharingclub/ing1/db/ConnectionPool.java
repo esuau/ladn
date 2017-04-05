@@ -1,6 +1,5 @@
 package fr.ladn.carsharingclub.ing1.db;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -9,11 +8,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 /**
  * Brings essential utilities for connection pooling.
  * Allows performance enhancement when accessing database.
  */
 public class ConnectionPool {
+
+    /** The logger. */
+    private final static Logger logger = Logger.getLogger(ConnectionPool.class.getName());
 
     /** Maximum connection possible in connection pool. */
     private static final int MAX_POOL_SIZE = 10;
@@ -25,6 +29,7 @@ public class ConnectionPool {
      * The constructor initializes the filling of the connection pool.
      */
     public ConnectionPool() {
+        logger.info("Initializing connection pool...");
         initialize();
     }
 
@@ -34,6 +39,7 @@ public class ConnectionPool {
      */
     private void initialize() {
         while (!isFull()) {
+            logger.info("Adding new connection...");
             System.out.println("Connection Pool is NOT full. Proceeding with adding new connections");
             connectionsList.add(createConnection());
         }
@@ -63,8 +69,9 @@ public class ConnectionPool {
             InputStream input = this.getClass().getClassLoader().getResourceAsStream("configServer.properties");
             properties.load(input);
             input.close();
+            logger.info("Configuration file dbconfig.properties successfully loaded.");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("IOException: " + e.getMessage());
         }
 
         Connection connection;
@@ -76,12 +83,12 @@ public class ConnectionPool {
         try {
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
-            System.out.println("Connection: " + connection);
+            logger.info("New connection successfully added: " + connection);
         } catch (SQLException e) {
-            System.err.println("SQLException: " + e);
+            logger.error("SQLException: " + e.getMessage());
             return null;
         } catch (ClassNotFoundException e) {
-            System.err.println("ClassNotFoundException: " + e);
+            logger.error("ClassNotFoundException: " + e.getMessage());
             return null;
         }
         return connection;
@@ -102,6 +109,8 @@ public class ConnectionPool {
             connection = connectionsList.get(0);
             connectionsList.remove(0);
         }
+
+        logger.info("Connection " + connection + " allocated.");
         return connection;
     }
 
@@ -113,6 +122,7 @@ public class ConnectionPool {
      */
     public synchronized void returnConnection(Connection connection) {
         connectionsList.add(connection);
+        logger.info("Connection " + connection + " is back to the pool.");
     }
 
     /**
@@ -121,6 +131,7 @@ public class ConnectionPool {
      * @return the maximum number of connections in the pool.
      */
     public synchronized int getSize() {
+        logger.info("Pool size: " + connectionsList.size() + ".");
         return connectionsList.size();
     }
 

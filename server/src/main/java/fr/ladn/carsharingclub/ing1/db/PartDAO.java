@@ -16,11 +16,11 @@ import java.sql.ResultSet;
  */
 public class PartDAO {
 
-    /** The connection pool. */
-    private ConnectionPool pool;
-
     /** The logger. */
     private final static Logger logger = Logger.getLogger(PartDAO.class.getName());
+
+    /** The connection pool. */
+    private ConnectionPool pool;
 
     /**
      * Constructor. References connection pool.

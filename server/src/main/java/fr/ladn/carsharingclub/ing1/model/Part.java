@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
  */
 public class Part {
 
+    /** The logger. */
     private final static Logger logger = Logger.getLogger(Part.class.getName());
 
     /** The identifier of the part. */

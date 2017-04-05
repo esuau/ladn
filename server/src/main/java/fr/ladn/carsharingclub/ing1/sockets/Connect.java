@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 import java.io.*;
 import java.net.*;
+import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.xml.ReadXMLFile;
@@ -21,6 +22,9 @@ import fr.ladn.carsharingclub.ing1.model.Part;
  * @see Server
  */
 public class Connect extends Thread {
+
+    /** The logger. */
+    private final static Logger logger = Logger.getLogger(Connect.class.getName());
 
     /** The socket of the server. */
     private ServerSocket serverSocket;
@@ -38,6 +42,7 @@ public class Connect extends Thread {
      * @see Server
      */
     Connect(ServerSocket serverSocket) {
+        logger.info("Initializing connection.");
         this.serverSocket = serverSocket;
     }
 
@@ -49,10 +54,10 @@ public class Connect extends Thread {
             while (true) {
                 Socket socketClient = serverSocket.accept();
                 BufferedReader in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
-                System.out.println("Client " + socketClient.getInetAddress() + " connected");
+                logger.info("Client " + socketClient.getInetAddress() + " connected.");
                 Part p = getData(in.readLine());
                 assert p != null;
-                System.out.println(p.toString() + " added");
+                logger.info(p.toString() + " has been added.");
                 socketClient.close();
             }
         } catch (IOException e) {
@@ -61,9 +66,9 @@ public class Connect extends Thread {
     }
 
     /**
-     * Turns the XML sent by the client into a Part object
+     * Turns the XML sent by the client into a Part object.
      *
-     * @param str the string (XML) sent by the client
+     * @param str the string (XML) sent by the client.
      * @return a part
      * @see ReadXMLFile
      * @see Part
@@ -78,9 +83,9 @@ public class Connect extends Thread {
     }
 
     /**
-     * Sends object data to a client via the socket connection
+     * Sends object data to a client via the socket connection.
      *
-     * @param p the Part object to be send
+     * @param p the Part object to be send.
      * @see WriteXMLFile
      */
     public void sendData(Part p) {

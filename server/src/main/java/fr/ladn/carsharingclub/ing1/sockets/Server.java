@@ -4,10 +4,7 @@ import java.io.*;
 import java.util.Properties;
 import java.net.*;
 
-import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
-import fr.ladn.carsharingclub.ing1.xml.ReadXMLFile;
-import fr.ladn.carsharingclub.ing1.xml.WriteXMLFile;
-import fr.ladn.carsharingclub.ing1.model.Part;
+import org.apache.log4j.Logger;
 
 /**
  * The Server class.
@@ -19,14 +16,18 @@ import fr.ladn.carsharingclub.ing1.model.Part;
  */
 class Server {
 
+    /** The logger. */
+    private final static Logger logger = Logger.getLogger(Server.class.getName());
+
     /**
      * Server constructor.
      * When starting, the server initializes the connection pool.
      * Then, the server waits for a message from a client. The server stops when getting a connection.
      *
-     * @see ConnectionPool
+     * @see Connect
      */
     Server() {
+        logger.info("Server starting.");
         Properties properties = new Properties();
 
         try {
@@ -34,7 +35,7 @@ class Server {
             properties.load(input);
             input.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load config file. " + e.getMessage());
         }
 
         int serverPort = Integer.parseInt(properties.getProperty("serverPort"));
@@ -43,9 +44,9 @@ class Server {
             ServerSocket serverSocket = new ServerSocket(serverPort);
             Thread connect = new Thread(new Connect(serverSocket));
             connect.start();
-            System.out.println("Server started on port " + serverPort + ".");
+            logger.info("Server started on port " + serverPort + ".");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to start connection. " + e.getMessage());
         }
     }
 }

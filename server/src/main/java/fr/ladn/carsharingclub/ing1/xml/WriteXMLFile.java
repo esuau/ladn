@@ -1,11 +1,15 @@
 package fr.ladn.carsharingclub.ing1.xml;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
+import org.apache.log4j.Logger;
 
 /**
  * The XML generator.
  */
 public class WriteXMLFile {
+
+    /** The logger. */
+    private final static Logger logger = Logger.getLogger(WriteXMLFile.class.getName());
 
     /**
      * This method transforms a Part object into a XML string.
@@ -22,6 +26,7 @@ public class WriteXMLFile {
         xml += "<qte_dispo>" + p.getAvailableQuantity() + "</qte_dispo>";
         xml += "<valeur_piece>" + p.getPrice() + "</valeur_piece>";
         xml += "</piece>";
+        logger.info("Successfully generated XML from part " + p.getId());
         return xml;
     }
 }
