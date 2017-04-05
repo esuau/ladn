@@ -2,6 +2,7 @@ package fr.ladn.carsharingclub.ing1.db;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -59,7 +60,7 @@ public class ConnectionPool {
         Properties properties = new Properties();
 
         try {
-            FileInputStream input = new FileInputStream("configServer.properties");
+            InputStream input = this.getClass().getClassLoader().getResourceAsStream("configServer.properties");
             properties.load(input);
             input.close();
         } catch (IOException e) {

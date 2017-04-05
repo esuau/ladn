@@ -9,6 +9,7 @@
         <artifactId>pds-ing1</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
+
     <artifactId>pds-server</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -31,18 +32,7 @@
     <build>
         <plugins>
 
-            <!-- Set a JDK compiler level -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-
-            <!-- -->
+            <!-- Maven Assembly Plugin -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -66,29 +56,6 @@
                 </executions>
             </plugin>
 
-            <!-- Load configServer.properties file -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources/fr/ladn/carsharingclub/ing1/sockets</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- Exec Maven Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -102,8 +69,6 @@
                         </goals>
                         <configuration>
                             <executable>java</executable>
-                            <!-- optional -->
-                            <workingDirectory>target</workingDirectory>
                             <arguments>
                                 <argument>-jar</argument>
                                 <argument>${basedir}/target/pds-server-${project.version}-jar-with-dependencies.jar
