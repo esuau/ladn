@@ -24,7 +24,7 @@
             <artifactId>pds-ing1</artifactId>
             <version>0.1-SNAPSHOT</version>
             <type>pom</type>
-            <scope>import</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
