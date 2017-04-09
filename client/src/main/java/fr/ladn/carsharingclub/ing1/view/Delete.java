@@ -1,7 +1,6 @@
 package fr.ladn.carsharingclub.ing1.view;
 
 // import fr.ladn.carsharingclub.ing1.model.Part;
-// import fr.ladn.carsharingclub.ing1.xml.ReadXMLFile;
 
 import org.apache.log4j.Logger;
 

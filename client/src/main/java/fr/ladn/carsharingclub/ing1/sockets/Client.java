@@ -7,16 +7,19 @@ import java.io.IOException;
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.io.*;
-import java.net.*;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.xml.ReadXMLFile;
-import fr.ladn.carsharingclub.ing1.xml.WriteXMLFile;
+import fr.ladn.carsharingclub.ing1.xml.XML;
 
 /**
  * The class Client.
  */
 public class Client {
+
+    /** The XML serialization tool. */
+    private XML<Part> xml = new XML<Part>();
+
+    /** Input stream reader. */
     private BufferedReader in;
     private PrintWriter out;
 
@@ -56,11 +59,11 @@ public class Client {
      * Converts the text (XML) data sent by the server into an Part object.
      *
      * @return a Part object.
-     * @see ReadXMLFile
+     * @see XML
      */
     public Part getData() {
         try {
-            return ReadXMLFile.parserXML(in.readLine());
+            return xml.parse(in.readLine());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,10 +74,10 @@ public class Client {
      * Converts an object into a XML formatted string and sends it to the server.
      *
      * @param p The part object to be turned into XML.
-     * @see WriteXMLFile
+     * @see XML
      */
     private void sendData(Part p) {
-        System.out.println(WriteXMLFile.factoryXML(p));
-        out.println(WriteXMLFile.factoryXML(p));
+        System.out.println(xml.stringify(p));
+        out.println(xml.stringify(p));
     }
 }
