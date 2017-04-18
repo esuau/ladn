@@ -1,7 +1,7 @@
 package fr.ladn.carsharingclub.ing1.view;
 
-// import fr.ladn.carsharingclub.ing1.model.Part;
-
+import fr.ladn.carsharingclub.ing1.utils.Operation;
+import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -57,7 +57,9 @@ class Delete extends JPanel {
             Integer id = Integer.parseInt(textId.getText());
 
             if (e.getSource() == deleteButton) {
+                Part a = new Part(id, "", "", "", "");
                 try {
+                    sendData(Operation.DELETE, a);
                     // TODO Implement client-side delete
                     // logger.info("Attempting to delete part #" + a.getId() + " in database...");
                 } catch (Exception err) {

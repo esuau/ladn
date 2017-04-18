@@ -6,6 +6,7 @@ import java.io.*;
 
 import org.apache.log4j.Logger;
 
+import fr.ladn.carsharingclub.ing1.utils.Operation;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.utils.XML;
 
@@ -89,7 +90,7 @@ public class Client extends Thread {
      * @param p The part object to be turned into XML.
      * @see XML
      */
-    public void postData(Part p) {
+    public void sendData(Operation, Part p) {
         logger.info("Send data to server: " + xml.stringify(p));
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);

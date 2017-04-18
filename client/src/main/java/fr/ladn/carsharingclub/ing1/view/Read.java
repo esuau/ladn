@@ -77,7 +77,9 @@ class Read extends JPanel {
             Integer id = Integer.parseInt(textId.getText());
 
             if (e.getSource() == readButton) {
+                Part a = new Part(id, "", "", "", "");
                 try {
+                    sendData(Operation.READ, a);
                     // TODO Implement client-side read
                     /*
                     textReference.setText(a.getReference());

@@ -120,6 +120,7 @@ class Update extends JPanel {
                 float price = Float.parseFloat(textPrice.getText());
                 Part a = new Part(id, reference, provider, availableQuantity, price);
                 try {
+                    sendData(Operation.UPDATE, a);
                     // TODO implement communication method for update
                 } catch (Exception err) {
                     System.out.println("Exception: " + err.getMessage());
