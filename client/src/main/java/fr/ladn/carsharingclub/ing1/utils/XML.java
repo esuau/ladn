@@ -1,4 +1,4 @@
-package fr.ladn.carsharingclub.ing1.xml;
+package fr.ladn.carsharingclub.ing1.utils;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;

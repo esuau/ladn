@@ -38,7 +38,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.ladn.carsharingclub.ing1.sockets.ServerMain</mainClass>
+                            <mainClass>fr.ladn.carsharingclub.ing1.controller.Starter</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

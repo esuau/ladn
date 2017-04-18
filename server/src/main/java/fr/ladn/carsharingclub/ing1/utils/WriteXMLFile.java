@@ -1,4 +1,4 @@
-package fr.ladn.carsharingclub.ing1.xml;
+package fr.ladn.carsharingclub.ing1.utils;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
@@ -19,7 +19,7 @@ public class WriteXMLFile {
      * @see Part
      */
     public static String factoryXML(Part p) {
-        String xml = "<?xml version=\"1.0\" encoding=\"TF-8\" standalone=\"yes\"?>";
+        String xml = "<?utils version=\"1.0\" encoding=\"TF-8\" standalone=\"yes\"?>";
         xml += "<piece id=\"" + p.getId() + "\">";
         xml += "<libelle_piece>" + p.getReference() + "</libelle_piece>";
         xml += "<fabricant>" + p.getProvider() + "</fabricant>";

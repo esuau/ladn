@@ -1,6 +1,5 @@
 package fr.ladn.carsharingclub.ing1.view;
 
-// import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -13,6 +12,7 @@ import java.awt.event.ActionListener;
  */
 class Read extends JPanel {
 
+    /** The logger. */
     private final static Logger logger = Logger.getLogger(Delete.class.getName());
 
     /** The "read" button. */

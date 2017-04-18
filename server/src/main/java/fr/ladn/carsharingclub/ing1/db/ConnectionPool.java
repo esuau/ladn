@@ -39,11 +39,10 @@ public class ConnectionPool {
      */
     private void initialize() {
         while (!isFull()) {
-            logger.info("Adding new connection...");
-            System.out.println("Connection Pool is NOT full. Proceeding with adding new connections");
+            logger.info("Connection Pool is NOT full. Proceeding with adding new connections");
             connectionsList.add(createConnection());
         }
-        System.out.println("Connection Pool is full. " + connectionsList.size() + " connections created");
+        logger.info("Connection Pool is full. " + connectionsList.size() + " connections created");
     }
 
     /**
@@ -63,6 +62,7 @@ public class ConnectionPool {
      * @return an opened database connection ready to be added to the connection pool list.
      */
     private Connection createConnection() {
+        logger.info("Adding new connection...");
         Properties properties = new Properties();
 
         try {

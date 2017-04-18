@@ -1,5 +1,6 @@
 package fr.ladn.carsharingclub.ing1.controller;
 
+import fr.ladn.carsharingclub.ing1.sockets.Client;
 import fr.ladn.carsharingclub.ing1.view.AppView;
 
 /**
@@ -16,6 +17,6 @@ class Controller {
     public static void main(String[] args) {
         AppView app = new AppView();
         app.display();
-        // TODO Implement data transmission with class Client
+        new Client();
     }
 }
