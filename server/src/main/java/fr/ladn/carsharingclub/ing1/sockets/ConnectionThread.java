@@ -9,9 +9,9 @@ import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
-import fr.ladn.carsharingclub.ing1.utils.ReadXMLFile;
-import fr.ladn.carsharingclub.ing1.utils.WriteXMLFile;
+import fr.ladn.carsharingclub.ing1.utils.XML;
 import fr.ladn.carsharingclub.ing1.model.Part;
+import fr.ladn.carsharingclub.ing1.utils.Container;
 
 /**
  * The ConnectionThread class.
@@ -60,19 +60,33 @@ public class ConnectionThread extends Thread {
     }
 
     /**
-     * Turns the XML sent by the client into a Part object.
-     *
-     * @param str the string (XML) sent by the client.
-     * @see ReadXMLFile
+     * Turns the XML sent by the client into a 
      * @see Part
      */
     private void getData(String str) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            Part part = ReadXMLFile.parserXML(str);
+            Container c = XML.parse(str);
             PartDAO partDAO = new PartDAO(connectionPool);
             partDAO.create(part);
             logger.info("Part " + part + " has been added.");
+            String operation = c.getOperation();
+            Part p = c.getObject();
+            
+            switch (operation) {
+                case "CREATE":
+                    PartDAO.create(p);
+                    break;
+                case "READ":
+                    PartDAO.read(p.getId());
+                    break;
+                case "UPDATE":
+                    PartDAO.update(p);
+                    break;
+                case "DELETE";
+                    PartDAO.delete(p);
+                    break;
+            }
         } catch (IOException e) {
             logger.error("Failed to get data from client: " + e.getMessage());
         } catch (Exception e) {
@@ -87,9 +101,11 @@ public class ConnectionThread extends Thread {
      * @see WriteXMLFile
      */
     private void sendData(Part p) {
+        Container<Part> container = new Container<>(null, p);
+        
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(WriteXMLFile.factoryXML(p));
+            out.println(XML.stringify(container));
             logger.info("Part " + p + " has been sent back to the client.");
         } catch (IOException e) {
             logger.error("Failed to  " + e.getMessage());
