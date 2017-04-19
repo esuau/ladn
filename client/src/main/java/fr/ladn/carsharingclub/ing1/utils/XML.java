@@ -6,9 +6,9 @@ import java.io.*;
 
 /**
  * The class XML.
- * Allows serialisation operations.
+ * Allows serialisation operations on containers.
  */
-public class XML<T> {
+public abstract class XML {
 
     /**
      * Deserializes an object from a string.
@@ -16,11 +16,11 @@ public class XML<T> {
      * @param str the received string.
      * @return an instance of the object.
      */
-    public T parse(String str) {
+    public static Container parse(String str) {
         XMLDecoder d = new XMLDecoder(new ByteArrayInputStream(str.getBytes()));
-        T obj = (T) d.readObject();
+        Container container = (Container) d.readObject();
         d.close();
-        return obj;
+        return container;
     }
 
     /**
@@ -29,10 +29,10 @@ public class XML<T> {
      * @param obj the object to stringify.
      * @return a serialised object.
      */
-    public String stringify(T obj) {
+    public static String stringify(Container container) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XMLEncoder e = new XMLEncoder(baos);
-        e.writeObject(obj);
+        e.writeObject(container);
         e.close();
         return new String(baos.toByteArray());
     }

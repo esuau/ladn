@@ -20,9 +20,6 @@ public class Client extends Thread {
     /** The logger. */
     private final static Logger logger = Logger.getLogger(Client.class.getName());
 
-    /** The XML serialization tool. */
-    private XML<Part> xml = new XML<>();
-
     /** The input stream reader. */
     private BufferedReader in;
 
@@ -76,7 +73,7 @@ public class Client extends Thread {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
             in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
-            Part part = xml.parse(in.readLine());
+            Part part = XML.parse(in.readLine());
             logger.info("Successfully get data from server " + serverAddress + " on port " + serverPort + ".");
             socketClient.close();
             return part;
@@ -93,8 +90,8 @@ public class Client extends Thread {
      * @see XML
      */
     public void sendData(Operation operation, Part p) {
-        String serializedPart = xml.stringify(p);
-        logger.info("Send data to server: " + xml.stringify(p));
+        String serializedPart = XML.stringify(p);
+        logger.info("Send data to server: " + XML.stringify(p));
         Map<String, Enum> message = new HashMap<>();
         message.put(serializedPart, operation);
         try {
