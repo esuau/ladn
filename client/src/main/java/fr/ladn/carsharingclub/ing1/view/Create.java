@@ -1,5 +1,6 @@
 package fr.ladn.carsharingclub.ing1.view;
 
+import fr.ladn.carsharingclub.ing1.sockets.Client;
 import fr.ladn.carsharingclub.ing1.utils.Operation;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
@@ -78,10 +79,10 @@ class Create extends JPanel {
 
             if (e.getSource() == createButton) {
                 Part a = new Part(reference, provider, availableQuantity, price);
+                Client client = new Client();
                 try {
                     logger.info("Attempting to create part #" + a.getId() + " in database...");
-                    sendData(Operation.CREATE, a);
-                    // TODO Implement client-side create
+                    client.sendData(Operation.CREATE, a);
                 } catch (Exception err) {
                     logger.error("Failed to create part #" + a.getId() + " in database. \nException: " + err.getMessage());
                 }

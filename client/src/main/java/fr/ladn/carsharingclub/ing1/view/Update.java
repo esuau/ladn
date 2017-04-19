@@ -1,6 +1,8 @@
 package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
+import fr.ladn.carsharingclub.ing1.sockets.Client;
+import fr.ladn.carsharingclub.ing1.utils.Operation;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -96,19 +98,18 @@ class Update extends JPanel {
          * @param e The information of the action performed on a button.
          */
         public void actionPerformed(ActionEvent e) {
+            logger.info("Button " + e.getSource() + " was pressed.");
             int id = Integer.parseInt(textId.getText());
-
+            Client client = new Client();
             if (e.getSource() == searchButton) {
                 try {
-                    // TODO Implement client-side update
-                    /*
+                    Part a = (Part) client.getData().getObject();
                     textReference.setText(a.getReference());
                     textProvider.setText(a.getProvider());
                     textAvailableQuantity.setText("" + a.getAvailableQuantity());
                     textPrice.setText("" + a.getPrice());
                     searchButton.setVisible(false);
                     updateButton.setVisible(true);
-                    */
                 } catch (Exception err) {
                     logger.error("Failed to update part #" + id + " in database. Exception: " + err.getMessage());
                     JOptionPane.showMessageDialog(null, "La pièce n'existe pas.");
@@ -120,8 +121,7 @@ class Update extends JPanel {
                 float price = Float.parseFloat(textPrice.getText());
                 Part a = new Part(id, reference, provider, availableQuantity, price);
                 try {
-                    sendData(Operation.UPDATE, a);
-                    // TODO implement communication method for update
+                    client.sendData(Operation.UPDATE, a);
                 } catch (Exception err) {
                     System.out.println("Exception: " + err.getMessage());
                 }

@@ -1,5 +1,6 @@
 package fr.ladn.carsharingclub.ing1.view;
 
+import fr.ladn.carsharingclub.ing1.sockets.Client;
 import fr.ladn.carsharingclub.ing1.utils.Operation;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
@@ -57,11 +58,11 @@ class Delete extends JPanel {
             Integer id = Integer.parseInt(textId.getText());
 
             if (e.getSource() == deleteButton) {
-                Part a = new Part(id, "", "", "", "");
+                Part a = new Part(id, null, null, 0, 0);
+                Client client = new Client();
+                logger.info("Attempting to delete part #" + a.getId() + " in database...");
                 try {
-                    sendData(Operation.DELETE, a);
-                    // TODO Implement client-side delete
-                    // logger.info("Attempting to delete part #" + a.getId() + " in database...");
+                    client.sendData(Operation.DELETE, a);
                 } catch (Exception err) {
                     System.out.println("Failed to delete part in database. Exception:" + err.getMessage());
                 }

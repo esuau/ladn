@@ -1,5 +1,8 @@
 package fr.ladn.carsharingclub.ing1.view;
 
+import fr.ladn.carsharingclub.ing1.model.Part;
+import fr.ladn.carsharingclub.ing1.sockets.Client;
+import fr.ladn.carsharingclub.ing1.utils.Operation;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -21,6 +24,18 @@ class Read extends JPanel {
     /** The text field for the part ID. */
     private JTextField textId = new JTextField();
 
+    /** The text field for the part reference. */
+    private JTextField textReference = new JTextField();
+
+    /** The text field for the part provider. */
+    private JTextField textProvider = new JTextField();
+
+    /** The text field for the part price. */
+    private JTextField textPrice = new JTextField();
+
+    /** */
+    private JTextField textAvailableQuantity = new JTextField();
+
     /**
      * Sets up a UI to display the information of the Part object.
      */
@@ -34,25 +49,21 @@ class Read extends JPanel {
         this.add(readButton);
         JLabel labelReference = new JLabel("Reference");
         this.add(labelReference);
-        JTextField textReference = new JTextField();
         this.add(textReference);
         JLabel space = new JLabel(" ");
         this.add(space);
         JLabel labelProvider = new JLabel("Provider");
         this.add(labelProvider);
-        JTextField textProvider = new JTextField();
         this.add(textProvider);
         JLabel space2 = new JLabel(" ");
         this.add(space2);
         JLabel labelPrice = new JLabel("Price");
         this.add(labelPrice);
-        JTextField textPrice = new JTextField();
         this.add(textPrice);
         JLabel space3 = new JLabel(" ");
         this.add(space3);
         JLabel labelAvailableQuantity = new JLabel("Available quantity");
         this.add(labelAvailableQuantity);
-        JTextField textAvailableQuantity = new JTextField();
         this.add(textAvailableQuantity);
 
         Listener listener = new Listener();
@@ -77,16 +88,15 @@ class Read extends JPanel {
             Integer id = Integer.parseInt(textId.getText());
 
             if (e.getSource() == readButton) {
-                Part a = new Part(id, "", "", "", "");
+                Part a = new Part(id, null, null, 0, 0);
+                Client client = new Client();
                 try {
-                    sendData(Operation.READ, a);
-                    // TODO Implement client-side read
-                    /*
+                    client.sendData(Operation.READ, a);
+                    a = (Part) client.getData().getObject();
                     textReference.setText(a.getReference());
                     textProvider.setText(a.getProvider());
                     textPrice.setText("" + a.getPrice());
                     textAvailableQuantity.setText("" + a.getAvailableQuantity());
-                    */
                 } catch (Exception err) {
                     JOptionPane.showMessageDialog(null, "La pièce n'existe pas.");
                     logger.error("Failed to read part #" + id + ". Exception: " + err.getMessage());

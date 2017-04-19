@@ -9,9 +9,10 @@ import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
-import fr.ladn.carsharingclub.ing1.utils.XML;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.utils.Container;
+import fr.ladn.carsharingclub.ing1.utils.Operation;
+import fr.ladn.carsharingclub.ing1.utils.XML;
 
 /**
  * The ConnectionThread class.
@@ -28,7 +29,7 @@ public class ConnectionThread extends Thread {
     /** The socket of the server. */
     private ServerSocket serverSocket;
 
-    /** The output stream. */
+    /** The client socket. */
     private Socket clientSocket;
 
     /** The connection pool. */
@@ -53,6 +54,7 @@ public class ConnectionThread extends Thread {
         try {
             Socket clientSocket = serverSocket.accept();
             logger.info("Client " + clientSocket.getInetAddress() + " connected.");
+            getData();
             clientSocket.close();
         } catch (IOException e) {
             logger.error("Server error: " + e.getMessage());
@@ -63,29 +65,29 @@ public class ConnectionThread extends Thread {
      * Turns the XML sent by the client into a 
      * @see Part
      */
-    private void getData(String str) {
+    private void getData() {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            Container c = XML.parse(str);
+            Container container = XML.parse(in.readLine());
             PartDAO partDAO = new PartDAO(connectionPool);
-            partDAO.create(part);
-            logger.info("Part " + part + " has been added.");
-            String operation = c.getOperation();
-            Part p = c.getObject();
+            Operation operation = container.getOperation();
+            Part p = (Part) container.getObject();
             
             switch (operation) {
-                case "CREATE":
-                    PartDAO.create(p);
+                case CREATE:
+                    partDAO.create(p);
                     break;
-                case "READ":
-                    PartDAO.read(p.getId());
+                case READ:
+                    partDAO.read(p.getId());
                     break;
-                case "UPDATE":
-                    PartDAO.update(p);
+                case UPDATE:
+                    partDAO.update(p);
                     break;
-                case "DELETE";
-                    PartDAO.delete(p);
+                case DELETE:
+                    partDAO.delete(p);
                     break;
+                default:
+                    System.out.println("The server was successfully pinged from client.");
             }
         } catch (IOException e) {
             logger.error("Failed to get data from client: " + e.getMessage());
@@ -98,7 +100,7 @@ public class ConnectionThread extends Thread {
      * Sends object data to a client via the socket connection.
      *
      * @param p the Part object to be send.
-     * @see WriteXMLFile
+     * @see XML
      */
     private void sendData(Part p) {
         Container<Part> container = new Container<>(null, p);

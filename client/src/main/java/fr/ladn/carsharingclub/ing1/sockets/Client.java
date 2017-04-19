@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.io.*;
 
+import fr.ladn.carsharingclub.ing1.utils.Container;
 import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.utils.Operation;
@@ -69,14 +70,14 @@ public class Client extends Thread {
      * @return a Part object.
      * @see XML
      */
-    public Part getData() {
+    public Container getData() {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
             in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
-            Part part = XML.parse(in.readLine());
+            Container container = XML.parse(in.readLine());
             logger.info("Successfully get data from server " + serverAddress + " on port " + serverPort + ".");
             socketClient.close();
-            return part;
+            return container;
         } catch (IOException e) {
             logger.error("Failed to get data from server: " + e.getMessage());
         }
@@ -90,10 +91,9 @@ public class Client extends Thread {
      * @see XML
      */
     public void sendData(Operation operation, Part p) {
-        String serializedPart = XML.stringify(p);
-        logger.info("Send data to server: " + XML.stringify(p));
-        Map<String, Enum> message = new HashMap<>();
-        message.put(serializedPart, operation);
+        Container<Part> container = new Container<>(operation, p);
+        String message = XML.stringify(container);
+        logger.info("Sending data to server: " + message);
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
             out = new PrintWriter(socketClient.getOutputStream(), true);

@@ -50,6 +50,7 @@ public class Server {
             Thread connect = new Thread(new ConnectionThread(serverSocket, connectionPool));
             connect.start();
             logger.info("Server started on port " + serverPort + ".");
+            connect.start();
         } catch (IOException e) {
             logger.error("Failed to start connection. " + e.getMessage());
         }
