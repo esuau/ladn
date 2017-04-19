@@ -27,7 +27,15 @@ public class Part implements Serializable {
     private float price;
 
     /**
-     * Default constructor.
+     * The default constructor.
+     * Never actually used in the project.
+     * Allows serialization.
+     */
+    public Part() { }
+
+    /**
+     * Custom constructor.
+     * Used to create a part with defined ID.
      *
      * @param id                The identifier of the part.
      * @param reference         The name/reference of the part

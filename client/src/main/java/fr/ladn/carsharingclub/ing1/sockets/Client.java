@@ -1,6 +1,8 @@
 package fr.ladn.carsharingclub.ing1.sockets;
 
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.io.*;
 
@@ -90,12 +92,15 @@ public class Client extends Thread {
      * @param p The part object to be turned into XML.
      * @see XML
      */
-    public void sendData(Operation, Part p) {
+    public void sendData(Operation operation, Part p) {
+        String serializedPart = xml.stringify(p);
         logger.info("Send data to server: " + xml.stringify(p));
+        Map<String, Enum> message = new HashMap<>();
+        message.put(serializedPart, operation);
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
             out = new PrintWriter(socketClient.getOutputStream(), true);
-            out.println(xml.stringify(p));
+            out.println(message);
             socketClient.close();
             logger.info("Successfully sent data to server " + serverAddress + " on port " + serverPort + ".");
         } catch (IOException e) {
