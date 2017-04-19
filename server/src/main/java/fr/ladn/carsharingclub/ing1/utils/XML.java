@@ -26,7 +26,7 @@ public abstract class XML {
     /**
      * Serialises an object.
      *
-     * @param obj the object to stringify.
+     * @param container the object to stringify.
      * @return a serialised object.
      */
     public static String stringify(Container container) {

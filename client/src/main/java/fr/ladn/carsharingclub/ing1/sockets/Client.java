@@ -21,11 +21,7 @@ public class Client extends Thread {
     /** The logger. */
     private final static Logger logger = Logger.getLogger(Client.class.getName());
 
-    /** The input stream reader. */
-    private BufferedReader in;
-
-    /** The output stream writer. */
-    private PrintWriter out;
+    private Socket clientSocket;
 
     /** The server address. */
     private String serverAddress = "";
@@ -72,11 +68,11 @@ public class Client extends Thread {
      */
     public Container getData() {
         try {
-            Socket socketClient = new Socket(serverAddress, serverPort);
-            in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
+            clientSocket = new Socket(serverAddress, serverPort);
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             Container container = XML.parse(in.readLine());
             logger.info("Successfully get data from server " + serverAddress + " on port " + serverPort + ".");
-            socketClient.close();
+            clientSocket.close();
             return container;
         } catch (IOException e) {
             logger.error("Failed to get data from server: " + e.getMessage());
@@ -95,10 +91,10 @@ public class Client extends Thread {
         String message = XML.stringify(container);
         logger.info("Sending data to server: " + message);
         try {
-            Socket socketClient = new Socket(serverAddress, serverPort);
-            out = new PrintWriter(socketClient.getOutputStream(), true);
+            clientSocket = new Socket(serverAddress, serverPort);
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(message);
-            socketClient.close();
+            clientSocket.close();
             logger.info("Successfully sent data to server " + serverAddress + " on port " + serverPort + ".");
         } catch (IOException e) {
             logger.error("Failed to send data to the server: " + e.getMessage());

@@ -26,7 +26,7 @@ public abstract class XML {
     /**
      * Serialises an object.
      *
-     * @param obj the object to stringify.
+     * @param container the object to stringify.
      * @return a serialised object.
      */
     public static String stringify(Container container) {
@@ -34,7 +34,7 @@ public abstract class XML {
         XMLEncoder e = new XMLEncoder(baos);
         e.writeObject(container);
         e.close();
-        return new String(baos.toByteArray());
+        return (new String(baos.toByteArray())).replaceAll("\\s*[\\r\\n]+\\s*", "").trim();
     }
 
 }

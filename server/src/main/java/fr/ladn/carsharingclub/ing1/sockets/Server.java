@@ -47,10 +47,13 @@ public class Server {
 
         try {
             ServerSocket serverSocket = new ServerSocket(serverPort);
-            Thread connect = new Thread(new ConnectionThread(serverSocket, connectionPool));
-            connect.start();
             logger.info("Server started on port " + serverPort + ".");
-            connect.start();
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                logger.info("Launching new connection thread.");
+                Thread connectionThread = new ConnectionThread(clientSocket, connectionPool);
+                connectionThread.start();
+            }
         } catch (IOException e) {
             logger.error("Failed to start connection. " + e.getMessage());
         }

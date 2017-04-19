@@ -26,9 +26,6 @@ public class ConnectionThread extends Thread {
     /** The logger. */
     private final static Logger logger = Logger.getLogger(ConnectionThread.class.getName());
 
-    /** The socket of the server. */
-    private ServerSocket serverSocket;
-
     /** The client socket. */
     private Socket clientSocket;
 
@@ -38,12 +35,12 @@ public class ConnectionThread extends Thread {
     /**
      * Gets the socket initialized by the server.
      *
-     * @param serverSocket the socket provided by the server
+     * @param clientSocket the socket provided by the server
      * @see Server
      */
-    ConnectionThread(ServerSocket serverSocket, ConnectionPool connectionPool) {
+    ConnectionThread(Socket clientSocket, ConnectionPool connectionPool) {
         logger.info("Initializing connection.");
-        this.serverSocket = serverSocket;
+        this.clientSocket = clientSocket;
         this.connectionPool = connectionPool;
     }
 
@@ -52,7 +49,6 @@ public class ConnectionThread extends Thread {
      */
     public void run() {
         try {
-            Socket clientSocket = serverSocket.accept();
             logger.info("Client " + clientSocket.getInetAddress() + " connected.");
             getData();
             clientSocket.close();
@@ -67,27 +63,36 @@ public class ConnectionThread extends Thread {
      */
     private void getData() {
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            Container container = XML.parse(in.readLine());
             PartDAO partDAO = new PartDAO(connectionPool);
-            Operation operation = container.getOperation();
-            Part p = (Part) container.getObject();
-            
-            switch (operation) {
-                case CREATE:
-                    partDAO.create(p);
-                    break;
-                case READ:
-                    partDAO.read(p.getId());
-                    break;
-                case UPDATE:
-                    partDAO.update(p);
-                    break;
-                case DELETE:
-                    partDAO.delete(p);
-                    break;
-                default:
-                    System.out.println("The server was successfully pinged from client.");
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            String str = in.readLine();
+            logger.info("Received " + str);
+            if (str != null) {
+                Container container = XML.parse(str);
+                Operation operation = container.getOperation();
+                Part p = (Part) container.getObject();
+                switch (operation) {
+                    case CREATE:
+                        logger.info("Attempt to create part in database.");
+                        partDAO.create(p);
+                        break;
+                    case READ:
+                        logger.info("Attempt to read part from database.");
+                        sendData(partDAO.read(p.getId()));
+                        break;
+                    case UPDATE:
+                        logger.info("Attempt to update part in database.");
+                        partDAO.update(p);
+                        break;
+                    case DELETE:
+                        logger.info("Attempt to delete part in database.");
+                        partDAO.delete(p);
+                        break;
+                    default:
+                        System.out.println("The server was successfully pinged from client.");
+                }
+            } else {
+                logger.info("Server was successfully pinged from client " + clientSocket.getInetAddress());
             }
         } catch (IOException e) {
             logger.error("Failed to get data from client: " + e.getMessage());
@@ -110,7 +115,7 @@ public class ConnectionThread extends Thread {
             out.println(XML.stringify(container));
             logger.info("Part " + p + " has been sent back to the client.");
         } catch (IOException e) {
-            logger.error("Failed to  " + e.getMessage());
+            logger.error("Failed to send data to client: " + e.getMessage());
         }
     }
 }

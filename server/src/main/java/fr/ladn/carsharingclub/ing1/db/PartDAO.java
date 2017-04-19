@@ -31,7 +31,7 @@ public class PartDAO {
     public PartDAO(ConnectionPool p) {
         logger.info("Creating PartDAO object...");
         pool = p;
-        logger.info("Established link with connection pool " + pool);
+        logger.info("Established link with connection pool " + pool + ".");
     }
 
     /**
