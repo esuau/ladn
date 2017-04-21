@@ -1,8 +1,8 @@
 package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.sockets.Client;
-import fr.ladn.carsharingclub.ing1.utils.Operation;
+// import fr.ladn.carsharingclub.ing1.sockets.Client;
+// import fr.ladn.carsharingclub.ing1.utils.Operation;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -24,51 +24,33 @@ class Read extends JPanel {
     /** The text field for the part ID. */
     private JTextField textId = new JTextField();
 
-    /** The text field for the part reference. */
-    private JTextField textReference = new JTextField();
-
-    /** The text field for the part provider. */
-    private JTextField textProvider = new JTextField();
-
-    /** The text field for the part price. */
-    private JTextField textPrice = new JTextField();
-
-    /** */
-    private JTextField textAvailableQuantity = new JTextField();
-
     /**
      * Sets up a UI to display the information of the Part object.
      */
     Read() {
-        this.setName("Read");
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
         JLabel labelId = new JLabel("ID");
         this.add(labelId);
         this.add(textId);
+        JLabel space6 = new JLabel(" ");
+        this.add(space6);
         this.add(readButton);
-        JLabel labelReference = new JLabel("Reference");
-        this.add(labelReference);
-        this.add(textReference);
         JLabel space = new JLabel(" ");
         this.add(space);
-        JLabel labelProvider = new JLabel("Provider");
-        this.add(labelProvider);
-        this.add(textProvider);
+        JLabel space5 = new JLabel(" ");
+        this.add(space5);
         JLabel space2 = new JLabel(" ");
         this.add(space2);
-        JLabel labelPrice = new JLabel("Price");
-        this.add(labelPrice);
-        this.add(textPrice);
+        JLabel space7 = new JLabel(" ");
+        this.add(space7);
         JLabel space3 = new JLabel(" ");
         this.add(space3);
-        JLabel labelAvailableQuantity = new JLabel("Available quantity");
-        this.add(labelAvailableQuantity);
-        this.add(textAvailableQuantity);
+        JLabel space8 = new JLabel(" ");
+        this.add(space8);
 
         Listener listener = new Listener();
         readButton.addActionListener(listener);
-        //this.pack();
         this.setVisible(true);
         logger.info("Displayed reading tab.");
     }
@@ -85,21 +67,38 @@ class Read extends JPanel {
          * @param e The information on the action performed on the "read" button.
          */
         public void actionPerformed(ActionEvent e) {
-            Integer id = Integer.parseInt(textId.getText());
 
             if (e.getSource() == readButton) {
-                Part a = new Part(id, null, null, 0, 0);
-                Client client = new Client();
+
                 try {
-                    client.sendData(Operation.READ, a);
-                    a = (Part) client.getData().getObject();
-                    textReference.setText(a.getReference());
-                    textProvider.setText(a.getProvider());
-                    textPrice.setText("" + a.getPrice());
-                    textAvailableQuantity.setText("" + a.getAvailableQuantity());
+                    String[] entete = {"id_piece","libelle_piece","fabricant","qte_dispo","prix"};
+
+                    if (textId.getText().isEmpty()) {
+                        JFrame fenetre = new JFrame();
+                        fenetre.setTitle("Toutes les pièces");
+                        // Object[][] donnees = (new Client()).getData().getObject();
+                        Part a = new Part(1, "Pneu", "Autobacs", 20, 76);
+                        Object[][] donnees = {
+                            { a.getId(), a.getReference(), a.getProvider(), a.getAvailableQuantity(), a.getPrice() }
+                        };
+                        JTable tableau = new JTable(donnees, entete);
+                        JScrollPane menuder = new JScrollPane(tableau);
+                        fenetre.getContentPane().add(tableau.getTableHeader(), BorderLayout.NORTH);
+                        fenetre.getContentPane().add(menuder, BorderLayout.CENTER);
+                        fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        fenetre.pack();
+                        if (donnees.length == 0) JOptionPane.showMessageDialog(null, "La piece n'existe pas.");
+                        fenetre.setVisible(true);
+                    } else {
+                        Integer id = Integer.parseInt(textId.getText());
+                        Part a = new Part();
+                        a.setId(id);
+                        JFrame fenetre = new JFrame();
+                        fenetre.setTitle("Pièce " + id);
+                    }
                 } catch (Exception err) {
                     JOptionPane.showMessageDialog(null, "La pièce n'existe pas.");
-                    logger.error("Failed to read part #" + id + ". Exception: " + err.getMessage());
+                    logger.error("Failed to read part. Exception: " + err.getMessage());
                 }
             }
 

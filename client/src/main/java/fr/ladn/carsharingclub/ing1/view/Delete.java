@@ -30,18 +30,39 @@ class Delete extends JPanel {
      * It also includes a button to operate the deletion action.
      */
     Delete() {
-        GridLayout layout = new GridLayout(1, 3);
+        GridLayout layout = new GridLayout(5, 3);
         this.setLayout(layout);
         JLabel labelId = new JLabel("ID");
         this.add(labelId);
         this.add(textId);
+        JLabel space6 = new JLabel(" ");
+        this.add(space6);
         this.add(deleteButton);
+        JLabel space = new JLabel(" ");
+        this.add(space);
+        JLabel space5 = new JLabel(" ");
+        this.add(space5);
+        JLabel space2 = new JLabel(" ");
+        this.add(space2);
+        JLabel space7 = new JLabel(" ");
+        this.add(space7);
+        JLabel space3 = new JLabel(" ");
+        this.add(space3);
+        JLabel space8 = new JLabel(" ");
+        this.add(space8);
 
         Listener listener = new Listener();
         deleteButton.addActionListener(listener);
 
         this.setVisible(true);
         logger.info("Displayed deletion tab.");
+    }
+
+    /**
+     * Clears the form field after a successful deletion.
+     */
+    private void clearForm() {
+        textId.setText("");
     }
 
     /**
@@ -63,8 +84,9 @@ class Delete extends JPanel {
                 logger.info("Attempting to delete part #" + a.getId() + " in database...");
                 try {
                     client.sendData(Operation.DELETE, a);
+                    clearForm();
                 } catch (Exception err) {
-                    System.out.println("Failed to delete part in database. Exception:" + err.getMessage());
+                    logger.error("Failed to delete part in database. Exception:" + err.getMessage());
                 }
             }
         }

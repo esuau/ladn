@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 
 public class AppView extends JPanel {
 
+    /** The logger. */
     private final static Logger logger = Logger.getLogger(AppView.class.getName());
 
     /**
@@ -60,7 +61,8 @@ public class AppView extends JPanel {
      */
     private void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("MAINTENANCE WORLD");
+        JFrame frame = new JFrame("CarSharingClub - Maintenance App");
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         AppView m = new AppView();
         //  m.setSize(50,100);

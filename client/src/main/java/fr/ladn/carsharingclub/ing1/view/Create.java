@@ -63,6 +63,16 @@ class Create extends JPanel {
     }
 
     /**
+     * Clears the form fields after a successful creation.
+     */
+    private void clearForm() {
+        textReference.setText("");
+        textProvider.setText("");
+        textAvailableQuantity.setText("");
+        textPrice.setText("");
+    }
+
+    /**
      * The listener for the "create" button.
      */
     private class Listener implements ActionListener {
@@ -83,6 +93,7 @@ class Create extends JPanel {
                 try {
                     logger.info("Attempting to create part #" + a.getId() + " in database...");
                     client.sendData(Operation.CREATE, a);
+                    clearForm();
                 } catch (Exception err) {
                     logger.error("Failed to create part #" + a.getId() + " in database. \nException: " + err.getMessage());
                 }

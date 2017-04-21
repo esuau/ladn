@@ -84,6 +84,19 @@ class Update extends JPanel {
     }
 
     /**
+     * Clears the form fields after a successful update.
+     */
+    private void clearForm() {
+        textId.setText("");
+        textReference.setText("");
+        textProvider.setText("");
+        textAvailableQuantity.setText("");
+        textPrice.setText("");
+        this.setVisible(true);
+        logger.info("Update form cleared.");
+    }
+
+    /**
      * Listener for the "search" and "update" buttons.
      *
      * @see Read
@@ -122,12 +135,11 @@ class Update extends JPanel {
                 Part a = new Part(id, reference, provider, availableQuantity, price);
                 try {
                     client.sendData(Operation.UPDATE, a);
+                    clearForm();
                 } catch (Exception err) {
-                    System.out.println("Exception: " + err.getMessage());
+                    logger.error("Exception: " + err.getMessage());
                 }
             }
-
-
         }
     }
 
