@@ -53,7 +53,7 @@ public class PartDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for part #" + part.getId() + " creation...");
-        PreparedStatement ps = conn.prepareStatement("INSERT INTO pieces ( libelle_piece, fabricant, qte_dispo, valeur_piece ) VALUES ( ?, ?, ?, ? )");
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO Pieces ( libelle_piece, fabricant, qte_dispo, valeur_piece ) VALUES ( ?, ?, ?, ? )");
         ps.setString(1, reference);
         ps.setString(2, provider);
         ps.setInt(3, availableQuantity);
@@ -77,7 +77,7 @@ public class PartDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for part #" + id + " reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM pieces WHERE id_piece = ?");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Pieces WHERE id_piece = ?");
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");
@@ -111,7 +111,7 @@ public class PartDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for all existing parts reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM pieces");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Pieces");
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");
 
@@ -145,7 +145,7 @@ public class PartDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for part #" + part.getId() + " update...");
-        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE pieces SET libelle_piece = ?, fabricant = ?, qte_dispo = ?, valeur_piece = ? WHERE id_piece = ?");
+        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE Pieces SET libelle_piece = ?, fabricant = ?, qte_dispo = ?, valeur_piece = ? WHERE id_piece = ?");
         ps.setString(1, part.getReference());
         ps.setString(2, part.getProvider());
         ps.setInt(3, part.getAvailableQuantity());
@@ -168,7 +168,7 @@ public class PartDAO {
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
-        PreparedStatement ps = conn.prepareStatement("DELETE FROM pieces WHERE id_piece = ?");
+        PreparedStatement ps = conn.prepareStatement("DELETE FROM Pieces WHERE id_piece = ?");
         ps.setInt(1, part.getId());
         ps.execute();
         logger.info("Database request has been executed. The part #" + part.getId() + " has been removed from database");
