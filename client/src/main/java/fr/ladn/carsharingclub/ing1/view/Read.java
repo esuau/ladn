@@ -1,8 +1,8 @@
 package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
-// import fr.ladn.carsharingclub.ing1.sockets.Client;
-// import fr.ladn.carsharingclub.ing1.utils.Operation;
+import fr.ladn.carsharingclub.ing1.sockets.Client;
+
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -18,6 +18,9 @@ class Read extends JPanel {
     /** The logger. */
     private final static Logger logger = Logger.getLogger(Delete.class.getName());
 
+    /** The client. */
+    private Client client;
+
     /** The "read" button. */
     private JButton readButton = new JButton("Read");
 
@@ -27,7 +30,8 @@ class Read extends JPanel {
     /**
      * Sets up a UI to display the information of the Part object.
      */
-    Read() {
+    Read(Client client) {
+        this.client = client;
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
         JLabel labelId = new JLabel("ID");
@@ -71,17 +75,18 @@ class Read extends JPanel {
             if (e.getSource() == readButton) {
 
                 try {
-                    String[] entete = {"id_piece","libelle_piece","fabricant","qte_dispo","prix"};
+                    String[] tableHeader = {"id_piece","libelle_piece","fabricant","qte_dispo","prix"};
+
+                    JFrame fenetre = new JFrame();
 
                     if (textId.getText().isEmpty()) {
-                        JFrame fenetre = new JFrame();
+                        // TODO implement all parts reading server side and client side (follo
                         fenetre.setTitle("Toutes les pièces");
-                        // Object[][] donnees = (new Client()).getData().getObject();
                         Part a = new Part(1, "Pneu", "Autobacs", 20, 76);
                         Object[][] donnees = {
                             { a.getId(), a.getReference(), a.getProvider(), a.getAvailableQuantity(), a.getPrice() }
                         };
-                        JTable tableau = new JTable(donnees, entete);
+                        JTable tableau = new JTable(donnees, tableHeader);
                         JScrollPane menuder = new JScrollPane(tableau);
                         fenetre.getContentPane().add(tableau.getTableHeader(), BorderLayout.NORTH);
                         fenetre.getContentPane().add(menuder, BorderLayout.CENTER);
@@ -91,10 +96,19 @@ class Read extends JPanel {
                         fenetre.setVisible(true);
                     } else {
                         Integer id = Integer.parseInt(textId.getText());
-                        Part a = new Part();
-                        a.setId(id);
-                        JFrame fenetre = new JFrame();
+                        Part a = client.getPart(id);
                         fenetre.setTitle("Pièce " + id);
+                        Object[][] receivedPart = {
+                            { a.getId(), a.getReference(), a.getProvider(), a.getAvailableQuantity(), a.getPrice() }
+                        };
+                        JTable tableau = new JTable(receivedPart, tableHeader);
+                        JScrollPane menuder = new JScrollPane(tableau);
+                        fenetre.getContentPane().add(tableau.getTableHeader(), BorderLayout.NORTH);
+                        fenetre.getContentPane().add(menuder, BorderLayout.CENTER);
+                        fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        fenetre.pack();
+                        if (receivedPart.length == 0) JOptionPane.showMessageDialog(null, "La piece n'existe pas.");
+                        fenetre.setVisible(true);
                     }
                 } catch (Exception err) {
                     JOptionPane.showMessageDialog(null, "La pièce n'existe pas.");

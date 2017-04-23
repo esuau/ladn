@@ -15,8 +15,7 @@ class Controller {
      * @param args The arguments.
      */
     public static void main(String[] args) {
-        AppView app = new AppView();
+        AppView app = new AppView(new Client());
         app.display();
-        new Client();
     }
 }

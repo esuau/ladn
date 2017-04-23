@@ -1,11 +1,12 @@
 package fr.ladn.carsharingclub.ing1.model;
 
 import org.apache.log4j.Logger;
+import java.io.Serializable;
 
 /**
  * Part business object
  */
-public class Part {
+public class Part implements Serializable {
 
     /** The logger. */
     private final static Logger logger = Logger.getLogger(Part.class.getName());
@@ -26,7 +27,15 @@ public class Part {
     private float price;
 
     /**
-     * Default constructor.
+     * The default constructor.
+     * Never actually used in the project.
+     * Allows serialization.
+     */
+    public Part() { }
+
+    /**
+     * Custom constructor.
+     * Used to create a part with defined ID.
      *
      * @param id                The identifier of the part.
      * @param reference         The name/reference of the part
@@ -70,6 +79,15 @@ public class Part {
     }
 
     /**
+     * Sets part ID.
+     *
+     * @param id the new ID.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * Gets part name.
      *
      * @return the reference of the part.
@@ -78,6 +96,11 @@ public class Part {
         return reference;
     }
 
+    /**
+     * Sets part reference or name.
+     *
+     * @param reference the new reference.
+     */
     public void setReference(String reference) {
         this.reference = reference;
     }
@@ -94,19 +117,10 @@ public class Part {
     /**
      * Set provider name.
      *
-     * @param provider The provider of the part.
+     * @param provider the provider of the part.
      */
     public void setProvider(String provider) {
         this.provider = provider;
-    }
-
-    /**
-     * Gets part cost or price.
-     *
-     * @return cost of a part.
-     */
-    public float getPrice() {
-        return price;
     }
 
     /**
@@ -121,10 +135,28 @@ public class Part {
     /**
      * Updates the available quantity of the part.
      *
-     * @param availableQuantity The updated available quantity of the part.
+     * @param availableQuantity the updated available quantity of the part.
      */
     public void setAvailableQuantity(int availableQuantity) {
         this.availableQuantity = availableQuantity;
+    }
+
+    /**
+     * Gets part cost or price.
+     *
+     * @return the cost of a part.
+     */
+    public float getPrice() {
+        return price;
+    }
+
+    /**
+     * Sets part price.
+     *
+     * @param price the new price.
+     */
+    public void setPrice(float price) {
+        this.price = price;
     }
 
 }

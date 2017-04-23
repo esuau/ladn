@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.*;
 import java.net.*;
 
+import fr.ladn.carsharingclub.ing1.utils.Operation;
 import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.utils.Container;
-import fr.ladn.carsharingclub.ing1.utils.Operation;
 import fr.ladn.carsharingclub.ing1.utils.XML;
 
 /**
@@ -29,8 +29,8 @@ public class ConnectionThread extends Thread {
     /** The client socket. */
     private Socket clientSocket;
 
-    /** The connection pool. */
-    private ConnectionPool connectionPool;
+    /** The Data Access Object for parts */
+    private PartDAO partDAO;
 
     /**
      * Gets the socket initialized by the server.
@@ -41,7 +41,7 @@ public class ConnectionThread extends Thread {
     ConnectionThread(Socket clientSocket, ConnectionPool connectionPool) {
         logger.info("Initializing connection.");
         this.clientSocket = clientSocket;
-        this.connectionPool = connectionPool;
+        this.partDAO = new PartDAO(connectionPool);
     }
 
     /**
@@ -63,37 +63,37 @@ public class ConnectionThread extends Thread {
      */
     private void getData() {
         try {
-            PartDAO partDAO = new PartDAO(connectionPool);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String str = in.readLine();
             logger.info("Received " + str);
-            if (str != null) {
-                Container container = XML.parse(str);
-                Operation operation = container.getOperation();
-                Part p = (Part) container.getObject();
-                switch (operation) {
-                    case CREATE:
-                        logger.info("Attempt to create part in database.");
-                        partDAO.create(p);
-                        break;
-                    case READ:
-                        logger.info("Attempt to read part from database.");
-                        sendData(partDAO.read(p.getId()));
-                        break;
-                    case UPDATE:
-                        logger.info("Attempt to update part in database.");
-                        partDAO.update(p);
-                        break;
-                    case DELETE:
-                        logger.info("Attempt to delete part in database.");
-                        partDAO.delete(p);
-                        break;
-                    default:
-                        System.out.println("The server was successfully pinged from client.");
-                }
-            } else {
-                logger.info("Server was successfully pinged from client " + clientSocket.getInetAddress());
+            Container container = XML.parse(str);
+            logger.info("Operations: " + container.getOperation());
+            switch (container.getOperation()) {
+                case PING:
+                    logger.info("The server was successfully pinged from the client " + clientSocket.getInetAddress() + ".");
+                    break;
+                case CREATE:
+                    logger.info("Attempt to create part in database.");
+                    partDAO.create((Part) container.getObject());
+                    break;
+                case READ:
+                    logger.info("Attempt to read part from database.");
+                    sendData(partDAO.read(((Part) container.getObject()).getId()));
+                    break;
+                case UPDATE:
+                    logger.info("Attempt to update part in database.");
+                    partDAO.update((Part) container.getObject());
+                    logger.info("Send back the updated part to the client.");
+                    partDAO.read(((Part) container.getObject()).getId());
+                    break;
+                case DELETE:
+                    logger.info("Attempt to delete part in database.");
+                    partDAO.delete((Part) container.getObject());
+                    break;
+                default:
+                    logger.info("Sorry. This operation is not covered yet.");
             }
+            logger.info("Finished operation.");
         } catch (IOException e) {
             logger.error("Failed to get data from client: " + e.getMessage());
         } catch (Exception e) {
@@ -108,12 +108,12 @@ public class ConnectionThread extends Thread {
      * @see XML
      */
     private void sendData(Part p) {
-        Container<Part> container = new Container<>(null, p);
-        
+        Container<Part> container = new Container<>(Operation.PING, p);
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(XML.stringify(container));
             logger.info("Part " + p + " has been sent back to the client.");
+            logger.info(XML.stringify(container));
         } catch (IOException e) {
             logger.error("Failed to send data to client: " + e.getMessage());
         }

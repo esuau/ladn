@@ -18,6 +18,9 @@ class Delete extends JPanel {
     /** The logger. */
     private final static Logger logger = Logger.getLogger(Delete.class.getName());
 
+    /** The client. */
+    private Client client;
+
     /** The text field for the part ID. */
     private JTextField textId = new JTextField();
 
@@ -29,7 +32,8 @@ class Delete extends JPanel {
      * This UI includes an single input, getting the ID of the part to be removed.
      * It also includes a button to operate the deletion action.
      */
-    Delete() {
+    Delete(Client client) {
+        this.client = client;
         GridLayout layout = new GridLayout(5, 3);
         this.setLayout(layout);
         JLabel labelId = new JLabel("ID");
@@ -80,10 +84,10 @@ class Delete extends JPanel {
 
             if (e.getSource() == deleteButton) {
                 Part a = new Part(id, null, null, 0, 0);
-                Client client = new Client();
                 logger.info("Attempting to delete part #" + a.getId() + " in database...");
                 try {
-                    client.sendData(Operation.DELETE, a);
+                    client.removePart(id);
+                    JOptionPane.showMessageDialog(null, "La pièce #" + id + " a bien été supprimée.");
                     clearForm();
                 } catch (Exception err) {
                     logger.error("Failed to delete part in database. Exception:" + err.getMessage());

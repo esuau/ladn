@@ -18,6 +18,9 @@ class Update extends JPanel {
     /** The logger. */
     private final static Logger logger = Logger.getLogger(Delete.class.getName());
 
+    /** The client. */
+    private Client client;
+
     /** The "search" button. */
     private JButton searchButton = new JButton("Search");
 
@@ -45,8 +48,8 @@ class Update extends JPanel {
      * The current part data is first displayed in the appropriate fields.
      * The user can then edit one or several of these fields.
      */
-    Update() {
-        //this.setSize(10, 20);
+    Update(Client client) {
+        this.client = client;
         GridLayout layout2 = new GridLayout(5, 3);
         this.setLayout(layout2);
         JLabel labelId = new JLabel("Part number");
@@ -116,7 +119,7 @@ class Update extends JPanel {
             Client client = new Client();
             if (e.getSource() == searchButton) {
                 try {
-                    Part a = (Part) client.getData().getObject();
+                    Part a = client.getPart(id);
                     textReference.setText(a.getReference());
                     textProvider.setText(a.getProvider());
                     textAvailableQuantity.setText("" + a.getAvailableQuantity());
@@ -133,12 +136,9 @@ class Update extends JPanel {
                 int availableQuantity = Integer.parseInt(textAvailableQuantity.getText());
                 float price = Float.parseFloat(textPrice.getText());
                 Part a = new Part(id, reference, provider, availableQuantity, price);
-                try {
-                    client.sendData(Operation.UPDATE, a);
-                    clearForm();
-                } catch (Exception err) {
-                    logger.error("Exception: " + err.getMessage());
-                }
+                client.updatePart(a);
+                JOptionPane.showMessageDialog(null, "Les informations sur la pièce #" + a.getId() + " ont bien été mises à jour.");
+                clearForm();
             }
         }
     }

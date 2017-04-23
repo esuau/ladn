@@ -18,6 +18,9 @@ class Create extends JPanel {
     /** The logger. */
     private final static Logger logger = Logger.getLogger(Create.class.getName());
 
+    /** The client. */
+    private Client client;
+
     /** The "create" button. */
     private JButton createButton = new JButton("Create");
 
@@ -37,7 +40,9 @@ class Create extends JPanel {
      * Sets up UI for part creation.
      * It basically includes a form with a submit button <code>createButton</code>.
      */
-    Create() {
+    Create(Client client) {
+        this.client = client;
+
         GridLayout layout = new GridLayout(5, 2);
         this.setLayout(layout);
         JLabel labelReference = new JLabel("Reference");
@@ -89,10 +94,9 @@ class Create extends JPanel {
 
             if (e.getSource() == createButton) {
                 Part a = new Part(reference, provider, availableQuantity, price);
-                Client client = new Client();
                 try {
                     logger.info("Attempting to create part #" + a.getId() + " in database...");
-                    client.sendData(Operation.CREATE, a);
+                    // client.sendData(Operation.CREATE, a);
                     clearForm();
                 } catch (Exception err) {
                     logger.error("Failed to create part #" + a.getId() + " in database. \nException: " + err.getMessage());
