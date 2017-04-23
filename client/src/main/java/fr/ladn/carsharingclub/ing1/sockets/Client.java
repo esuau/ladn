@@ -129,6 +129,11 @@ public class Client extends Thread {
         return null;
     }
 
+    /**
+     * Gets all the existing parts transmitted by the server.
+     *
+     * @return the list of all the existing parts.
+     */
     public ArrayList<Part> getParts() {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
