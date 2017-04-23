@@ -7,6 +7,8 @@ import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * DOA Object for Part.
@@ -63,11 +65,11 @@ public class PartDAO {
     }
 
     /**
-     * Gets information from an existing part.
+     * Gets information from an existing part by its ID.
      *
-     * @param id of the part to be read
-     * @return part information
-     * @throws Exception if connection issue encountered
+     * @param id of the part to be read.
+     * @return the information on the part.
+     * @throws Exception if a connection issue is encountered.
      */
     public Part read(int id) throws Exception {
 
@@ -95,6 +97,40 @@ public class PartDAO {
             logger.error("Database request did not return any information. The part #" + id + " may not exist.");
             return null;
         }
+    }
+
+    /**
+     * Gets the data on all the existing parts in the database.
+     *
+     * @return the list of all the existing parts.
+     * @throws SQLException if a database request issue is encountered.
+     */
+    public ArrayList<Part> readAll() throws SQLException {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        logger.info("Preparing SQL statement for all existing parts reading...");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM pieces");
+        ResultSet rs = ps.executeQuery();
+        logger.info("Database request has been successfully executed.");
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+
+        ArrayList<Part> parts = new ArrayList<>();
+
+        while (rs.next()) {
+            int id = rs.getInt("id_piece");
+            String reference = rs.getString("libelle_piece");
+            String provider = rs.getString("fabricant");
+            int availableQuantity = rs.getInt("qte_dispo");
+            float price = rs.getFloat("valeur_piece");
+
+            logger.info("Successfully get part #" + id + " information from database.");
+            parts.add(new Part(id, reference, provider, availableQuantity, price));
+        }
+        return parts;
     }
 
     /**

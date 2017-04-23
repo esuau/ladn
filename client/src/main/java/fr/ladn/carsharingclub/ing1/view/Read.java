@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * The view for Part reading.
@@ -80,12 +81,16 @@ class Read extends JPanel {
                     JFrame fenetre = new JFrame();
 
                     if (textId.getText().isEmpty()) {
-                        // TODO implement all parts reading server side and client side (follo
                         fenetre.setTitle("Toutes les pièces");
-                        Part a = new Part(1, "Pneu", "Autobacs", 20, 76);
-                        Object[][] donnees = {
-                            { a.getId(), a.getReference(), a.getProvider(), a.getAvailableQuantity(), a.getPrice() }
-                        };
+                        ArrayList<Part> parts = client.getParts();
+                        Object[][] donnees = new Object[parts.size()][tableHeader.length];
+                        for (int i = 0; i < parts.size(); i++) {
+                            donnees[i][0] = parts.get(i).getId();
+                            donnees[i][1] = parts.get(i).getReference();
+                            donnees[i][2] = parts.get(i).getProvider();
+                            donnees[i][3] = parts.get(i).getAvailableQuantity();
+                            donnees[i][4] = parts.get(i).getPrice();
+                        }
                         JTable tableau = new JTable(donnees, tableHeader);
                         JScrollPane menuder = new JScrollPane(tableau);
                         fenetre.getContentPane().add(tableau.getTableHeader(), BorderLayout.NORTH);

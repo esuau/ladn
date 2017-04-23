@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 import fr.ladn.carsharingclub.ing1.utils.Operation;
 import org.apache.log4j.Logger;
@@ -78,13 +79,13 @@ public class ConnectionThread extends Thread {
                     break;
                 case READ:
                     logger.info("Attempt to read part from database.");
-                    sendData(partDAO.read(((Part) container.getObject()).getId()));
+                    int id = ((Part) container.getObject()).getId();
+                    if (id > 0) sendData(new Container<>(Operation.PING, partDAO.read(id)));
+                    else sendData(new Container<>(Operation.PING, partDAO.readAll()));
                     break;
                 case UPDATE:
                     logger.info("Attempt to update part in database.");
                     partDAO.update((Part) container.getObject());
-                    logger.info("Send back the updated part to the client.");
-                    partDAO.read(((Part) container.getObject()).getId());
                     break;
                 case DELETE:
                     logger.info("Attempt to delete part in database.");
@@ -104,15 +105,14 @@ public class ConnectionThread extends Thread {
     /**
      * Sends object data to a client via the socket connection.
      *
-     * @param p the Part object to be send.
+     * @param container the Container object to be sent.
      * @see XML
      */
-    private void sendData(Part p) {
-        Container<Part> container = new Container<>(Operation.PING, p);
+    private void sendData(Container container) {
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(XML.stringify(container));
-            logger.info("Part " + p + " has been sent back to the client.");
+            logger.info("Data has been sent back to the client.");
             logger.info(XML.stringify(container));
         } catch (IOException e) {
             logger.error("Failed to send data to client: " + e.getMessage());

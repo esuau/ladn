@@ -94,13 +94,10 @@ class Create extends JPanel {
 
             if (e.getSource() == createButton) {
                 Part a = new Part(reference, provider, availableQuantity, price);
-                try {
-                    logger.info("Attempting to create part #" + a.getId() + " in database...");
-                    // client.sendData(Operation.CREATE, a);
-                    clearForm();
-                } catch (Exception err) {
-                    logger.error("Failed to create part #" + a.getId() + " in database. \nException: " + err.getMessage());
-                }
+                logger.info("Attempting to create part #" + a.getId() + " in database...");
+                client.createPart(a);
+                JOptionPane.showMessageDialog(null, "La pièce " + a.getReference() + " a bien été ajoutée dans la base.");
+                clearForm();
             }
         }
     }

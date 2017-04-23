@@ -2,6 +2,7 @@ package fr.ladn.carsharingclub.ing1.sockets;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -94,6 +95,21 @@ public class Client extends Thread {
     }
 
     /**
+     * Sends a new part to the server in order to create it in database.
+     *
+     * @param part the part to create.
+     */
+    public void createPart(Part part) {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(Operation.CREATE, part));
+            socketClient.close();
+        } catch (IOException e) {
+            logger.error("Failed to send part #" + part.getId() + " to the server: " + e.getMessage());
+        }
+    }
+
+    /**
      * Gets a part object by ID from the server.
      *
      * @param id the id of the part to be get from the server.
@@ -107,6 +123,22 @@ public class Client extends Thread {
             return part;
         } catch (IOException e) {
             logger.error("Failed to get part #" + id + " from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No part was returned from the server.");
+        }
+        return null;
+    }
+
+    public ArrayList<Part> getParts() {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(Operation.READ, new Part(-1, "", "", 0, 0)));
+            Container<ArrayList<Part>> receivedContainer = getData(socketClient);
+            ArrayList<Part> parts = receivedContainer.getObject();
+            socketClient.close();
+            return parts;
+        } catch (IOException e) {
+            logger.error("Failed to get parts from the server: " + e.getMessage());
         } catch (NullPointerException e) {
             logger.error("No part was returned from the server.");
         }
