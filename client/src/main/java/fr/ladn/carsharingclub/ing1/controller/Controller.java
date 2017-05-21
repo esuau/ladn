@@ -1,7 +1,7 @@
 package fr.ladn.carsharingclub.ing1.controller;
 
 import fr.ladn.carsharingclub.ing1.sockets.Client;
-import fr.ladn.carsharingclub.ing1.view.AppView;
+import fr.ladn.carsharingclub.ing1.view.MainView;
 
 /**
  * Starts the client
@@ -15,7 +15,8 @@ class Controller {
      * @param args The arguments.
      */
     public static void main(String[] args) {
-        AppView app = new AppView(new Client());
+        // AppView app = new AppView(new Client());
+        MainView app = new MainView(new Client());
         app.display();
     }
 }
