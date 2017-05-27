@@ -38,7 +38,7 @@ public class Operation implements Serializable {
      * Default constructor.
      * Allows serialization.
      */
-    public Operation() { }
+    Operation() { }
 
     /**
      * Constructor of the operation.
@@ -47,10 +47,11 @@ public class Operation implements Serializable {
      * @param failures the failures.
      * @param status   the status of the operation.
      */
-    public Operation(Vehicle vehicle, Failure[] failures, OperationStatus status) {
+    public Operation(Vehicle vehicle, Failure[] failures, OperationStatus status, Duration estimatedDuration) {
         this.vehicle = vehicle;
         this.failures = failures;
         this.status = status;
+        this.estimatedDuration = estimatedDuration;
     }
 
     public int getId() {
