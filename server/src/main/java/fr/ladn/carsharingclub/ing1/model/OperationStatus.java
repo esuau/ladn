@@ -58,7 +58,7 @@ public enum OperationStatus {
     /**
      * @return the status order.
      */
-    public int toInt() {
+    public int getStep() {
         return step;
     }
 }

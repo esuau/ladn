@@ -1,10 +1,13 @@
 package fr.ladn.carsharingclub.ing1.model;
 
+import java.io.Serializable;
+import java.time.Duration;
+
 /**
  * The class Failure.
  * Includes data on a failure.
  */
-public class Failure {
+public class Failure implements Serializable {
 
     /** The identifier of the failure. */
     private int id;
@@ -12,26 +15,30 @@ public class Failure {
     /** The common name of the failure. */
     private String name;
 
-    /** The type of the failure. */
-    private String type;
+    /** The type of the failure on the vehicle. */
+    private FailureType type;
 
-    /** The location of the failure on the vehicle. */
-    private FailureLocation location;
+    /** The instructions related to the repair work. */
+    private String instructions;
+
+    /** The estimated time for the repair work. */
+    private Duration estimatedTime;
 
     /** Default constructor */
-    public Failure() {
-    }
+    Failure() { }
 
     /**
      * The commonly used failure constructor.
-     * @param name     the name of the failure.
-     * @param type     the type of failure.
-     * @param location the location of the failure.
+     * @param name          the name of the failure.
+     * @param type          the type of failure, based on its location.
+     * @param instructions  the instructions corresponding to the repair work.
+     * @param estimatedTime the estimated time to complete the repair work.
      */
-    public Failure(String name, String type, FailureLocation location) {
+    public Failure(String name, FailureType type, String instructions, Duration estimatedTime) {
         this.name = name;
         this.type = type;
-        this.location = location;
+        this.instructions = instructions;
+        this.estimatedTime = estimatedTime;
     }
 
     public int getId() {
@@ -50,19 +57,27 @@ public class Failure {
         this.name = name;
     }
 
-    public String getType() {
+    public FailureType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(FailureType type) {
         this.type = type;
     }
 
-    public FailureLocation getLocation() {
-        return location;
+    public String getInstructions() {
+        return instructions;
     }
 
-    public void setLocation(FailureLocation location) {
-        this.location = location;
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public Duration getEstimatedTime() {
+        return estimatedTime;
+    }
+
+    public void setEstimatedTime(Duration estimatedTime) {
+        this.estimatedTime = estimatedTime;
     }
 }
