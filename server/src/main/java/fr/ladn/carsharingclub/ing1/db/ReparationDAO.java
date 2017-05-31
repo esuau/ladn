@@ -2,7 +2,6 @@ package fr.ladn.carsharingclub.ing1.db;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.model.Reparation;
-
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -10,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -39,36 +37,36 @@ public class ReparationDAO {
         logger.info("Established link with connection pool " + pool + ".");
     }
 
-   
+
     /**
-     * Gets information from an existing part by its ID.
+     * Gets a filtered list of vehicles relatively to their status.
      *
-     * @param id of the part to be read.
-     * @return the information on the part.
-     * @throws Exception if a connection issue is encountered.
+     * @param status the list of selected status.
+     * @return the list of corresponding vehicles.
+     * @throws SQLException if a database request issue is encountered.
      */
-    public ArrayList<Reparation> afficher_vehicule_statut(ArrayList<String> l) throws Exception {
+    public ArrayList<Reparation> displayVehicleByStatus(ArrayList<String> status) throws SQLException {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-         PreparedStatement ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation IN ('?','?','?','?')");
-        /*creation de l'ensemble des statuts que l'on veut afficher*/
-        Iterator<String> it = l.iterator();
-        int i=1;
-       // String s="(\'\'";
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation IN ('?','?','?','?')");
+        // Include the selected status in the request.
+        Iterator<String> it = status.iterator();
+        int i = 1;
+        // String s="(\'\'";
         while (it.hasNext()) {
-            String s=it.next();
-            ps.setString(i,s);
-            i=i+1;
-             //s = s+", \'"+it.next()+"\'";
+            String s = it.next();
+            ps.setString(i, s);
+            i = i + 1;
+            //s = s+", \'"+it.next()+"\'";
         }
-        if(i<5){
-            for(int j=i;j<5;j++){
-               ps.setString(j,""); 
+        if (i < 5) {
+            for (int j = i; j < 5; j++) {
+                ps.setString(j, "");
             }
         }
-         
-       
+
+
         //ps.setString(1, s);
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");
@@ -76,7 +74,7 @@ public class ReparationDAO {
         pool.returnConnection(conn);
         logger.info("Connection " + conn + " returned to the connection pool.");
 
-       ArrayList<Reparation> reparation = new ArrayList<>();
+        ArrayList<Reparation> reparation = new ArrayList<>();
 
         while (rs.next()) {
             int id = rs.getInt("id_reparation");
@@ -88,20 +86,20 @@ public class ReparationDAO {
             int panne = rs.getInt("id_panne");
             String vehicule = rs.getString("id_vehicule");
             int place = rs.getInt("id_place");
-            
+
             logger.info("Successfully get part #" + id + " information from database.");
-            reparation.add(new Reparation(id,statut, priorite,dtentre,dtsortie,technicien,panne,vehicule,place));
+            reparation.add(new Reparation(id, statut, priorite, dtentre, dtsortie, technicien, panne, vehicule, place));
         }
         return reparation;
     }
 
     /**
-     * Gets the data on all the existing parts in the database.
+     * Gets the data on all the existing operations in the database.
      *
-     * @return the list of all the existing parts.
+     * @return the list of all the existing operations.
      * @throws SQLException if a database request issue is encountered.
      */
-    public ArrayList<Reparation> readAllOperation() throws SQLException {
+    public ArrayList<Reparation> getOperations() throws SQLException {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
@@ -127,11 +125,11 @@ public class ReparationDAO {
             int panne = rs.getInt("id_panne");
             String vehicule = rs.getString("id_vehicule");
             int place = rs.getInt("id_place");
-            
+
             logger.info("Successfully get part #" + id + " information from database.");
-            reparation.add(new Reparation(id,statut, priorite,dtentre,dtsortie,technicien,panne,vehicule,place));
+            reparation.add(new Reparation(id, statut, priorite, dtentre, dtsortie, technicien, panne, vehicule, place));
         }
         return reparation;
-      
+
     }
 }

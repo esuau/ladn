@@ -20,9 +20,6 @@ public class Server {
     /** The logger. */
     private final static Logger logger = Logger.getLogger(Server.class.getName());
 
-    /** The connection pool. */
-    private ConnectionPool connectionPool = new ConnectionPool();
-
     /**
      * Server constructor.
      * When starting, the server initializes the connection pool.
@@ -51,6 +48,8 @@ public class Server {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 logger.info("Launching new connection thread.");
+                // Connection pool initialization.
+                ConnectionPool connectionPool = new ConnectionPool();
                 Thread connectionThread = new ConnectionThread(clientSocket, connectionPool);
                 connectionThread.start();
             }

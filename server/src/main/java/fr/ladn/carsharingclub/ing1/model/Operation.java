@@ -25,8 +25,8 @@ public class Operation implements Serializable {
     /** The technician in charge of the repair work. */
     private Technician technician;
 
-    /** The theoretical repair time */
-    private Duration estimatedDuration;
+    /** The priority level of the operation. */
+    private OperationPriority priority;
 
     /** The starting date of repairs. */
     private Date start;
@@ -47,11 +47,38 @@ public class Operation implements Serializable {
      * @param failures the failures.
      * @param status   the status of the operation.
      */
-    public Operation(Vehicle vehicle, Failure[] failures, OperationStatus status, Duration estimatedDuration) {
+    public Operation(Vehicle vehicle, Failure[] failures, OperationStatus status) {
         this.vehicle = vehicle;
         this.failures = failures;
         this.status = status;
-        this.estimatedDuration = estimatedDuration;
+    }
+
+    /**
+     * Gets the biggest and most urgent failure to repair for the operation.
+     *
+     * @return the most urgent failure to repair.
+     */
+    public Failure getBiggestFailure() {
+        int index = 0;
+        for (int i = 0; i < failures.length; i++) {
+            if (failures[i].getType().getPriority() < failures[index].getType().getPriority()) {
+                index = i;
+            }
+        }
+        return failures[index];
+    }
+
+    /**
+     * Gets the total estimated duration of the operation given all the failures.
+     *
+     * @return the total theoretical duration of the operation.
+     */
+    public Duration getTotalEstimatedDuration() {
+        Duration totalEstimatedDuration = Duration.ofMinutes(0);
+        for (Failure failure : failures) {
+            totalEstimatedDuration = totalEstimatedDuration.plus(failure.getEstimatedTime());
+        }
+        return totalEstimatedDuration;
     }
 
     public int getId() {
@@ -94,14 +121,6 @@ public class Operation implements Serializable {
         this.technician = technician;
     }
 
-    public Duration getEstimatedDuration() {
-        return estimatedDuration;
-    }
-
-    public void setEstimatedDuration(Duration estimatedDuration) {
-        this.estimatedDuration = estimatedDuration;
-    }
-
     public Date getStart() {
         return start;
     }
@@ -116,5 +135,13 @@ public class Operation implements Serializable {
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    public OperationPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(OperationPriority priority) {
+        this.priority = priority;
     }
 }

@@ -99,7 +99,7 @@ public class ConnectionThread extends Thread {
                     logger.info("Attempt to read operation in database.");
                     ArrayList<String> statuts = ((Reparation)container.getObject()).getList();
                     //int iden = ((Reparation) container.getObject()).getId_reparation();
-                   /* if (iden < 0)*/ sendData(new Container<>(Operation.PING, repDAO.afficher_vehicule_statut(statuts)));
+                   /* if (iden < 0)*/ sendData(new Container<>(Operation.PING, repDAO.displayVehicleByStatus(statuts)));
                     break;
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
