@@ -30,6 +30,8 @@ class Read extends JPanel {
 
     /**
      * Sets up a UI to display the information of the Part object.
+     *
+     * @param client the client singleton.
      */
     Read(Client client) {
         this.client = client;

@@ -47,6 +47,8 @@ class Update extends JPanel {
      * It includes a form where the user can edit the information of an existing part.
      * The current part data is first displayed in the appropriate fields.
      * The user can then edit one or several of these fields.
+     *
+     * @param client the client singleton.
      */
     Update(Client client) {
         this.client = client;

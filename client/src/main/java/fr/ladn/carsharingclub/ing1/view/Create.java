@@ -39,6 +39,8 @@ class Create extends JPanel {
     /**
      * Sets up UI for part creation.
      * It basically includes a form with a submit button <code>createButton</code>.
+     *
+     * @param client the client singleton.
      */
     Create(Client client) {
         this.client = client;

@@ -31,6 +31,8 @@ class Delete extends JPanel {
      * Sets up UI for part deletion.
      * This UI includes an single input, getting the ID of the part to be removed.
      * It also includes a button to operate the deletion action.
+     *
+     * @param client the client singleton.
      */
     Delete(Client client) {
         this.client = client;
