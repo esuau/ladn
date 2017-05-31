@@ -51,23 +51,33 @@ public class ReparationDAO {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-         PreparedStatement ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation IN ('?','?','?','?')");
+        PreparedStatement ps ;
+        switch (l.size()) {
+            case 4:
+                ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation='?' OR statut_reparation='?' OR statut_reparation='?' OR statut_reparation='?'");
+                break;
+            case 3:
+                ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation='?' OR statut_reparation='?' OR statut_reparation='?'");
+                break;
+            case 2:
+                ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation='?' OR statut_reparation='?'");
+                break;
+            default:
+                ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation='?'");
+                break;
+        }
         /*creation de l'ensemble des statuts que l'on veut afficher*/
         Iterator<String> it = l.iterator();
         int i=1;
        // String s="(\'\'";
+      
         while (it.hasNext()) {
             String s=it.next();
             ps.setString(i,s);
             i=i+1;
              //s = s+", \'"+it.next()+"\'";
         }
-        if(i<5){
-            for(int j=i;j<5;j++){
-               ps.setString(j,""); 
-            }
-        }
-         
+        
        
         //ps.setString(1, s);
         ResultSet rs = ps.executeQuery();
@@ -107,7 +117,7 @@ public class ReparationDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for all existing parts reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Pieces");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM reparer");
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");
 
