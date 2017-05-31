@@ -8,9 +8,11 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
+import fr.ladn.carsharingclub.ing1.model.Reparation;
 import fr.ladn.carsharingclub.ing1.utils.Container;
 import fr.ladn.carsharingclub.ing1.utils.Operation;
 import fr.ladn.carsharingclub.ing1.utils.XML;
+import java.util.Iterator;
 
 /**
  * The class Client.
@@ -149,6 +151,25 @@ public class Client extends Thread {
         }
         return null;
     }
+    
+    public ArrayList<Reparation> getOperationsStatus(ArrayList<String> l) {
+        try {
+            
+            Socket socketClient = new Socket(serverAddress, serverPort);
+             sendData(socketClient, new Container<>(Operation.READ_OPERATION_S, new Reparation(-1,l)));
+             Container<ArrayList<Reparation>> receivedContainer = getData(socketClient);
+             ArrayList<Reparation> reparations=new ArrayList<>();
+             reparations=receivedContainer.getObject();
+             socketClient.close();
+            return reparations;
+        } catch (IOException e) {
+            logger.error("Failed to get operations from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No operation was returned from the server.");
+        }
+        return null;
+    }
+
 
     /**
      * Removes a part in the database.
@@ -179,5 +200,7 @@ public class Client extends Thread {
             logger.error("Failed to get part #" + part.getId() + " from the server: " + e.getMessage());
         }
     }
+
+   
 
 }

@@ -11,7 +11,9 @@ import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
+import fr.ladn.carsharingclub.ing1.db.ReparationDAO;
 import fr.ladn.carsharingclub.ing1.model.Part;
+import fr.ladn.carsharingclub.ing1.model.Reparation;
 import fr.ladn.carsharingclub.ing1.utils.Container;
 import fr.ladn.carsharingclub.ing1.utils.XML;
 
@@ -32,6 +34,7 @@ public class ConnectionThread extends Thread {
 
     /** The Data Access Object for parts */
     private PartDAO partDAO;
+    private ReparationDAO repDAO;
 
     /**
      * Gets the socket initialized by the server.
@@ -43,6 +46,7 @@ public class ConnectionThread extends Thread {
         logger.info("Initializing connection.");
         this.clientSocket = clientSocket;
         this.partDAO = new PartDAO(connectionPool);
+        this.repDAO = new ReparationDAO(connectionPool);
     }
 
     /**
@@ -90,6 +94,12 @@ public class ConnectionThread extends Thread {
                 case DELETE:
                     logger.info("Attempt to delete part in database.");
                     partDAO.delete((Part) container.getObject());
+                    break;
+                case READ_OPERATION_S:
+                    logger.info("Attempt to read operation in database.");
+                    ArrayList<String> statuts = ((Reparation)container.getObject()).getList();
+                    //int iden = ((Reparation) container.getObject()).getId_reparation();
+                   /* if (iden < 0)*/ sendData(new Container<>(Operation.PING, repDAO.afficher_vehicule_statut(statuts)));
                     break;
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
