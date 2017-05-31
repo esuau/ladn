@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
 /**
  * DOA Object for Part.
@@ -37,34 +39,7 @@ public class ReparationDAO {
         logger.info("Established link with connection pool " + pool + ".");
     }
 
-    /**
-     * Creates a part in the database.
-     * Part appearing into the database are considered available in the stock.
-     *
-     * @param part to add to the stock
-     * @throws Exception if connection issue encountered
-     */
-    public void create(Reparation rep) throws Exception {
-        String reference = part.getReference();
-        String provider = part.getProvider();
-        int availableQuantity = part.getAvailableQuantity();
-        float price = part.getPrice();
-
-        Connection conn = pool.getConnection();
-        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-
-        logger.info("Preparing SQL statement for part #" + part.getId() + " creation...");
-        PreparedStatement ps = conn.prepareStatement("INSERT INTO Pieces ( libelle_piece, fabricant, qte_dispo, valeur_piece ) VALUES ( ?, ?, ?, ? )");
-        ps.setString(1, reference);
-        ps.setString(2, provider);
-        ps.setInt(3, availableQuantity);
-        ps.setFloat(4, price);
-        ps.execute();
-        logger.info("Database request has been executed. The part #" + part.getId() + " has been created in database.");
-
-        pool.returnConnection(conn);
-    }
-
+   
     /**
      * Gets information from an existing part by its ID.
      *
@@ -72,32 +47,52 @@ public class ReparationDAO {
      * @return the information on the part.
      * @throws Exception if a connection issue is encountered.
      */
-    public Part read(int id) throws Exception {
+    public ArrayList<Reparation> afficher_vehicule_statut(ArrayList<String> l) throws Exception {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-
-        logger.info("Preparing SQL statement for part #" + id + " reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Pieces WHERE id_piece = ?");
-        ps.setInt(1, id);
+         PreparedStatement ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation IN ('?','?','?','?')");
+        /*creation de l'ensemble des statuts que l'on veut afficher*/
+        Iterator<String> it = l.iterator();
+        int i=1;
+       // String s="(\'\'";
+        while (it.hasNext()) {
+            String s=it.next();
+            ps.setString(i,s);
+            i=i+1;
+             //s = s+", \'"+it.next()+"\'";
+        }
+        if(i<5){
+            for(int j=i;j<5;j++){
+               ps.setString(j,""); 
+            }
+        }
+         
+       
+        //ps.setString(1, s);
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");
 
         pool.returnConnection(conn);
         logger.info("Connection " + conn + " returned to the connection pool.");
 
-        if (rs.next()) {
-            String reference = rs.getString("libelle_piece");
-            String provider = rs.getString("fabricant");
-            int availableQuantity = rs.getInt("qte_dispo");
-            float price = rs.getFloat("valeur_piece");
+       ArrayList<Reparation> reparation = new ArrayList<>();
 
+        while (rs.next()) {
+            int id = rs.getInt("id_reparation");
+            String statut = rs.getString("statut_reparation");
+            int priorite = rs.getInt("priorite_reparation");
+            java.sql.Date dtentre = rs.getDate("Date_entrée_vehicule");
+            java.sql.Date dtsortie = rs.getDate("date_sortie");
+            int technicien = rs.getInt("id_technicien");
+            int panne = rs.getInt("id_panne");
+            String vehicule = rs.getString("id_vehicule");
+            int place = rs.getInt("id_place");
+            
             logger.info("Successfully get part #" + id + " information from database.");
-            return new Part(id, reference, provider, availableQuantity, price);
-        } else {
-            logger.error("Database request did not return any information. The part #" + id + " may not exist.");
-            return null;
+            reparation.add(new Reparation(id,statut, priorite,dtentre,dtsortie,technicien,panne,vehicule,place));
         }
+        return reparation;
     }
 
     /**
@@ -106,7 +101,7 @@ public class ReparationDAO {
      * @return the list of all the existing parts.
      * @throws SQLException if a database request issue is encountered.
      */
-    public ArrayList<Part> readAll() throws SQLException {
+    public ArrayList<Reparation> readAllOperation() throws SQLException {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
@@ -119,61 +114,24 @@ public class ReparationDAO {
         pool.returnConnection(conn);
         logger.info("Connection " + conn + " returned to the connection pool.");
 
-        ArrayList<Part> parts = new ArrayList<>();
+        ArrayList<Reparation> reparation = new ArrayList<>();
+        //java.sql.Date dtentre = new java.sql.Date(System.currentTimeMillis()) ;
 
         while (rs.next()) {
-            int id = rs.getInt("id_piece");
-            String reference = rs.getString("libelle_piece");
-            String provider = rs.getString("fabricant");
-            int availableQuantity = rs.getInt("qte_dispo");
-            float price = rs.getFloat("valeur_piece");
-
+            int id = rs.getInt("id_reparation");
+            String statut = rs.getString("statut_reparation");
+            int priorite = rs.getInt("priorite_reparation");
+            java.sql.Date dtentre = rs.getDate("date_entrée_vehicule");
+            java.sql.Date dtsortie = rs.getDate("date_sortie");
+            int technicien = rs.getInt("id_technicien");
+            int panne = rs.getInt("id_panne");
+            String vehicule = rs.getString("id_vehicule");
+            int place = rs.getInt("id_place");
+            
             logger.info("Successfully get part #" + id + " information from database.");
-            parts.add(new Part(id, reference, provider, availableQuantity, price));
+            reparation.add(new Reparation(id,statut, priorite,dtentre,dtsortie,technicien,panne,vehicule,place));
         }
-        return parts;
-    }
-
-    /**
-     * Updates part information in the stock.
-     *
-     * @param part to be updated
-     * @throws Exception if connection issue encountered
-     */
-    public void update(Part part) throws Exception {
-
-        Connection conn = pool.getConnection();
-        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-
-        logger.info("Preparing SQL statement for part #" + part.getId() + " update...");
-        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE Pieces SET libelle_piece = ?, fabricant = ?, qte_dispo = ?, valeur_piece = ? WHERE id_piece = ?");
-        ps.setString(1, part.getReference());
-        ps.setString(2, part.getProvider());
-        ps.setInt(3, part.getAvailableQuantity());
-        ps.setFloat(4, part.getPrice());
-        ps.setInt(5, part.getId());
-        ps.execute();
-        logger.info("Database request has been executed. The part #" + part.getId() + " has been updated in database.");
-
-        pool.returnConnection(conn);
-    }
-
-    /**
-     * Permanently removes a part from the database.
-     *
-     * @param part to be removed from the stock
-     * @throws Exception if connection issue encountered
-     */
-    public void delete(Part part) throws Exception {
-
-        Connection conn = pool.getConnection();
-        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-
-        PreparedStatement ps = conn.prepareStatement("DELETE FROM Pieces WHERE id_piece = ?");
-        ps.setInt(1, part.getId());
-        ps.execute();
-        logger.info("Database request has been executed. The part #" + part.getId() + " has been removed from database");
-
-        pool.returnConnection(conn);
+        return reparation;
+      
     }
 }

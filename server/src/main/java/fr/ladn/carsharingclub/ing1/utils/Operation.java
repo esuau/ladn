@@ -8,5 +8,6 @@ public enum Operation {
 	READ,
 	UPDATE,
 	DELETE,
+        READ_OPERATION_S,
 	PING
 }
