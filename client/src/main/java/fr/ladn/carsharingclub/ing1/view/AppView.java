@@ -34,8 +34,8 @@ public class AppView extends JPanel {
         tabbedPane.addTab("Ajouter un véhicule", null, panel2, "Ajouter un véhicule entrant.");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
-        JPanel panel3 = new Update(client);
-        tabbedPane.addTab("Modifier une pièce", null, panel3, "Modifier une référence de pièce existante.");
+        JPanel panel3 = new RepairView(client);
+        tabbedPane.addTab("Opérations", null, panel3, "Réaliser une opération de maintenance.");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         JPanel panel4 = new Delete(client);
@@ -71,14 +71,17 @@ public class AppView extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         AppView m = new AppView(this.client);
-        //  m.setSize(50,100);
-        //Add content to the window.
+
+        m.setSize(650, 650);
+
+        // Add content to the window.
         frame.add(m, BorderLayout.CENTER);
 
         //Display the window.
-        frame.setSize(50, 200);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.pack();
 
+        // Set main view visible.
         frame.setVisible(true);
         logger.info("Displayed application GUI.");
     }

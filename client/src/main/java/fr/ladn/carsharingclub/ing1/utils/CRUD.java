@@ -3,7 +3,7 @@ package fr.ladn.carsharingclub.ing1.utils;
 /**
  * The available interaction types that can be operated by the server.
  */
-public enum Operation {
+public enum CRUD {
     CREATE,
     READ,
     UPDATE,

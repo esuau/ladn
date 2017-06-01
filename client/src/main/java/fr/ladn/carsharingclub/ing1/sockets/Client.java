@@ -5,14 +5,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.model.Reparation;
 import fr.ladn.carsharingclub.ing1.utils.Container;
-import fr.ladn.carsharingclub.ing1.utils.Operation;
 import fr.ladn.carsharingclub.ing1.utils.XML;
-import java.util.Iterator;
 
 /**
  * The class Client.
@@ -53,7 +52,7 @@ public class Client extends Thread {
         // Pings the server to check connection.
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(Operation.PING, new Part()));
+            sendData(socketClient, new Container<>(CRUD.PING, new Part()));
             socketClient.close();
             logger.info("Successfully pinged server " + serverAddress + " on port " + serverPort + ".");
         } catch (IOException e) {
@@ -104,7 +103,7 @@ public class Client extends Thread {
     public void createPart(Part part) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(Operation.CREATE, part));
+            sendData(socketClient, new Container<>(CRUD.CREATE, part));
             socketClient.close();
         } catch (IOException e) {
             logger.error("Failed to send part #" + part.getId() + " to the server: " + e.getMessage());
@@ -119,7 +118,7 @@ public class Client extends Thread {
     public Part getPart(int id) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(Operation.READ, new Part(id, "", "", 0, 0)));
+            sendData(socketClient, new Container<>(CRUD.READ, new Part(id, "", "", 0, 0)));
             Part part = (Part) getData(socketClient).getObject();
             socketClient.close();
             return part;
@@ -139,7 +138,7 @@ public class Client extends Thread {
     public ArrayList<Part> getParts() {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(Operation.READ, new Part(-1, "", "", 0, 0)));
+            sendData(socketClient, new Container<>(CRUD.READ, new Part(-1, "", "", 0, 0)));
             Container<ArrayList<Part>> receivedContainer = getData(socketClient);
             ArrayList<Part> parts = receivedContainer.getObject();
             socketClient.close();
@@ -151,16 +150,21 @@ public class Client extends Thread {
         }
         return null;
     }
-    
+
+    /**
+     * Gets the operations having the selected status.
+     *
+     * @param l the list of operations.
+     * @return the corresponding list of operation.
+     */
     public ArrayList<Reparation> getOperationsStatus(ArrayList<String> l) {
         try {
-            
             Socket socketClient = new Socket(serverAddress, serverPort);
-             sendData(socketClient, new Container<>(Operation.READ_OPERATION_S, new Reparation(-1,l)));
-             Container<ArrayList<Reparation>> receivedContainer = getData(socketClient);
-             ArrayList<Reparation> reparations=new ArrayList<>();
-             reparations=receivedContainer.getObject();
-             socketClient.close();
+            sendData(socketClient, new Container<>(CRUD.READ_OPERATION_S, new Reparation(-1, l)));
+            Container<ArrayList<Reparation>> receivedContainer = getData(socketClient);
+            ArrayList<Reparation> reparations;
+            reparations = receivedContainer.getObject();
+            socketClient.close();
             return reparations;
         } catch (IOException e) {
             logger.error("Failed to get operations from the server: " + e.getMessage());
@@ -179,7 +183,7 @@ public class Client extends Thread {
     public void removePart(int id) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(Operation.DELETE, new Part(id, "", "", 0, 0)));
+            sendData(socketClient, new Container<>(CRUD.DELETE, new Part(id, "", "", 0, 0)));
             socketClient.close();
         } catch (IOException e) {
             logger.error("Failed to get part #" + id + " from the server: " + e.getMessage());
@@ -194,13 +198,12 @@ public class Client extends Thread {
     public void updatePart(Part part) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(Operation.UPDATE, part));
+            sendData(socketClient, new Container<>(CRUD.UPDATE, part));
             socketClient.close();
         } catch (IOException e) {
             logger.error("Failed to get part #" + part.getId() + " from the server: " + e.getMessage());
         }
     }
 
-   
 
 }
