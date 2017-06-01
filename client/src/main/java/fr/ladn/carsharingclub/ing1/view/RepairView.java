@@ -2,11 +2,14 @@ package fr.ladn.carsharingclub.ing1.view;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import java.util.regex.Pattern;
+
 import fr.ladn.carsharingclub.ing1.model.*;
+//import fr.ladn.carsharingclub.ing1.sockets.Client;
+//import fr.ladn.carsharingclub.ing1.utils.Operation;
 
 public class RepairView extends JFrame {
 	/* Creation of JLabels*/
@@ -37,10 +40,14 @@ public class RepairView extends JFrame {
 	
 	/* Creation of variables*/
 	private Reparation r;
+	private java.sql.Timestamp dateDebut;
+	private java.sql.Timestamp dateFin;
+	//private Client client;
 	
 	
 	public RepairView() {
-		initComponents();
+		createAndShowGUI();
+		//this.client = client;
 		this.setVisible(true);
 		this.setTitle("Réaliser une opération de maintenance");
 		this.setLocationRelativeTo(null); 
@@ -51,7 +58,7 @@ public class RepairView extends JFrame {
 		this.setLocationRelativeTo(null);
 	}
 	
-	private void initComponents() {
+	private void createAndShowGUI() {
 		/* Definition of Labels*/
 		lblTechnicien = new JLabel("Technicien : ");
 		lblVehicule = new JLabel("Véhicule : ");
@@ -82,7 +89,11 @@ public class RepairView extends JFrame {
 		BorderLayout layout = new BorderLayout();
 		
 		/* Variables*/
-		r = new Reparation(1, "diagnostiqué", 1, null, null, 2, "2+3+6", "M3X-48-DZ", 23);
+		r = new Reparation(1, "Diagnostiqué", 1, null, null, 2, "2+3+6", "M3X-48-DZ", 23);
+		
+		if (!r.getStatut_reparation().equals("Suspendu")) {
+			this.dateDebut = new java.sql.Timestamp(new Date().getTime());
+		}
 	    
 		JPanel infos = new JPanel();
 		
@@ -99,19 +110,24 @@ public class RepairView extends JFrame {
 		infos.add(lblVehicule);
 		infos.add(infoVehicule);
 		
+		String[] lPannes = r.getId_pannes().split(Pattern.quote("+"));
 		
-		String[] entetes = {"ID Panne", "Nom panne", "Pièces nécessaires"};
+		for(int i = 0; i < lPannes.length; i++) {
+			System.out.println(lPannes[i]);
+		}
+		
+		String[] entetesPannes = {"ID Panne", "Nom panne", "Pièces nécessaires"};
 		Object[][] donnees = {
 			{"Johnathan", "Sykes", "po"},
 			{"Nicolas", "Van de Kampf", "po"},
 			{"Damien", "Cuthbert", "po"}
 		};
 		
-		String[] tPieces = {"Option 1", "Option 2", "Option 3", "Option 4"};
+		String[] entetesPieces = {"ID Pièce", "Nom pièce", "Quantité nécéssaire"};
 		
 		JPanel pannes = new JPanel();
-		tabPannes = new JTable(donnees, entetes);
-		tabPieces = new JTable(donnees, entetes);
+		tabPannes = new JTable(donnees, entetesPannes);
+		tabPieces = new JTable(donnees, entetesPieces);
 		JScrollPane spPannes = new JScrollPane(tabPannes);
 		JScrollPane spPicesNecessaires = new JScrollPane(tabPieces);
 		
@@ -169,8 +185,41 @@ public class RepairView extends JFrame {
 		commentaire.add(btnSuspendre);
 		commentaire.add(btnTerminer);
 		
+		Listener listener = new Listener();
+		btnValider.addActionListener(listener);
+		btnSuspendre.addActionListener(listener);
+		btnTerminer.addActionListener(listener);
+		
 		this.getContentPane().add(infos, BorderLayout.NORTH);
 		this.getContentPane().add(pannes, BorderLayout.CENTER);
 		this.getContentPane().add(commentaire, BorderLayout.SOUTH);
     }
+	
+	private class Listener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == btnValider && !nbPieces.getText().isEmpty()) {
+				String namePart = String.valueOf(cbPieces.getSelectedItem());
+				int qtPart = Integer.valueOf(nbPieces.getText());
+				
+				tCommentaire.setText(tCommentaire.getText() + " +" + qtPart + "x" + namePart);
+				System.out.println(namePart);
+				System.out.println(qtPart);
+			}
+			
+			if (e.getSource() == btnSuspendre || e.getSource() == btnTerminer) {
+				String comment = tCommentaire.getText();
+				System.out.println(comment);
+				
+				if (e.getSource() == btnSuspendre) {
+					System.out.println("Suspendre");
+				} else if (e.getSource() == btnTerminer) {
+					System.out.println("Terminer");
+					System.out.println(dateDebut);
+					dateFin = new java.sql.Timestamp(new Date().getTime());
+					System.out.println(dateFin);
+					System.exit(0);
+				}
+			}
+		}
+	}
 }
