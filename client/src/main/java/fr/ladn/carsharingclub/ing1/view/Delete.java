@@ -1,7 +1,6 @@
 package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.sockets.Client;
-import fr.ladn.carsharingclub.ing1.utils.Operation;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
 

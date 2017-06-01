@@ -54,6 +54,20 @@ public class Operation implements Serializable {
     }
 
     /**
+     * Instantiates a new operation with ID.
+     *
+     * @param vehicle  the corresponding vehicle.
+     * @param failures the failures.
+     * @param status   the status of the operation.
+     */
+    public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status) {
+        this.id = id;
+        this.vehicle = vehicle;
+        this.failures = failures;
+        this.status = status;
+    }
+
+    /**
      * Gets the biggest and most urgent failure to repair for the operation.
      *
      * @return the most urgent failure to repair.

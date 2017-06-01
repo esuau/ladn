@@ -17,10 +17,10 @@ import java.util.Iterator;
  *
  * @see Part
  */
-public class ReparationDAO {
+public class OperationDAO {
 
     /** The logger. */
-    private final static Logger logger = Logger.getLogger(ReparationDAO.class.getName());
+    private final static Logger logger = Logger.getLogger(OperationDAO.class.getName());
 
     /** The connection pool. */
     private ConnectionPool pool;
@@ -31,8 +31,8 @@ public class ReparationDAO {
      * @param p The connection pool.
      * @see ConnectionPool
      */
-    public ReparationDAO(ConnectionPool p) {
-        logger.info("Creating PartDAO object...");
+    public OperationDAO(ConnectionPool p) {
+        logger.info("Creating OperationDAO object...");
         pool = p;
         logger.info("Established link with connection pool " + pool + ".");
     }

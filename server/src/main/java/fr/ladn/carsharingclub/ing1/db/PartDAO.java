@@ -46,18 +46,16 @@ public class PartDAO {
     public void create(Part part) throws Exception {
         String reference = part.getReference();
         String provider = part.getProvider();
-        int availableQuantity = part.getAvailableQuantity();
         float price = part.getPrice();
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for part #" + part.getId() + " creation...");
-        PreparedStatement ps = conn.prepareStatement("INSERT INTO Pieces ( libelle_piece, fabricant, qte_dispo, valeur_piece ) VALUES ( ?, ?, ?, ? )");
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO piece ( libelle_piece, fabricant, valeur_piece ) VALUES ( ?, ?, ? )");
         ps.setString(1, reference);
         ps.setString(2, provider);
-        ps.setInt(3, availableQuantity);
-        ps.setFloat(4, price);
+        ps.setFloat(3, price);
         ps.execute();
         logger.info("Database request has been executed. The part #" + part.getId() + " has been created in database.");
 
@@ -77,7 +75,7 @@ public class PartDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for part #" + id + " reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Pieces WHERE id_piece = ?");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM piece WHERE id_piece = ?");
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");
@@ -111,7 +109,7 @@ public class PartDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for all existing parts reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Pieces");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM piece");
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");
 
@@ -145,12 +143,12 @@ public class PartDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for part #" + part.getId() + " update...");
-        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE Pieces SET libelle_piece = ?, fabricant = ?, qte_dispo = ?, valeur_piece = ? WHERE id_piece = ?");
+        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE piece SET libelle_piece = ?, fabricant = ?, valeur_piece = ? WHERE id_piece = ?");
         ps.setString(1, part.getReference());
         ps.setString(2, part.getProvider());
-        ps.setInt(3, part.getAvailableQuantity());
-        ps.setFloat(4, part.getPrice());
-        ps.setInt(5, part.getId());
+        ps.setFloat(3, part.getPrice());
+        ps.setInt(4, part.getId());
+        // TODO update availale quantity
         ps.execute();
         logger.info("Database request has been executed. The part #" + part.getId() + " has been updated in database.");
 
@@ -168,7 +166,7 @@ public class PartDAO {
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
-        PreparedStatement ps = conn.prepareStatement("DELETE FROM Pieces WHERE id_piece = ?");
+        PreparedStatement ps = conn.prepareStatement("DELETE FROM piece WHERE id_piece = ?");
         ps.setInt(1, part.getId());
         ps.execute();
         logger.info("Database request has been executed. The part #" + part.getId() + " has been removed from database");
