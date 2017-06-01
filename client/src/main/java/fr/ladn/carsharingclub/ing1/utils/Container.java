@@ -3,12 +3,12 @@ package fr.ladn.carsharingclub.ing1.utils;
 import java.io.Serializable;
 
 /**
- * The serializable object containing the part and the operation to be performed by the server.
+ * The serializable object containing the part and the CRUD to be performed by the server.
  */
 public class Container<T> implements Serializable {
 
-    /** The operation. */
-    private Operation operation;
+    /** The CRUD. */
+    private CRUD CRUD;
 
     /** The object to transfer. */
     private T object;
@@ -22,28 +22,28 @@ public class Container<T> implements Serializable {
 
     /**
      * The custom constructor.
-     * @param o   the operation to be performed by the server.
+     * @param o   the CRUD to be performed by the server.
      * @param obj the object to be transferred to the server.
      */
-    public Container(Operation o, T obj) {
-        this.operation = o;
+    public Container(CRUD o, T obj) {
+        this.CRUD = o;
         this.object = obj;
     }
 
     /**
      * Gets the operator.
-     * @return the operation to be performed.
+     * @return the CRUD to be performed.
      */
-    public Operation getOperation() {
-        return operation;
+    public CRUD getCRUD() {
+        return CRUD;
     }
 
     /**
-     * Sets the operation.
-     * @param operation the new operation.
+     * Sets the CRUD.
+     * @param CRUD the new CRUD.
      */
-    public void setOperation(Operation operation) {
-        this.operation = operation;
+    public void setCRUD(CRUD CRUD) {
+        this.CRUD = CRUD;
     }
 
     /**
