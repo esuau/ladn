@@ -3,6 +3,7 @@ package fr.ladn.carsharingclub.ing1.model;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * The class CRUD.
@@ -29,10 +30,19 @@ public class Operation implements Serializable {
     private OperationPriority priority;
 
     /** The date of entry of the vehicle in the deposit. */
-    private Date dateEntry;
+    private java.sql.Timestamp dateEntry;
 
     /** The actual exit date of the vehicle. */
-    private Date dateExit;
+    private java.sql.Timestamp dateExit;
+    
+     /** The actual exit date of the vehicle. */
+    private String comment;
+    
+    /** The begin date of the actual status of the operation. */
+    private java.sql.Timestamp dateBS;
+    
+    /** The end date of the actual status of the operation. */
+    private java.sql.Timestamp dateES;
 
     /**
      * Default constructor.
@@ -48,20 +58,6 @@ public class Operation implements Serializable {
      * @param status   the status of the operation.
      */
     public Operation(Vehicle vehicle, Failure[] failures, OperationStatus status) {
-        this.vehicle = vehicle;
-        this.failures = failures;
-        this.status = status;
-    }
-
-    /**
-     * Instantiates a new operation with ID.
-     *
-     * @param vehicle  the corresponding vehicle.
-     * @param failures the failures.
-     * @param status   the status of the operation.
-     */
-    public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status) {
-        this.id = id;
         this.vehicle = vehicle;
         this.failures = failures;
         this.status = status;
@@ -135,19 +131,19 @@ public class Operation implements Serializable {
         this.technician = technician;
     }
 
-    public Date getDateEntry() {
+    public java.sql.Timestamp getDateEntry() {
         return dateEntry;
     }
 
-    public void setDateEntry(Date dateEntry) {
+    public void setDateEntry(java.sql.Timestamp dateEntry) {
         this.dateEntry = dateEntry;
     }
 
-    public Date getDateExit() {
+    public java.sql.Timestamp getDateExit() {
         return dateExit;
     }
 
-    public void setDateExit(Date dateExit) {
+    public void setDateExit(java.sql.Timestamp dateExit) {
         this.dateExit = dateExit;
     }
 
@@ -157,5 +153,29 @@ public class Operation implements Serializable {
 
     public void setPriority(OperationPriority priority) {
         this.priority = priority;
+    }
+    
+    public java.sql.Timestamp getDateBS() {
+        return dateBS;
+    }
+    
+    public void setDateBS(java.sql.Timestamp dateBS) {
+        this.dateBS = dateES;
+    }
+    
+    public java.sql.Timestamp getDateES() {
+        return dateES;
+    }
+    
+    public void setDateES(java.sql.Timestamp dateES) {
+        this.dateES = dateES;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
