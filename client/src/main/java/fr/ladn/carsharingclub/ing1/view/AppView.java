@@ -26,12 +26,12 @@ public class AppView extends JPanel {
         logger.info("Initializing application UI.");
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        JPanel panel1 = new Monitor(client);
-        tabbedPane.addTab("Consulter Operations", null, panel1, "Consulter les information d'une operation.");
+        JPanel panel1 = new MonitorView(client);
+        tabbedPane.addTab("Consulter une opérations", null, panel1, "Consulter les information d'une operation.");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-        JPanel panel2 = new Create(client);
-        tabbedPane.addTab("Ajouter une pièce", null, panel2, "Créer une nouvelle référence de pièce.");
+        JPanel panel2 = new AddVehicleView(client);
+        tabbedPane.addTab("Ajouter un véhicule", null, panel2, "Ajouter un véhicule entrant.");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
         JPanel panel3 = new Update(client);
