@@ -71,7 +71,7 @@ class RepairView extends JPanel {
         Failure f2 = new Failure("Failure 2", new FailureType(3, "Priority"), "Instructions", Duration.ofHours(10));
         Failure[] failures = {f1, f2};
         operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED);
-        Technician t = new Technician("Louis", "Endelicher", "00000000", "LOL", "FUOOCO");
+        Technician t = new Technician("Louis", "Endelicher", "00000000", "LOL", TechnicianRights.TECHNICIAN);
         operation.setTechnician(t);
 
         /* Definition of Labels*/

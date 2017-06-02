@@ -2,8 +2,6 @@ package fr.ladn.carsharingclub.ing1.model;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.util.Date;
-import java.sql.Timestamp;
 
 /**
  * The class CRUD.
@@ -44,11 +42,72 @@ public class Operation implements Serializable {
     /** The end date of the actual status of the operation. */
     private java.sql.Timestamp dateES;
 
+    /** The identifier of the parking space. */
+    private int parkingSpace;
+
     /**
      * Default constructor.
      * Allows serialization.
      */
     Operation() { }
+
+    /**
+     * Instantiates the operation with all the fields.
+     *
+     * @param id           the identifier of the operation.
+     * @param vehicle      the vehicle corresponding to the operation.
+     * @param failures     the failures corresponding to the operation.
+     * @param status       the status of the operation.
+     * @param technician   the technician in charge of the operation.
+     * @param priority     the priority level of the operation.
+     * @param dateEntry    the entry date of the vehicle.
+     * @param dateExit     the exit date of the vehicle.
+     * @param parkingSpace the ID of the parking spot.
+     *
+     * @see Vehicle
+     * @see Failure
+     * @see OperationStatus
+     * @see OperationPriority
+     */
+    public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status, Technician technician, OperationPriority priority, java.sql.Timestamp dateEntry, java.sql.Timestamp dateExit, int parkingSpace) {
+        this.id = id;
+        this.vehicle = vehicle;
+        this.failures = failures;
+        this.status = status;
+        this.technician = technician;
+        this.priority = priority;
+        this.dateEntry = dateEntry;
+        this.dateExit = dateExit;
+        this.parkingSpace = parkingSpace;
+    }
+
+    /**
+     * Instantiates an operation without defined ID.
+     *
+     * @param vehicle      the vehicle corresponding to the operation.
+     * @param failures     the failures corresponding to the operation.
+     * @param status       the status of the operation.
+     * @param technician   the technician in charge of the operation.
+     * @param priority     the priority level of the operation.
+     * @param dateEntry    the entry date of the vehicle.
+     * @param dateExit     the exit date of the vehicle.
+     * @param parkingSpace the ID of the parking spot.
+     *
+     * @see Vehicle
+     * @see Failure
+     * @see OperationStatus
+     * @see Technician
+     */
+    public Operation(Vehicle vehicle, Failure[] failures, OperationStatus status, Technician technician, OperationPriority priority, java.sql.Timestamp dateEntry, java.sql.Timestamp dateExit, int parkingSpace) {
+        this.vehicle = vehicle;
+        this.failures = failures;
+        this.status = status;
+        this.technician = technician;
+        this.priority = priority;
+        this.dateEntry = dateEntry;
+        this.dateExit = dateExit;
+        this.parkingSpace = parkingSpace;
+    }
 
     /**
      * Constructor of the operation.
@@ -58,6 +117,7 @@ public class Operation implements Serializable {
      * @param status   the status of the operation.
      */
     public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status) {
+        this.id = id;
         this.vehicle = vehicle;
         this.failures = failures;
         this.status = status;
@@ -182,4 +242,13 @@ public class Operation implements Serializable {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public int getParkingSpace() {
+        return parkingSpace;
+    }
+
+    public void setParkingSpace(int parkingSpace) {
+        this.parkingSpace = parkingSpace;
+    }
+
 }
