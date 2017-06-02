@@ -68,6 +68,13 @@ public class Part implements Serializable {
         this.availableQuantity = availableQuantity;
         this.price = price;
     }
+    
+    
+    public Part(int id, int quantity) {
+        logger.info("Creating new part instance with the quantity needed for a specific operation");
+        this.id = id;
+        this.availableQuantity = quantity;
+    }
 
     /**
      * Gets part ID.

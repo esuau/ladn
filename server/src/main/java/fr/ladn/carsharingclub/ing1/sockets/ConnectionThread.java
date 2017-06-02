@@ -101,6 +101,10 @@ public class ConnectionThread extends Thread {
                     //int iden = ((Reparation) container.getObject()).getId_reparation();
                    /* if (iden < 0)*/ sendData(new Container<>(CRUD.PING, repDAO.displayVehicleByStatus(statuts)));
                     break;
+                case READ_PARTS_FAILURE:
+                    logger.info("Attenmt to read assoc_reparation_pannes.");
+                    int idPart = ((Part) container.getObject()).getId();
+                    sendData(new Container<>(CRUD.PING, partDAO.failurePartsReadAll(idPart)));
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }

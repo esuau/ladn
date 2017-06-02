@@ -96,6 +96,31 @@ public class PartDAO {
             return null;
         }
     }
+    
+    public ArrayList<Part> failurePartsReadAll(int idFailure) throws Exception {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        logger.info("Preparing SQL statement for id operation #" + idFailure + " reading...");
+        PreparedStatement ps = conn.prepareStatement("SELECT id_piece, qte_necessaire FROM necessiter WHERE id_panne = ?");
+        ps.setInt(1, idFailure);
+        ResultSet rs = ps.executeQuery();
+        logger.info("Database request has been successfully executed.");
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+        
+        ArrayList<Part> parts = new ArrayList<>();
+
+        while (rs.next()) {
+            int idPart = rs.getInt("id_piece");
+            int qty = rs.getInt("qte_necessaire");
+            logger.info("Successfully get part #" + idPart + " information from database.");
+            parts.add(new Part(idPart, qty));
+        }
+        return parts;
+    }
 
     /**
      * Gets the data on all the existing parts in the database.

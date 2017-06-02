@@ -204,6 +204,25 @@ public class Client extends Thread {
             logger.error("Failed to get part #" + part.getId() + " from the server: " + e.getMessage());
         }
     }
-
-
+    
+    /**
+     * Gets an ArrayList of Parts needed for the operation in parameter.
+     *
+     * @param Operation, the operation we want to get the parts needed.
+     */
+    public ArrayList<Part> getPartsFailure(int idFailure) {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.READ_PARTS_FAILURE, new Part(idFailure, "", "", 0, 0)));
+            Container<ArrayList<Part>> receivedContainer = getData(socketClient);
+            ArrayList<Part> parts = receivedContainer.getObject();
+            socketClient.close();
+            return parts;
+        } catch (IOException e) {
+            logger.error("Failed to get parts needed for the operation from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No part was returned from the server.");
+        }
+        return null;
+    }
 }
