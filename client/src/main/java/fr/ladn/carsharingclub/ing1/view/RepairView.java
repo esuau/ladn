@@ -65,6 +65,14 @@ class RepairView extends JPanel {
     RepairView(Client client) {
 
         this.client = client;
+        
+        /* Variables*/
+        Failure f1 = new Failure("Failure 1", new FailureType(1, "Moteur"), "Instructions", Duration.ofHours(10));
+        Failure f2 = new Failure("Failure 2", new FailureType(3, "Priority"), "Instructions", Duration.ofHours(10));
+        Failure[] failures = {f1, f2};
+        operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED);
+        Technician t = new Technician("Louis", "Endelicher", "00000000", "LOL", "FUOOCO");
+        operation.setTechnician(t);
 
         /* Definition of Labels*/
         lblTechnicien = new JLabel("Technicien : ");
@@ -80,8 +88,14 @@ class RepairView extends JPanel {
         nbPieces = new JTextField(5);
 
 		/* Definition of JComboBox*/
-        String[] pieces = new String[]{"Pneu", "Roue", "Moteur"};
-        cbPieces = new JComboBox(pieces);
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        ArrayList<Part> lParts = client.getParts();
+        
+        for (Part p : lParts) {
+            model.addElement(p.getReference());
+        }
+        
+        cbPieces = new JComboBox(model);
         cbPieces.setToolTipText("Sélectionner une pièce");
 
 		/* Definition of JButton*/
@@ -90,21 +104,14 @@ class RepairView extends JPanel {
         btnTerminer = new JButton("Terminer");
 
 		/* Definition of JTextArea*/
-        tCommentaire = new JTextArea();
+        tCommentaire = new JTextArea(operation.getComment());
 
 		/* Layout*/
         BorderLayout layout = new BorderLayout();
 
-		/* Variables*/
-		Failure f1 = new Failure("Failure 1", new FailureType(1, "Moteur"), "Instructions", Duration.ofHours(10));
-        Failure f2 = new Failure("Failure 2", new FailureType(3, "Priority"), "Instructions", Duration.ofHours(10));
-        Failure[] failures = {f1, f2};
+        Failure[] tPannesOperation = operation.getFailures();
 
-        operation = new Operation(1, new Vehicle("registration", "brand", "manufacturer", "version"), failures, OperationStatus.DIAGNOSED);
-
-        if (!operation.getStatus().equals(OperationStatus.PENDING)) {
-            this.dateStart = new java.sql.Timestamp(new Date().getTime());
-        }
+        this.dateStart = new java.sql.Timestamp(new Date().getTime());
 
         JPanel infos = new JPanel();
 
@@ -114,6 +121,8 @@ class RepairView extends JPanel {
         lblVehicule.setPreferredSize(new Dimension(350, 25));
         infoVehicule.setPreferredSize(new Dimension(200, 25));
         infoVehicule.setText(operation.getVehicle().getRegistrationNumber());
+        
+        infoTechnicien.setText(t.getFirstName() + " " + t.getLastName());
 
         infos.setBorder(BorderFactory.createTitledBorder("Informations"));
         infos.add(lblTechnicien);
@@ -122,18 +131,18 @@ class RepairView extends JPanel {
         infos.add(infoVehicule);
 
         String[] entetesPannes = {"ID Panne", "Nom panne", "Pièces nécessaires"};
-        Object[][] donnees = new Object[operation.getFailures().length][3];
+        Object[][] dataPannes = new Object[operation.getFailures().length][3];
         for (int i = 0; i < operation.getFailures().length; i++) {
-            donnees[i][0] = operation.getFailures()[i].getId();
-            donnees[i][1] = operation.getFailures()[i].getName();
-            donnees[i][2] = operation.getFailures()[i].getType().getName();
+            dataPannes[i][0] = operation.getFailures()[i].getId();
+            dataPannes[i][1] = operation.getFailures()[i].getName();
+            dataPannes[i][2] = operation.getFailures()[i].getType().getName();
         }
 
         String[] entetesPieces = {"ID Pièce", "Nom pièce", "Quantité nécéssaire"};
 
         JPanel pannes = new JPanel();
-        tabPannes = new JTable(donnees, entetesPannes);
-        tabPieces = new JTable(donnees, entetesPieces);
+        tabPannes = new JTable(dataPannes, entetesPannes);
+        tabPieces = new JTable(dataPannes, entetesPieces);
         JScrollPane spPannes = new JScrollPane(tabPannes);
         JScrollPane spPicesNecessaires = new JScrollPane(tabPieces);
 
@@ -163,7 +172,7 @@ class RepairView extends JPanel {
         btnValider.setPreferredSize(new Dimension(150, 25));
 
         pannes.setBorder(BorderFactory.createTitledBorder("Opération"));
-        pannes.setPreferredSize(new Dimension(650, 315));
+        pannes.setPreferredSize(new Dimension(650, 350));
         spPannes.setPreferredSize(new Dimension(600, 120));
         tabPannes.setPreferredSize(new Dimension(600, 100));
         pannes.add(tabPannes.getTableHeader());
@@ -215,17 +224,24 @@ class RepairView extends JPanel {
             }
 
             if (e.getSource() == btnSuspendre || e.getSource() == btnTerminer) {
-                String comment = tCommentaire.getText();
-                System.out.println(comment);
+                operation.setComment(tCommentaire.getText());
 
                 if (e.getSource() == btnSuspendre) {
                     System.out.println("Suspendre");
+                    
+                    if(!operation.getStatus().equals(OperationStatus.PENDING)) {
+                       operation.setDateBS(dateStart);
+                    }
                 } else if (e.getSource() == btnTerminer) {
+                    operation.setDateBS(dateStart);
                     System.out.println("Terminer");
                     System.out.println(dateStart);
-                    dateEnd = new java.sql.Timestamp(new Date().getTime());
+                    operation.setDateES(new java.sql.Timestamp(new Date().getTime()));
                     System.out.println(dateEnd);
-                    System.exit(0);
+                    
+                    //operation = client.getNewOperation();
+                    revalidate();
+                    repaint();
                 }
             }
         }

@@ -1,7 +1,6 @@
 package fr.ladn.carsharingclub.ing1.db;
 
-import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.model.Reparation;
+import fr.ladn.carsharingclub.ing1.model.*;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -137,6 +136,28 @@ public class OperationDAO {
             reparation.add(new Reparation(id, statut, priorite, dtentre, dtsortie, technicien, panne, vehicule, place));
         }
         return reparation;
-
     }
+    
+    public void updateOperation(Operation o) throws Exception {
+        
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        logger.info("Preparing SQL statement for operation #" + o.getId() + " update...");
+        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE reparation SET comment = ?, status = ? WHERE id_reparation = ?");
+        ps.setString(1, o.getComment());
+        //ps.setString(2, o.getStatus().getStep());
+        ps.setInt(3, o.getId());
+        PreparedStatement ps2 = pool.getConnection().prepareStatement("UPDATE reparation_histo_temps SET statut = ?, date_debut = ?, date_fin = ? WHERE id_reparation = ?");
+        //ps2.setString(1, o.getStatus().getStep());
+        
+        
+        // TODO update availale quantity
+        ps.execute();
+        logger.info("Database request has been executed. The operation #" + o.getId() + " has been updated in database.");
+
+        pool.returnConnection(conn);
+    }
+    
+    
 }
