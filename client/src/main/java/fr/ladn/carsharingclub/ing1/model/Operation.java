@@ -117,6 +117,7 @@ public class Operation implements Serializable {
      * @param status   the status of the operation.
      */
     public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status) {
+        this.id = id;
         this.vehicle = vehicle;
         this.failures = failures;
         this.status = status;
