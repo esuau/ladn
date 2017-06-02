@@ -12,8 +12,7 @@ import org.apache.log4j.Logger;
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
 import fr.ladn.carsharingclub.ing1.db.OperationDAO;
-import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.model.Reparation;
+import fr.ladn.carsharingclub.ing1.model.*;
 import fr.ladn.carsharingclub.ing1.utils.Container;
 import fr.ladn.carsharingclub.ing1.utils.XML;
 
@@ -102,9 +101,13 @@ public class ConnectionThread extends Thread {
                    /* if (iden < 0)*/ sendData(new Container<>(CRUD.PING, repDAO.displayVehicleByStatus(statuts)));
                     break;
                 case READ_PARTS_FAILURE:
-                    logger.info("Attenmt to read assoc_reparation_pannes.");
+                    logger.info("Attempt to read assoc_reparation_pannes.");
                     int idPart = ((Part) container.getObject()).getId();
                     sendData(new Container<>(CRUD.PING, partDAO.failurePartsReadAll(idPart)));
+                    break;
+                case READ_EMPTY_SPACE:
+                    logger.info("Attempt to read empty place from database.");
+                    sendData(new Container<>(CRUD.PING, repDAO.readEmptySpace()));
                     break;
                 default:
                     logger.info("Sorry. This operation is not covered yet.");

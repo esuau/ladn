@@ -159,5 +159,27 @@ public class OperationDAO {
         pool.returnConnection(conn);
     }
     
-    
+    public Integer readEmptySpace() throws Exception {
+        
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        logger.info("Preparing SQL statement to get empty space from database...");
+        PreparedStatement ps = pool.getConnection().prepareStatement("SELECT id_place FROM place WHERE id_place NOT IN (SELECT id_place FROM reparer) LIMIT 1");
+        ResultSet rs = ps.executeQuery();
+        logger.info("Database request has been executed. The empty space has been returned.");
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+        
+        if (rs.next()) {
+            Integer idEmptySpace = rs.getInt("id_place");
+            
+            logger.info("Successfully get empty place #" + idEmptySpace + " from database.");
+            return new Integer(idEmptySpace);
+        } else {
+            logger.error("Database request did not return any space information.");
+            return null;
+        }
+    }
 }

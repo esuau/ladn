@@ -139,7 +139,8 @@ class RepairView extends JPanel {
         Object[][] dataPannes = new Object[operation.getFailures().length][3];
         for (int i = 0; i < operation.getFailures().length; i++) {
             dataPannes[i][0] = operation.getFailures()[i].getId();
-            dataPannes[i][1] = operation.getFailures()[i].getName();
+            //dataPannes[i][1] = operation.getFailures()[i].getName();
+            dataPannes[i][1] = client.getEmptySpace();
             dataPannes[i][2] = setStringPartsFailure(client.getPartsFailure(operation.getFailures()[i].getId()));
         }
         

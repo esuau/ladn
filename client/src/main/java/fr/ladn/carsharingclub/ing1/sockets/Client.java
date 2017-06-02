@@ -8,8 +8,7 @@ import java.util.Properties;
 import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import org.apache.log4j.Logger;
 
-import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.model.Reparation;
+import fr.ladn.carsharingclub.ing1.model.*;
 import fr.ladn.carsharingclub.ing1.utils.Container;
 import fr.ladn.carsharingclub.ing1.utils.XML;
 
@@ -224,5 +223,20 @@ public class Client extends Thread {
             logger.error("No part was returned from the server.");
         }
         return null;
+    }
+    
+    public int getEmptySpace() {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.READ_EMPTY_SPACE, new Object()));
+            Integer i = (Integer) getData(socketClient).getObject();
+            socketClient.close();
+            return i.intValue();
+        } catch (IOException e) {
+            logger.error("Failed to get space from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No space was returned from the server.");
+        }
+        return 0;
     }
 }

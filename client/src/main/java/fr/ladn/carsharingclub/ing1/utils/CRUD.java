@@ -10,5 +10,6 @@ public enum CRUD {
     DELETE,
     READ_OPERATION_S,
     READ_PARTS_FAILURE,
+    READ_EMPTY_SPACE,
     PING
 }
