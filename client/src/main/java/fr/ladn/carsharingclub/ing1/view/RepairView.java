@@ -67,8 +67,8 @@ class RepairView extends JPanel {
         this.client = client;
         
         /* Variables*/
-        Failure f1 = new Failure("Failure 1", new FailureType(1, "Moteur"), "Instructions", Duration.ofHours(10));
-        Failure f2 = new Failure("Failure 2", new FailureType(3, "Priority"), "Instructions", Duration.ofHours(10));
+        Failure f1 = new Failure(1, "Failure 1", new FailureType(1, "Moteur"), "Instructions", Duration.ofHours(10));
+        Failure f2 = new Failure(2, "Failure 2", new FailureType(3, "Priority"), "Instructions", Duration.ofHours(10));
         Failure[] failures = {f1, f2};
         operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED);
         Technician t = new Technician("Louis", "Endelicher", "00000000", "LOL", TechnicianRights.TECHNICIAN);
@@ -229,7 +229,11 @@ class RepairView extends JPanel {
                 if (e.getSource() == btnSuspendre) {
                     System.out.println("Suspendre");
                     
-                    ArrayList<Part> lPartsFailure = client.getPartsFailure(1);
+                    ArrayList<Part> lPartsFailure = new ArrayList<Part>();
+                    
+                    for (Failure f : operation.getFailures()) {
+                        lPartsFailure.addAll(client.getPartsFailure(f.getId()));
+                    }
                     
                     for (Part p2 : lPartsFailure) {
                         System.out.println("Part : " + p2.getId() + "Qty : " + p2.getAvailableQuantity());

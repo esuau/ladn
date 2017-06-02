@@ -40,6 +40,14 @@ public class Failure implements Serializable {
         this.instructions = instructions;
         this.estimatedTime = estimatedTime;
     }
+    
+    public Failure(int id, String name, FailureType type, String instructions, Duration estimatedTime) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.instructions = instructions;
+        this.estimatedTime = estimatedTime;
+    }
 
     public int getId() {
         return id;
