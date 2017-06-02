@@ -32,13 +32,13 @@ public class Operation implements Serializable {
 
     /** The actual exit date of the vehicle. */
     private java.sql.Timestamp dateExit;
-
-    /** The actual exit date of the vehicle. */
+    
+     /** The actual exit date of the vehicle. */
     private String comment;
-
+    
     /** The begin date of the actual status of the operation. */
     private java.sql.Timestamp dateBS;
-
+    
     /** The end date of the actual status of the operation. */
     private java.sql.Timestamp dateES;
 
@@ -117,9 +117,18 @@ public class Operation implements Serializable {
      * @param status   the status of the operation.
      */
     public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status) {
+        this.id = id;
         this.vehicle = vehicle;
         this.failures = failures;
         this.status = status;
+    }
+    
+    public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status, String comment) {
+        this.id = id;
+        this.vehicle = vehicle;
+        this.failures = failures;
+        this.status = status;
+        this.comment = comment;
     }
     
     public Operation(int id) {
@@ -217,27 +226,27 @@ public class Operation implements Serializable {
     public void setPriority(OperationPriority priority) {
         this.priority = priority;
     }
-
+    
     public java.sql.Timestamp getDateBS() {
         return dateBS;
     }
-
+    
     public void setDateBS(java.sql.Timestamp dateBS) {
         this.dateBS = dateES;
     }
-
+    
     public java.sql.Timestamp getDateES() {
         return dateES;
     }
-
+    
     public void setDateES(java.sql.Timestamp dateES) {
         this.dateES = dateES;
     }
-
+    
     public String getComment() {
         return comment;
     }
-
+    
     public void setComment(String comment) {
         this.comment = comment;
     }

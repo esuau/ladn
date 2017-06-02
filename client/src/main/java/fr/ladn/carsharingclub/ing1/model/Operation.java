@@ -123,6 +123,14 @@ public class Operation implements Serializable {
         this.status = status;
     }
     
+    public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status, String comment) {
+        this.id = id;
+        this.vehicle = vehicle;
+        this.failures = failures;
+        this.status = status;
+        this.comment = comment;
+    }
+    
     public Operation(int id) {
         this.id = id;
     }

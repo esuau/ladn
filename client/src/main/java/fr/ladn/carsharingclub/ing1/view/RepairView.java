@@ -70,9 +70,14 @@ class RepairView extends JPanel {
         Failure f1 = new Failure(1, "Failure 1", new FailureType(1, "Moteur"), "Instructions", Duration.ofHours(10));
         Failure f2 = new Failure(2, "Failure 2", new FailureType(3, "Priority"), "Instructions", Duration.ofHours(10));
         Failure[] failures = {f1, f2};
-        operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED);
+        operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED, "C le pre a pé é boi");
         Technician t = new Technician("Louis", "Endelicher", "00000000", "LOL", TechnicianRights.TECHNICIAN);
         operation.setTechnician(t);
+        ArrayList<Part> lPartsFailure = new ArrayList<Part>();
+        
+        for (Failure f : operation.getFailures()) {
+            lPartsFailure.addAll(client.getPartsFailure(f.getId()));
+        }
 
         /* Definition of Labels*/
         lblTechnicien = new JLabel("Technicien : ");
@@ -130,19 +135,28 @@ class RepairView extends JPanel {
         infos.add(lblVehicule);
         infos.add(infoVehicule);
 
-        String[] entetesPannes = {"ID Panne", "Nom panne", "Pièces nécessaires"};
+        String[] entetesPannes = {"ID Panne", "Nom panne", "ID Pièces nécessaires"};
         Object[][] dataPannes = new Object[operation.getFailures().length][3];
         for (int i = 0; i < operation.getFailures().length; i++) {
             dataPannes[i][0] = operation.getFailures()[i].getId();
             dataPannes[i][1] = operation.getFailures()[i].getName();
-            dataPannes[i][2] = operation.getFailures()[i].getType().getName();
+            dataPannes[i][2] = setStringPartsFailure(client.getPartsFailure(operation.getFailures()[i].getId()));
+        }
+        
+        Object[][] dataPieces = new Object[lPartsFailure.size()][3];
+        int index = 0;
+        for (Part p : lPartsFailure) {
+            dataPieces[index][0] = p.getId();
+            dataPieces[index][1] = client.getPart(p.getId()).getReference();
+            dataPieces[index][2] = p.getAvailableQuantity();
+            index++;
         }
 
         String[] entetesPieces = {"ID Pièce", "Nom pièce", "Quantité nécéssaire"};
 
         JPanel pannes = new JPanel();
         tabPannes = new JTable(dataPannes, entetesPannes);
-        tabPieces = new JTable(dataPannes, entetesPieces);
+        tabPieces = new JTable(dataPieces, entetesPieces);
         JScrollPane spPannes = new JScrollPane(tabPannes);
         JScrollPane spPicesNecessaires = new JScrollPane(tabPieces);
 
@@ -211,14 +225,36 @@ class RepairView extends JPanel {
 
         this.setVisible(true);
     }
+    
+    public String setStringPartsFailure(ArrayList<Part> lParts) {
+        String partsForFailure = "";
+        int i = 1;
+        
+        for(Part p : lParts) {
+            partsForFailure = partsForFailure + p.getId();
+            
+            if (i < lParts.size()) {
+                partsForFailure = partsForFailure + " - ";
+            }
+            
+            i++;
+        }
+        
+        return partsForFailure;
+    }
 
     private class Listener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == btnValider && !nbPieces.getText().isEmpty()) {
                 String namePart = String.valueOf(cbPieces.getSelectedItem());
                 int qtPart = Integer.valueOf(nbPieces.getText());
+                
+                String space = "";
+                if(!tCommentaire.getText().equals("")) {
+                    space = " ";
+                }
 
-                tCommentaire.setText(tCommentaire.getText() + " +" + qtPart + "x" + namePart);
+                tCommentaire.setText(tCommentaire.getText() + space + "+" + qtPart + "x" + namePart);
                 System.out.println(namePart);
                 System.out.println(qtPart);
             }
@@ -228,18 +264,6 @@ class RepairView extends JPanel {
 
                 if (e.getSource() == btnSuspendre) {
                     System.out.println("Suspendre");
-                    
-                    ArrayList<Part> lPartsFailure = new ArrayList<Part>();
-                    
-                    for (Failure f : operation.getFailures()) {
-                        lPartsFailure.addAll(client.getPartsFailure(f.getId()));
-                    }
-                    
-                    for (Part p2 : lPartsFailure) {
-                        System.out.println("Part : " + p2.getId() + "Qty : " + p2.getAvailableQuantity());
-                    }
-                    
-                    System.out.println(client.getPartsFailure(1));
                     
                     if(!operation.getStatus().equals(OperationStatus.PENDING)) {
                        operation.setDateBS(dateStart);
