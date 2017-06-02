@@ -229,6 +229,14 @@ class RepairView extends JPanel {
                 if (e.getSource() == btnSuspendre) {
                     System.out.println("Suspendre");
                     
+                    ArrayList<Part> lPartsFailure = client.getPartsFailure(1);
+                    
+                    for (Part p2 : lPartsFailure) {
+                        System.out.println("Part : " + p2.getId() + "Qty : " + p2.getAvailableQuantity());
+                    }
+                    
+                    System.out.println(client.getPartsFailure(1));
+                    
                     if(!operation.getStatus().equals(OperationStatus.PENDING)) {
                        operation.setDateBS(dateStart);
                     }

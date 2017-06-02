@@ -105,6 +105,7 @@ public class ConnectionThread extends Thread {
                     logger.info("Attenmt to read assoc_reparation_pannes.");
                     int idPart = ((Part) container.getObject()).getId();
                     sendData(new Container<>(CRUD.PING, partDAO.failurePartsReadAll(idPart)));
+                    break;
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }
