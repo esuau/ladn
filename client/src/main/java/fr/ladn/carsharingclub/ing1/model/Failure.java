@@ -24,8 +24,10 @@ public class Failure implements Serializable {
     /** The estimated time for the repair work. */
     private Duration estimatedTime;
 
-    /** Default constructor */
-    Failure() { }
+    /**
+     * Default constructor
+     */
+    public Failure() { }
 
     /**
      * The commonly used failure constructor.

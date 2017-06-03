@@ -116,6 +116,9 @@ public class ConnectionThread extends Thread {
                     logger.info("Attempt to read a car from database.");
                     int id_vehicle = ((Vehicle) container.getObject()).getId();
                     sendData(new Container<>(CRUD.PING, vecDAO.getVehicleById(id_vehicle)));
+                case UPDATE_OPERATION:
+                    logger.info("Attempt to update operation in database.");
+                    repDAO.updateOperation((Operation) container.getObject());
                     break;
                 default:
                     logger.info("Sorry. This operation is not covered yet.");

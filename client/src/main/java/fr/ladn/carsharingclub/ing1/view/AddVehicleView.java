@@ -64,37 +64,32 @@ class AddVehicleView extends JPanel {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate localDate = LocalDate.now();
-        
+
         JButton btnRechercher = new JButton("Rechercher");
-		btnRechercher.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if (e.getSource() == btnRechercher) {
-	                
-	                try {
-	                	if(! searchId.getText().isEmpty()){
-	                    date.setText(dtf.format(localDate));
-	                    status.setText("diagnostique");
+        btnRechercher.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            if (e.getSource() == btnRechercher) {
 
-	                        Integer id = Integer.parseInt(searchId.getText());
-	                        Vehicle v = client.getVehicle(id);
-	                        vehicleId.setText(""+v.getId());
-	                    //    vehicleId.setText(""+searchId.getText());
-	                        registrationNumber.setText(v.getRegistrationNumber());
-	                	} 
-	                }	
-	                catch (Exception err) {
-	                    JOptionPane.showMessageDialog(null, "Le vehicule n'existe pas.");
-	                    logger.error("Failed to read vehicle. Exception: ");
-	                }
-	            }
-				
-			}
-		});
+                try {
+                    if (!searchId.getText().isEmpty()) {
+                        date.setText(dtf.format(localDate));
+                        status.setText("diagnostique");
 
-        JLabel lblDateEntrejjmmaaaa = new JLabel("Date entrée");
+                        Integer id = Integer.parseInt(searchId.getText());
+                        Vehicle v = client.getVehicle(id);
+                        vehicleId.setText("" + v.getId());
+                        vehicleId.setText("" + searchId.getText());
+                        registrationNumber.setText(v.getRegistrationNumber());
+                    }
+                } catch (Exception err) {
+                    JOptionPane.showMessageDialog(null, "Le vehicule n'existe pas.");
+                    logger.error("Failed to read vehicle. Exception: ");
+                }
+            }
+
+        });
+
+        JLabel lblDateEntrejjmmaaaa = new JLabel("Date entrée (JJ/MM/AAAA)");
 
         date = new JTextField();
         date.setEditable(false);
@@ -225,8 +220,6 @@ class AddVehicleView extends JPanel {
         );
         this.setLayout(groupLayout);
         this.setVisible(true);
-        
-        
     }
 
     /**
@@ -241,5 +234,4 @@ class AddVehicleView extends JPanel {
         parkingSpaceNumber.setText("");
         status.setText("");
     }
-    
 }

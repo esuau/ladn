@@ -144,15 +144,13 @@ public class OperationDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for operation #" + o.getId() + " update...");
-        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE reparer SET commentaire = ?, statut_reparation = ? WHERE id_reparation = ?");
-        ps.setString(1, o.getComment());
-        //ps.setString(2, o.getStatus().getStep());
-        ps.setInt(3, o.getId());
-        PreparedStatement ps2 = pool.getConnection().prepareStatement("UPDATE reparation_histo_temps SET statut = ?, date_debut = ?, date_fin = ? WHERE id_reparation = ?");
-        //ps2.setString(1, o.getStatus().getStep());
+        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE reparer SET id_technicien = ?, id_place = ?, statut_reparation = ?, commentaire = ? WHERE id_reparation = ?");
+        ps.setInt(1, o.getTechnician().getId());
+        ps.setInt(2, o.getParkingSpace());
+        ps.setString(3, o.getStatus().toString());
+        ps.setString(4, o.getComment());
+        ps.setInt(5, o.getId());
 
-
-        // TODO update availale quantity
         ps.execute();
         logger.info("Database request has been executed. The operation #" + o.getId() + " has been updated in database.");
 
@@ -165,13 +163,13 @@ public class OperationDAO {
      * @return the identifier of an empty parking spot.
      * @throws SQLException in case of issue with the SQL request.
      */
-    public int readEmptySpace() throws SQLException {
+    public Integer readEmptySpace() throws Exception {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement to get empty space from database...");
-        PreparedStatement ps = pool.getConnection().prepareStatement("SELECT id_place FROM place WHERE id_place NOT IN (SELECT id_place FROM reparer) LIMIT 1");
+        PreparedStatement ps = pool.getConnection().prepareStatement("SELECT id_place FROM place WHERE id_place NOT IN (SELECT id_place FROM reparer) AND id_place != -1 LIMIT 1");
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been executed. The empty space has been returned.");
 
@@ -179,16 +177,15 @@ public class OperationDAO {
         logger.info("Connection " + conn + " returned to the connection pool.");
 
         if (rs.next()) {
-            int idEmptySpace = rs.getInt("id_place");
-
+            Integer idEmptySpace = rs.getInt("id_place");
             logger.info("Successfully get empty place #" + idEmptySpace + " from database.");
             return idEmptySpace;
         } else {
             logger.error("Database request did not return any space information.");
+            return null;
         }
-        return 0;
     }
-    
+
     /**
      * Gets information from an existing car by its ID.
      *

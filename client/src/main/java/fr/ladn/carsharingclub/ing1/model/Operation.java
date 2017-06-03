@@ -49,7 +49,7 @@ public class Operation implements Serializable {
      * Default constructor.
      * Allows serialization.
      */
-    Operation() { }
+    public Operation() { }
 
     /**
      * Instantiates the operation with all the fields.
@@ -130,7 +130,22 @@ public class Operation implements Serializable {
         this.status = status;
         this.comment = comment;
     }
-    
+
+    /**
+     * Constructor of the operation.
+     *
+     * To be used only in RepairView to update reparation_histo_temps.
+     *
+     * @param dateBS the Timestamp date of the beginning of the status.
+     * @param dateES the Timestamp date of the end of the status.
+     */
+    public Operation(int id, java.sql.Timestamp dateBS, java.sql.Timestamp dateES, OperationStatus status) {
+        this.id = id;
+        this.dateBS = dateBS;
+        this.dateES = dateES;
+        this.status = status;
+    }
+
     public Operation(int id) {
         this.id = id;
     }

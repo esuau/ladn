@@ -49,7 +49,7 @@ public class Operation implements Serializable {
      * Default constructor.
      * Allows serialization.
      */
-    Operation() { }
+    public Operation() { }
 
     /**
      * Instantiates the operation with all the fields.

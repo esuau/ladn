@@ -168,12 +168,9 @@ public class PartDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for part #" + part.getId() + " update...");
-        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE piece SET libelle_piece = ?, fabricant = ?, valeur_piece = ? WHERE id_piece = ?");
-        ps.setString(1, part.getReference());
-        ps.setString(2, part.getProvider());
-        ps.setFloat(3, part.getPrice());
-        ps.setInt(4, part.getId());
-        // TODO update availale quantity
+        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE piece SET qte_dispo = ? WHERE id_piece = ?");
+        ps.setInt(1, part.getAvailableQuantity());
+        ps.setInt(2, part.getId());
         ps.execute();
         logger.info("Database request has been executed. The part #" + part.getId() + " has been updated in database.");
 

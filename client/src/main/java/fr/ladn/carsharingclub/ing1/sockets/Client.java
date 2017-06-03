@@ -1,5 +1,6 @@
 package fr.ladn.carsharingclub.ing1.sockets;
 
+import fr.ladn.carsharingclub.ing1.model.Operation;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.model.Reparation;
 import fr.ladn.carsharingclub.ing1.model.Vehicle;
@@ -156,7 +157,6 @@ public class Client extends Thread {
      *
      * @param id the id of the vehicle to be get from the server.
      */
-    
     public Vehicle getVehicle(int id) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
@@ -256,14 +256,24 @@ public class Client extends Thread {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
             sendData(socketClient, new Container<>(CRUD.READ_EMPTY_SPACE, new Object()));
-            int i = (int) getData(socketClient).getObject();
+            Integer i = (Integer) getData(socketClient).getObject();
             socketClient.close();
-            return i;
+            return i.intValue();
         } catch (IOException e) {
             logger.error("Failed to get space from the server: " + e.getMessage());
         } catch (NullPointerException e) {
             logger.error("No space was returned from the server.");
         }
         return 0;
+    }
+    
+    public void updateOperation(Operation operation) {
+         try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.UPDATE_OPERATION, operation));
+            socketClient.close();
+        } catch (IOException e) {
+            logger.error("Failed to get operation #" + operation.getId() + " from the server: " + e.getMessage());
+        }
     }
 }

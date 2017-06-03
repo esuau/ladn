@@ -17,7 +17,7 @@ public class FailureType implements Serializable {
      * The default constructor.
      * Do not use.
      */
-    FailureType() {
+    public FailureType() {
         this(0, "");
     }
 

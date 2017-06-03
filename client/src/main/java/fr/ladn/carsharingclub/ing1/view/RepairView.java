@@ -1,17 +1,17 @@
 package fr.ladn.carsharingclub.ing1.view;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.time.Duration;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import java.util.regex.Pattern;
-
 import fr.ladn.carsharingclub.ing1.model.*;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
-
 import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * The RepairView.
@@ -37,7 +37,7 @@ class RepairView extends JPanel {
     private JTextField nbPieces;
 
     /* Creation of JComboBox*/
-    private JComboBox cbPieces;
+    private JComboBox<Part> cbPieces;
 
     /* Creation of JButtons*/
     private JButton btnValider;
@@ -55,7 +55,7 @@ class RepairView extends JPanel {
     private Operation operation;
     private java.sql.Timestamp dateStart;
     private java.sql.Timestamp dateEnd;
-    //private Client client;
+    private OperationStatus statusStart;
 
     /**
      * Instantiates the view for operation execution.
@@ -67,6 +67,7 @@ class RepairView extends JPanel {
         this.client = client;
         
         /* Variables*/
+        //operation = client.getNewOperation();
         Failure f1 = new Failure(1, "Failure 1", new FailureType(1, "Moteur"), "Instructions", Duration.ofHours(10));
         Failure f2 = new Failure(2, "Failure 2", new FailureType(3, "Priority"), "Instructions", Duration.ofHours(10));
         Failure[] failures = {f1, f2};
@@ -78,6 +79,7 @@ class RepairView extends JPanel {
         for (Failure f : operation.getFailures()) {
             lPartsFailure.addAll(client.getPartsFailure(f.getId()));
         }
+        statusStart = operation.getStatus();
 
         /* Definition of Labels*/
         lblTechnicien = new JLabel("Technicien : ");
@@ -97,10 +99,10 @@ class RepairView extends JPanel {
         ArrayList<Part> lParts = client.getParts();
         
         for (Part p : lParts) {
-            model.addElement(p.getReference());
+            model.addElement(p);
         }
         
-        cbPieces = new JComboBox(model);
+        cbPieces = new JComboBox<Part>(model);
         cbPieces.setToolTipText("Sélectionner une pièce");
 
 		/* Definition of JButton*/
@@ -139,8 +141,7 @@ class RepairView extends JPanel {
         Object[][] dataPannes = new Object[operation.getFailures().length][3];
         for (int i = 0; i < operation.getFailures().length; i++) {
             dataPannes[i][0] = operation.getFailures()[i].getId();
-            //dataPannes[i][1] = operation.getFailures()[i].getName();
-            dataPannes[i][1] = client.getEmptySpace();
+            dataPannes[i][1] = operation.getFailures()[i].getName();
             dataPannes[i][2] = setStringPartsFailure(client.getPartsFailure(operation.getFailures()[i].getId()));
         }
         
@@ -223,6 +224,9 @@ class RepairView extends JPanel {
         this.add(infos, BorderLayout.NORTH);
         this.add(pannes, BorderLayout.CENTER);
         this.add(commentaire, BorderLayout.SOUTH);
+        operation.setParkingSpace(-1);
+        operation.setStatus(OperationStatus.INPROGRESS);
+        client.updateOperation(operation);
 
         this.setVisible(true);
     }
@@ -247,36 +251,64 @@ class RepairView extends JPanel {
     private class Listener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == btnValider && !nbPieces.getText().isEmpty()) {
-                String namePart = String.valueOf(cbPieces.getSelectedItem());
+                Part mPart = (Part) cbPieces.getSelectedItem();
                 int qtPart = Integer.valueOf(nbPieces.getText());
                 
-                String space = "";
-                if(!tCommentaire.getText().equals("")) {
-                    space = " ";
+                if (qtPart > 0) {
+                    String space = "";
+                    if(!tCommentaire.getText().equals("")) {
+                        space = " ";
+                    }
+                    
+                    mPart.setAvailableQuantity(mPart.getAvailableQuantity() - qtPart);
+                    client.updatePart(mPart);
+                    
+                    tCommentaire.setText(tCommentaire.getText() + space + "+" + qtPart + "x" + mPart);
                 }
-
-                tCommentaire.setText(tCommentaire.getText() + space + "+" + qtPart + "x" + namePart);
-                System.out.println(namePart);
-                System.out.println(qtPart);
             }
 
             if (e.getSource() == btnSuspendre || e.getSource() == btnTerminer) {
                 operation.setComment(tCommentaire.getText());
+                
+                operation.setParkingSpace(client.getEmptySpace());
 
                 if (e.getSource() == btnSuspendre) {
-                    System.out.println("Suspendre");
+                    operation.setStatus(OperationStatus.PENDING);
                     
-                    if(!operation.getStatus().equals(OperationStatus.PENDING)) {
-                       operation.setDateBS(dateStart);
+                    client.updateOperation(operation);
+                
+                    if (!statusStart.equals(OperationStatus.PENDING)) {
+                        operation.setDateBS(dateStart);
+                        
+                        // update reparation_histo_temps pour ajouter la date de fin du status diagnostiqué
+                        // create reparation_histo_temps pour ajouter une nouvelle ligne avec le nouveau status suspendu avec date du debut (actuelle) et date de fin à nulle
+                        // dire à djo de faire un trigger sur la modification de la table reparer > statut : si le 'status' est changé alors elle met la date de actuelle au précédent statut et la date actuelle au nouveau 'status'
                     }
                 } else if (e.getSource() == btnTerminer) {
-                    operation.setDateBS(dateStart);
-                    System.out.println("Terminer");
-                    System.out.println(dateStart);
-                    operation.setDateES(new java.sql.Timestamp(new Date().getTime()));
-                    System.out.println(dateEnd);
+                    operation.setStatus(OperationStatus.REPARED);
                     
-                    //operation = client.getNewOperation();
+                    operation.setDateBS(dateStart);
+                    operation.setDateES(new java.sql.Timestamp(new Date().getTime()));
+                    
+                    ArrayList<Part> lParts = client.getParts();
+                    
+                    ArrayList<Part> lPartsFailure = new ArrayList<Part>();
+                    
+                    for (Failure f : operation.getFailures()) {
+                        lPartsFailure.addAll(client.getPartsFailure(f.getId()));
+                    }
+                    
+                    for(Part p : lParts) {
+                        for(Part removeParts : lPartsFailure) {
+                            if(p.getId() == removeParts.getId()) {
+                                p.setAvailableQuantity(p.getAvailableQuantity() - removeParts.getAvailableQuantity());
+                                client.updatePart(p);
+                            }
+                        }
+                    }
+                    
+                    client.updateOperation(operation);
+
                     revalidate();
                     repaint();
                 }
