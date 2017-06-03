@@ -96,8 +96,15 @@ public class PartDAO {
             return null;
         }
     }
-    
-    public ArrayList<Part> failurePartsReadAll(int idFailure) throws Exception {
+
+    /**
+     * Gets all parts corresponding to a failure.
+     *
+     * @param idFailure the identifier of the failure.
+     * @return the ccoresponding list of parts.
+     * @throws SQLException in case of issue with the SQL request.
+     */
+    public ArrayList<Part> failurePartsReadAll(int idFailure) throws SQLException {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");

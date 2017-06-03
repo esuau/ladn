@@ -29,6 +29,10 @@ public class Server {
      */
     public Server() {
         logger.info("Server starting.");
+
+        // Connection pool initialization.
+        ConnectionPool connectionPool = new ConnectionPool();
+
         Properties properties = new Properties();
 
         try {
@@ -48,8 +52,6 @@ public class Server {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 logger.info("Launching new connection thread.");
-                // Connection pool initialization.
-                ConnectionPool connectionPool = new ConnectionPool();
                 Thread connectionThread = new ConnectionThread(clientSocket, connectionPool);
                 connectionThread.start();
             }

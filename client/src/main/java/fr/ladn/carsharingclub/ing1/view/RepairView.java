@@ -74,7 +74,7 @@ class RepairView extends JPanel {
         operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED, "C le pre a pé é boi");
         Technician t = new Technician("Louis", "Endelicher", "00000000", "LOL", TechnicianRights.TECHNICIAN);
         operation.setTechnician(t);
-        ArrayList<Part> lPartsFailure = new ArrayList<Part>();
+        ArrayList<Part> lPartsFailure = new ArrayList<>();
         
         for (Failure f : operation.getFailures()) {
             lPartsFailure.addAll(client.getPartsFailure(f.getId()));
@@ -292,7 +292,7 @@ class RepairView extends JPanel {
                     
                     ArrayList<Part> lParts = client.getParts();
                     
-                    ArrayList<Part> lPartsFailure = new ArrayList<Part>();
+                    ArrayList<Part> lPartsFailure = new ArrayList<>();
                     
                     for (Failure f : operation.getFailures()) {
                         lPartsFailure.addAll(client.getPartsFailure(f.getId()));
