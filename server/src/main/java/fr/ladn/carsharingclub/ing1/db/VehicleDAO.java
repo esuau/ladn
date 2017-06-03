@@ -60,10 +60,10 @@ public class VehicleDAO {
             int idVehicule = rs.getInt("id_vehicule");
             String immatriculation = rs.getString("immatriculation");
 
-            logger.info("Successfully get part #" + id + " information from database.");
+            logger.info("Successfully get vehicle #" + id + " information from database.");
             return new Vehicle(idVehicule, immatriculation, "", "", "");
         } else {
-            logger.error("Database request did not return any information. The part #" + id + " may not exist.");
+            logger.error("Database request did not return any information. The vehicle #" + id + " may not exist.");
             return null;
         }
     }

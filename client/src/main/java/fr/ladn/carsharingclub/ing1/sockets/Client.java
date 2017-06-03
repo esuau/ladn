@@ -160,14 +160,14 @@ public class Client extends Thread {
     public Vehicle getVehicle(int id) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(CRUD.READ, new Vehicle(id, "", "", "", "")));
+            sendData(socketClient, new Container<>(CRUD.READ_CAR, new Vehicle(id, "", "", "", "")));
             Vehicle vehicle = (Vehicle) getData(socketClient).getObject();
             socketClient.close();
             return vehicle;
         } catch (IOException e) {
             logger.error("Failed to get vehicle #" + id + " from the server: " + e.getMessage());
         } catch (NullPointerException e) {
-            logger.error("No part was returned from the server.");
+            logger.error("No vehicle was returned from the server.");
         }
         return null;
     }

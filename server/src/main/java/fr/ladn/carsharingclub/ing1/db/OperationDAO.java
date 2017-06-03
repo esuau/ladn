@@ -188,5 +188,37 @@ public class OperationDAO {
         }
         return 0;
     }
+    
+    /**
+     * Gets information from an existing car by its ID.
+     *
+     * @param id of the car to be read.
+     * @return the information on the part.
+     * @throws Exception if a connection issue is encountered.
+     */
+    public Vehicle read(int id) throws Exception {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        logger.info("Preparing SQL statement for vehicle #" + id + " reading...");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM vehicule WHERE id_vehicule = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        logger.info("Database request has been successfully executed.");
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+
+        if (rs.next()) {
+            String immatriculation = rs.getString("immatriculation");
+
+            logger.info("Successfully get vehicle #" + id + " information from database.");
+            return new Vehicle(id,immatriculation,"","","");
+        } else {
+            logger.error("Database request did not return any information. The vehicle #" + id + " may not exist.");
+            return null;
+        }
+    }
 
 }

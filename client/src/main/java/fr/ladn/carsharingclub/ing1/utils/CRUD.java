@@ -11,5 +11,6 @@ public enum CRUD {
     READ_OPERATION_S,
     READ_PARTS_FAILURE,
     READ_EMPTY_SPACE,
-    PING
+    PING,
+    READ_CAR
 }

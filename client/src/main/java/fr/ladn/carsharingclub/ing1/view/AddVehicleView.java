@@ -74,14 +74,17 @@ class AddVehicleView extends JPanel {
 				if (e.getSource() == btnRechercher) {
 	                
 	                try {
+	                	if(! searchId.getText().isEmpty()){
 	                    date.setText(dtf.format(localDate));
+	                    status.setText("diagnostique");
 
-	                       // Integer id = Integer.parseInt(searchId.getText());
-	                        //Vehicle v = client.getVehicle(id);
-	                       // vehicleId.setText(""+v.getId());
-	                        vehicleId.setText(""+searchId.getText());
-	                       // registrationNumber.setText(v.getRegistrationNumber());
-	                } 
+	                        Integer id = Integer.parseInt(searchId.getText());
+	                        Vehicle v = client.getVehicle(id);
+	                        vehicleId.setText(""+v.getId());
+	                    //    vehicleId.setText(""+searchId.getText());
+	                        registrationNumber.setText(v.getRegistrationNumber());
+	                	} 
+	                }	
 	                catch (Exception err) {
 	                    JOptionPane.showMessageDialog(null, "Le vehicule n'existe pas.");
 	                    logger.error("Failed to read vehicle. Exception: ");
@@ -91,7 +94,7 @@ class AddVehicleView extends JPanel {
 			}
 		});
 
-        JLabel lblDateEntrejjmmaaaa = new JLabel("Date entrée (JJ/MM/AAAA)");
+        JLabel lblDateEntrejjmmaaaa = new JLabel("Date entrée");
 
         date = new JTextField();
         date.setEditable(false);
