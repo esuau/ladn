@@ -1,22 +1,17 @@
 package fr.ladn.carsharingclub.ing1.sockets;
 
+import fr.ladn.carsharingclub.ing1.model.Part;
+import fr.ladn.carsharingclub.ing1.model.Reparation;
+import fr.ladn.carsharingclub.ing1.model.Vehicle;
+import fr.ladn.carsharingclub.ing1.utils.CRUD;
+import fr.ladn.carsharingclub.ing1.utils.Container;
+import fr.ladn.carsharingclub.ing1.utils.XML;
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Properties;
-
-import fr.ladn.carsharingclub.ing1.utils.CRUD;
-import org.apache.log4j.Logger;
-
-<<<<<<< Updated upstream
-import fr.ladn.carsharingclub.ing1.model.*;
-=======
-import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.model.Reparation;
-import fr.ladn.carsharingclub.ing1.model.Vehicle;
->>>>>>> Stashed changes
-import fr.ladn.carsharingclub.ing1.utils.Container;
-import fr.ladn.carsharingclub.ing1.utils.XML;
 
 /**
  * The class Client.
@@ -234,7 +229,7 @@ public class Client extends Thread {
     /**
      * Gets an ArrayList of Parts needed for the operation in parameter.
      *
-     * @param Operation, the operation we want to get the parts needed.
+     * @param idFailure the identifier of failure that needs the parts.
      */
     public ArrayList<Part> getPartsFailure(int idFailure) {
         try {
@@ -251,14 +246,19 @@ public class Client extends Thread {
         }
         return null;
     }
-    
+
+    /**
+     * Gets an empty parking spaces from the server.
+     *
+     * @return the identifier of an empty parking spot.
+     */
     public int getEmptySpace() {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
             sendData(socketClient, new Container<>(CRUD.READ_EMPTY_SPACE, new Object()));
-            Integer i = (Integer) getData(socketClient).getObject();
+            int i = (int) getData(socketClient).getObject();
             socketClient.close();
-            return i.intValue();
+            return i;
         } catch (IOException e) {
             logger.error("Failed to get space from the server: " + e.getMessage());
         } catch (NullPointerException e) {

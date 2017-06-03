@@ -36,6 +36,39 @@ public class VehicleDAO {
     }
 
     /**
+     * Search a vehicle by its ID.
+     *
+     * @param id the identifier of the vehicle to be searched.
+     * @return the corresponding vehicle.
+     * @throws SQLException in case of issue with the SQL request.
+     */
+    public Vehicle getVehicleById(int id) throws Exception {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        logger.info("Preparing SQL statement for part #" + id + " reading...");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM vehicule WHERE id_vehicule = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        logger.info("Database request has been successfully executed.");
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+
+        if (rs.next()) {
+            int idVehicule = rs.getInt("id_vehicule");
+            String immatriculation = rs.getString("immatriculation");
+
+            logger.info("Successfully get part #" + id + " information from database.");
+            return new Vehicle(idVehicule, immatriculation, "", "", "");
+        } else {
+            logger.error("Database request did not return any information. The part #" + id + " may not exist.");
+            return null;
+        }
+    }
+
+    /**
      * Gets a vehicle related to a given operation.
      *
      * @param operationId the ID of the operation.

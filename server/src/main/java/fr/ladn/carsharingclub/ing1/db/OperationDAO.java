@@ -48,7 +48,7 @@ public class OperationDAO {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-        PreparedStatement ps ;
+        PreparedStatement ps;
         switch (status.size()) {
             case 4:
                 ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation='?' OR statut_reparation='?' OR statut_reparation='?' OR statut_reparation='?'");
@@ -137,31 +137,36 @@ public class OperationDAO {
         }
         return reparation;
     }
-    
+
     public void updateOperation(Operation o) throws Exception {
-        
+
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for operation #" + o.getId() + " update...");
-        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE reparation SET comment = ?, status = ? WHERE id_reparation = ?");
+        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE reparer SET commentaire = ?, statut_reparation = ? WHERE id_reparation = ?");
         ps.setString(1, o.getComment());
         //ps.setString(2, o.getStatus().getStep());
         ps.setInt(3, o.getId());
         PreparedStatement ps2 = pool.getConnection().prepareStatement("UPDATE reparation_histo_temps SET statut = ?, date_debut = ?, date_fin = ? WHERE id_reparation = ?");
         //ps2.setString(1, o.getStatus().getStep());
-        
-        
+
+
         // TODO update availale quantity
         ps.execute();
         logger.info("Database request has been executed. The operation #" + o.getId() + " has been updated in database.");
 
         pool.returnConnection(conn);
     }
-    
-<<<<<<< Updated upstream
-    public Integer readEmptySpace() throws Exception {
-        
+
+    /**
+     * Gets an empty parking space.
+     *
+     * @return the identifier of an empty parking spot.
+     * @throws SQLException in case of issue with the SQL request.
+     */
+    public int readEmptySpace() throws SQLException {
+
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
@@ -170,48 +175,18 @@ public class OperationDAO {
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been executed. The empty space has been returned.");
 
-=======
-    public Vehicle searchVehicle(int id) throws Exception{
-        
-        Connection conn = pool.getConnection();
-        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-        
-        logger.info("Preparing SQL statement for part #" + id + " reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM vehicule WHERE id_vehicle = ?");
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        logger.info("Database request has been successfully executed.");
-        
->>>>>>> Stashed changes
         pool.returnConnection(conn);
         logger.info("Connection " + conn + " returned to the connection pool.");
-        
+
         if (rs.next()) {
-<<<<<<< Updated upstream
-            Integer idEmptySpace = rs.getInt("id_place");
-            
+            int idEmptySpace = rs.getInt("id_place");
+
             logger.info("Successfully get empty place #" + idEmptySpace + " from database.");
-            return new Integer(idEmptySpace);
+            return idEmptySpace;
         } else {
             logger.error("Database request did not return any space information.");
-            return null;
         }
+        return 0;
     }
-=======
-            int idVehicule = rs.getInt("id_vehicule");
-            String immatriculation = rs.getString("immatriculation");
-            
-            logger.info("Successfully get part #" + id + " information from database.");
-            return new Vehicle(idVehicule, immatriculation, "", "", "");
-        } else {
-            logger.error("Database request did not return any information. The part #" + id + " may not exist.");
-            return null;
-        }
 
-
-        
-    }
-    
-    
->>>>>>> Stashed changes
 }
