@@ -54,6 +54,7 @@ public class Vehicle implements Serializable {
      * @param version            the version of the vehicle.
      */
     public Vehicle(int id, String registrationNumber, String brand, String manufacturer, String version) {
+        this.id = id;
         this.registrationNumber = registrationNumber;
         this.brand = brand;
         this.manufacturer = manufacturer;
