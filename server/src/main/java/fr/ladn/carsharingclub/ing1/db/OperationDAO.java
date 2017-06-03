@@ -159,6 +159,7 @@ public class OperationDAO {
         pool.returnConnection(conn);
     }
     
+<<<<<<< Updated upstream
     public Integer readEmptySpace() throws Exception {
         
         Connection conn = pool.getConnection();
@@ -169,10 +170,24 @@ public class OperationDAO {
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been executed. The empty space has been returned.");
 
+=======
+    public Vehicle searchVehicle(int id) throws Exception{
+        
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+        
+        logger.info("Preparing SQL statement for part #" + id + " reading...");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM vehicule WHERE id_vehicle = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        logger.info("Database request has been successfully executed.");
+        
+>>>>>>> Stashed changes
         pool.returnConnection(conn);
         logger.info("Connection " + conn + " returned to the connection pool.");
         
         if (rs.next()) {
+<<<<<<< Updated upstream
             Integer idEmptySpace = rs.getInt("id_place");
             
             logger.info("Successfully get empty place #" + idEmptySpace + " from database.");
@@ -182,4 +197,21 @@ public class OperationDAO {
             return null;
         }
     }
+=======
+            int idVehicule = rs.getInt("id_vehicule");
+            String immatriculation = rs.getString("immatriculation");
+            
+            logger.info("Successfully get part #" + id + " information from database.");
+            return new Vehicle(idVehicule, immatriculation, "", "", "");
+        } else {
+            logger.error("Database request did not return any information. The part #" + id + " may not exist.");
+            return null;
+        }
+
+
+        
+    }
+    
+    
+>>>>>>> Stashed changes
 }

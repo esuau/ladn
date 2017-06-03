@@ -8,7 +8,13 @@ import java.util.Properties;
 import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import org.apache.log4j.Logger;
 
+<<<<<<< Updated upstream
 import fr.ladn.carsharingclub.ing1.model.*;
+=======
+import fr.ladn.carsharingclub.ing1.model.Part;
+import fr.ladn.carsharingclub.ing1.model.Reparation;
+import fr.ladn.carsharingclub.ing1.model.Vehicle;
+>>>>>>> Stashed changes
 import fr.ladn.carsharingclub.ing1.utils.Container;
 import fr.ladn.carsharingclub.ing1.utils.XML;
 
@@ -144,6 +150,27 @@ public class Client extends Thread {
             return parts;
         } catch (IOException e) {
             logger.error("Failed to get parts from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No part was returned from the server.");
+        }
+        return null;
+    }
+    
+    /**
+     * Gets a vehicle object by ID from the server.
+     *
+     * @param id the id of the vehicle to be get from the server.
+     */
+    
+    public Vehicle getVehicle(int id) {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.READ, new Vehicle(id, "", "", "", "")));
+            Vehicle vehicle = (Vehicle) getData(socketClient).getObject();
+            socketClient.close();
+            return vehicle;
+        } catch (IOException e) {
+            logger.error("Failed to get vehicle #" + id + " from the server: " + e.getMessage());
         } catch (NullPointerException e) {
             logger.error("No part was returned from the server.");
         }

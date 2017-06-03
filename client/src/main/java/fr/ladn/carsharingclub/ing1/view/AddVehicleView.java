@@ -1,8 +1,14 @@
 package fr.ladn.carsharingclub.ing1.view;
 
+import fr.ladn.carsharingclub.ing1.model.Vehicle;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 
 import org.apache.log4j.Logger;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -56,7 +62,34 @@ class AddVehicleView extends JPanel {
         registrationNumber.setEditable(false);
         registrationNumber.setColumns(10);
 
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate localDate = LocalDate.now();
+        
         JButton btnRechercher = new JButton("Rechercher");
+		btnRechercher.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (e.getSource() == btnRechercher) {
+	                
+	                try {
+	                    date.setText(dtf.format(localDate));
+
+	                       // Integer id = Integer.parseInt(searchId.getText());
+	                        //Vehicle v = client.getVehicle(id);
+	                       // vehicleId.setText(""+v.getId());
+	                        vehicleId.setText(""+searchId.getText());
+	                       // registrationNumber.setText(v.getRegistrationNumber());
+	                } 
+	                catch (Exception err) {
+	                    JOptionPane.showMessageDialog(null, "Le vehicule n'existe pas.");
+	                    logger.error("Failed to read vehicle. Exception: ");
+	                }
+	            }
+				
+			}
+		});
 
         JLabel lblDateEntrejjmmaaaa = new JLabel("Date entrée (JJ/MM/AAAA)");
 
@@ -189,6 +222,8 @@ class AddVehicleView extends JPanel {
         );
         this.setLayout(groupLayout);
         this.setVisible(true);
+        
+        
     }
 
     /**
@@ -203,4 +238,5 @@ class AddVehicleView extends JPanel {
         parkingSpaceNumber.setText("");
         status.setText("");
     }
+    
 }
