@@ -54,7 +54,6 @@ class RepairView extends JPanel {
     /* Creation of variables*/
     private Operation operation;
     private java.sql.Timestamp dateStart;
-    private java.sql.Timestamp dateEnd;
     private OperationStatus statusStart;
 
     /**
@@ -74,6 +73,8 @@ class RepairView extends JPanel {
         operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED, "C le pre a pé é boi");
         Technician t = new Technician("Louis", "Endelicher", "00000000", "LOL", TechnicianRights.TECHNICIAN);
         operation.setTechnician(t);
+        operation.setOldStatus(operation.getStatus());
+        
         ArrayList<Part> lPartsFailure = new ArrayList<>();
         
         for (Failure f : operation.getFailures()) {
@@ -117,8 +118,6 @@ class RepairView extends JPanel {
         BorderLayout layout = new BorderLayout();
 
         Failure[] tPannesOperation = operation.getFailures();
-
-        this.dateStart = new java.sql.Timestamp(new Date().getTime());
 
         JPanel infos = new JPanel();
 
@@ -269,7 +268,7 @@ class RepairView extends JPanel {
 
             if (e.getSource() == btnSuspendre || e.getSource() == btnTerminer) {
                 operation.setComment(tCommentaire.getText());
-                
+                operation.setDateBS(new java.sql.Timestamp(new Date().getTime()));
                 operation.setParkingSpace(client.getEmptySpace());
 
                 if (e.getSource() == btnSuspendre) {
@@ -278,17 +277,11 @@ class RepairView extends JPanel {
                     client.updateOperation(operation);
                 
                     if (!statusStart.equals(OperationStatus.PENDING)) {
-                        operation.setDateBS(dateStart);
-                        
-                        // update reparation_histo_temps pour ajouter la date de fin du status diagnostiqué
-                        // create reparation_histo_temps pour ajouter une nouvelle ligne avec le nouveau status suspendu avec date du debut (actuelle) et date de fin à nulle
-                        // dire à djo de faire un trigger sur la modification de la table reparer > statut : si le 'status' est changé alors elle met la date de actuelle au précédent statut et la date actuelle au nouveau 'status'
+                        client.updateWorkflow(operation);
+                        client.createWorkflow(operation);
                     }
                 } else if (e.getSource() == btnTerminer) {
                     operation.setStatus(OperationStatus.REPARED);
-                    
-                    operation.setDateBS(dateStart);
-                    operation.setDateES(new java.sql.Timestamp(new Date().getTime()));
                     
                     ArrayList<Part> lParts = client.getParts();
                     
@@ -308,6 +301,8 @@ class RepairView extends JPanel {
                     }
                     
                     client.updateOperation(operation);
+                    client.updateWorkflow(operation);
+                    client.createWorkflow(operation);
 
                     revalidate();
                     repaint();

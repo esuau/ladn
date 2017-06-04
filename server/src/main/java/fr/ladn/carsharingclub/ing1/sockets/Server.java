@@ -39,7 +39,7 @@ public class Server {
             InputStream input = this.getClass().getClassLoader().getResourceAsStream("configServer.properties");
             properties.load(input);
             input.close();
-            logger.error("Successfully loaded configuration file.");
+            logger.info("Successfully loaded configuration file.");
         } catch (IOException e) {
             logger.error("Failed to load configuration file: " + e.getMessage());
         }

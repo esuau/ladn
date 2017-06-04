@@ -276,4 +276,24 @@ public class Client extends Thread {
             logger.error("Failed to get operation #" + operation.getId() + " from the server: " + e.getMessage());
         }
     }
+    
+    public void updateWorkflow(Operation operation) {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.UPDATE_WORKFLOW, operation));
+            socketClient.close();
+        } catch (IOException e) {
+            logger.error("Failed to get operation #" + operation.getId() + " from the server: " + e.getMessage());
+        }
+    }
+    
+    public void createWorkflow(Operation operation) {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.CREATE_WORKFLOW, operation));
+            socketClient.close();
+        } catch (IOException e) {
+            logger.error("Failed to send operation #" + operation.getId() + " to the server: " + e.getMessage());
+        }
+    }
 }

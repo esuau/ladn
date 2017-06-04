@@ -9,27 +9,9 @@ public enum OperationStatus {
      * The vehicle is waiting for a diagnosis of the failure(s).
      */
     UNDIAGNOSED(1, "non diagnostiqué"),
-
-    /**
-     * The failures have been diagnosed.
-     * The operation is waiting to be performed.
-     */
     DIAGNOSED(2, "diagnostiqué"),
-
-    /**
-     * The operation is performed by a technician.
-     */
     INPROGRESS(3, "réparation en cours"),
-
-    /**
-     * The operation is temporally pending after being started.
-     * Next status is always "INPROGRESS"
-     */
     PENDING(4, "réparation suspendue"),
-
-    /**
-     * The operation is completed.
-     */
     REPARED(5, "réparé");
 
     /** The status order. */

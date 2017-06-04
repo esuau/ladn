@@ -156,6 +156,43 @@ public class OperationDAO {
 
         pool.returnConnection(conn);
     }
+    
+    public void updateWorkflow(Operation o) throws Exception {
+        
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+        
+        logger.info("Preparing SQL statement to update operation #" + o.getId() + " in reparation_histo_temps");
+        PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE reparation_histo_temps SET date_fin = ? WHERE id_reparation = ? AND statut = ?");
+        ps.setTimestamp(1, o.getDateBS());
+        ps.setInt(2, o.getId());
+        ps.setString(3, o.getOldStatus().toString());
+        System.out.println(o.getOldStatus() + " " + o.getDateBS());
+        
+        ps.execute();
+        logger.info("Database request has been executed. The operation #" + o.getId() + " has been updated in database > reparation_histo_temps.");
+    }
+    
+    public void createWorkflow(Operation o) throws Exception {
+        int id = o.getId();
+        String status = o.getStatus().toString();
+        java.sql.Timestamp date = o.getDateBS();
+        int parkingSpace = o.getParkingSpace();
+        
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+        
+        logger.info("Preparing SQL statement for operation #" + o.getId() + " new status creation in reparation_histo_temps...");
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO reparation_histo_temps ( id_reparation, statut, date_debut, id_place ) VALUES ( ?, ?, ?, ? )");
+        ps.setInt(1, id);
+        ps.setString(2, status);
+        ps.setTimestamp(3, date);
+        ps.setInt(4, parkingSpace);
+        ps.execute();
+        logger.info("Database request has been executed. A new status for operation #" + o.getId() + " has been created in database > reparation_histo_temps.");
+
+        pool.returnConnection(conn);
+    }
 
     /**
      * Gets an empty parking space.
@@ -185,37 +222,4 @@ public class OperationDAO {
             return null;
         }
     }
-
-    /**
-     * Gets information from an existing car by its ID.
-     *
-     * @param id of the car to be read.
-     * @return the information on the part.
-     * @throws Exception if a connection issue is encountered.
-     */
-    public Vehicle read(int id) throws Exception {
-
-        Connection conn = pool.getConnection();
-        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-
-        logger.info("Preparing SQL statement for vehicle #" + id + " reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM vehicule WHERE id_vehicule = ?");
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        logger.info("Database request has been successfully executed.");
-
-        pool.returnConnection(conn);
-        logger.info("Connection " + conn + " returned to the connection pool.");
-
-        if (rs.next()) {
-            String immatriculation = rs.getString("immatriculation");
-
-            logger.info("Successfully get vehicle #" + id + " information from database.");
-            return new Vehicle(id,immatriculation,"","","");
-        } else {
-            logger.error("Database request did not return any information. The vehicle #" + id + " may not exist.");
-            return null;
-        }
-    }
-
 }

@@ -44,6 +44,9 @@ public class Operation implements Serializable {
 
     /** The identifier of the parking space. */
     private int parkingSpace;
+    
+    /** The old status of the operation to be used when searching the operation status in reparation_histo_temps */
+    private OperationStatus oldStatus;
 
     /**
      * Default constructor.
@@ -247,7 +250,7 @@ public class Operation implements Serializable {
     }
     
     public void setDateBS(java.sql.Timestamp dateBS) {
-        this.dateBS = dateES;
+        this.dateBS = dateBS;
     }
     
     public java.sql.Timestamp getDateES() {
@@ -273,5 +276,12 @@ public class Operation implements Serializable {
     public void setParkingSpace(int parkingSpace) {
         this.parkingSpace = parkingSpace;
     }
+    
+    public OperationStatus getOldStatus() {
+        return oldStatus;
+    }
 
+    public void setOldStatus(OperationStatus oldStatus) {
+        this.oldStatus = oldStatus;
+    }
 }

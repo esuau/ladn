@@ -120,6 +120,14 @@ public class ConnectionThread extends Thread {
                     logger.info("Attempt to update operation in database.");
                     repDAO.updateOperation((Operation) container.getObject());
                     break;
+                case UPDATE_WORKFLOW:
+                    logger.info("Attempt to update operation status in database > reparation_histo_temps.");
+                    repDAO.updateWorkflow((Operation) container.getObject());
+                    break;
+                case CREATE_WORKFLOW:
+                    logger.info("Attempt to update operation status in database > reparation_histo_temps.");
+                    repDAO.createWorkflow((Operation) container.getObject());
+                    break;
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }
