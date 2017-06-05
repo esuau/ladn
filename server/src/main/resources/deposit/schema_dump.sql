@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost:8889
--- Généré le :  Dim 04 Juin 2017 à 14:09
+-- Généré le :  Lun 05 Juin 2017 à 14:34
 -- Version du serveur :  5.5.42
 -- Version de PHP :  7.0.0
 
@@ -140,15 +140,31 @@ CREATE TABLE `piece` (
   `fabricant` varchar(25) DEFAULT NULL,
   `valeur_piece` decimal(15,3) DEFAULT NULL,
   `qte_dispo` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `piece`
 --
 
 INSERT INTO `piece` (`id_piece`, `libelle_piece`, `fabricant`, `valeur_piece`, `qte_dispo`) VALUES
-(1, 'PNEU', 'MICHELIN', '30.000', -73),
-(2, 'MOTEUR', 'BMW', '1430.000', 72);
+(1, 'PNEU', 'MICHELIN', '30.000', 143),
+(2, 'MOTEUR', 'ELRUN', '1430.000', 66),
+(3, 'AMPOULE', 'PHILIPS', '4.000', 100),
+(4, 'RETROVISEUR', 'RETROGLASS', '19.000', 50),
+(5, 'PARE-BRISE', 'CARGLASS', '30.000', 120),
+(6, 'CLE', 'ELRUN', '14.000', 24),
+(7, 'VOLANT', 'ELRUN', '32.000', 12),
+(8, 'BATTERIE', 'ELRUN', '60.000', 20),
+(9, 'CÂBLE', 'ELECC2', '1.000', 80),
+(10, 'ANTENNE', 'PHILIPS', '3.000', 12),
+(11, 'SIEGE', 'ELRUN', '96.000', 8),
+(12, 'CEINTURE', 'DRIVSAF', '25.000', 15),
+(13, 'POIGNÉE PORTE', 'ELRUN', '12.000', 8),
+(14, 'EMBRAYAGE', 'ELRUN', '170.000', 4),
+(15, 'BOÎTE DE VITESSE', 'ELRUN', '302.000', 6),
+(16, 'BOÎTE À GANTS', 'ELRUN', '13.000', 2),
+(17, 'PLAQUETTE FREIN', 'SKRT', '20.000', 26),
+(18, 'TAPIS SOL', 'ALC', '10.000', 45);
 
 -- --------------------------------------------------------
 
@@ -200,7 +216,8 @@ CREATE TABLE `reparation_histo_temps` (
 --
 
 INSERT INTO `reparation_histo_temps` (`id_reparation`, `statut`, `date_debut`, `date_fin`, `id_place`) VALUES
-(1, 'diagnostiqué', '2017-06-03 22:00:00', NULL, 2);
+(1, 'diagnostiqué', '2017-05-31 22:00:00', '2017-06-05 08:02:49', 2),
+(1, 'réparé', '2017-06-05 08:02:49', NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -225,7 +242,7 @@ CREATE TABLE `reparer` (
 --
 
 INSERT INTO `reparer` (`id_reparation`, `id_technicien`, `id_place`, `id_vehicule`, `statut_reparation`, `priorite_reparation`, `commentaire`, `date_entree_vehicule`, `date_sortie_vehicule`) VALUES
-(1, 0, -1, 1, 'réparation en cours', NULL, 'C le pre a pé é boi', '0000-00-00 00:00:00', NULL),
+(1, 0, 2, 1, 'réparé', NULL, 'C le pre a pé é boi', '0000-00-00 00:00:00', NULL),
 (2, 1, 1, 1, NULL, NULL, NULL, NULL, NULL),
 (3, 2, 3, 2, NULL, NULL, NULL, NULL, NULL);
 
@@ -328,7 +345,7 @@ ALTER TABLE `panne`
 -- AUTO_INCREMENT pour la table `piece`
 --
 ALTER TABLE `piece`
-  MODIFY `id_piece` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id_piece` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT pour la table `place`
 --
