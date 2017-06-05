@@ -25,7 +25,7 @@ public class StatsViewCtMoyen extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	 private final static Logger logger = Logger.getLogger(Delete.class.getName());
+	 private final static Logger logger = Logger.getLogger(StatsViewCtMoyen.class.getName());
 
 	    /** The client. */
 	private Client client;

@@ -27,7 +27,7 @@ public class StatsViewNbOp extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	 private final static Logger logger = Logger.getLogger(Delete.class.getName());
+	 private final static Logger logger = Logger.getLogger(StatsViewNbOp.class.getName());
 
 	    /** The client. */
 	private Client client;

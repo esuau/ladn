@@ -26,7 +26,7 @@ public class StatsViewConso extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	 private final static Logger logger = Logger.getLogger(Delete.class.getName());
+	 private final static Logger logger = Logger.getLogger(StatsViewConso.class.getName());
 
 	    /** The client. */
 	private Client client;

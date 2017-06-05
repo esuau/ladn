@@ -26,7 +26,7 @@ public class StatsViewTmpsOp extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	 private final static Logger logger = Logger.getLogger(Delete.class.getName());
+	 private final static Logger logger = Logger.getLogger(StatsViewTmpsOp.class.getName());
 
 	    /** The client. */
 	private Client client;

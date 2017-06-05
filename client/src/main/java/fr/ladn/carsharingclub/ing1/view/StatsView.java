@@ -29,7 +29,7 @@ public class StatsView extends JPanel {
 	 * Create the panel.
 	 */
 	/** The logger. */
-    private final static Logger logger = Logger.getLogger(Delete.class.getName());
+    private final static Logger logger = Logger.getLogger(StatsView.class.getName());
 
     /** The client. */
     private Client client;
