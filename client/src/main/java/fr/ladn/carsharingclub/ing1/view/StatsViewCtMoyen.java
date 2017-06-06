@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.SystemColor;
+import java.util.ArrayList;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -17,6 +18,7 @@ import javax.swing.border.LineBorder;
 
 import org.apache.log4j.Logger;
 
+import fr.ladn.carsharingclub.ing1.model.Technician;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 
 public class StatsViewCtMoyen extends JPanel {
@@ -53,7 +55,10 @@ public class StatsViewCtMoyen extends JPanel {
 		txtpnPanne.setBackground(SystemColor.menu);
 		
 		JComboBox comboBox_7 = new JComboBox();
-		
+		ArrayList<Technician> lTechnicians = client.getTechnicians();
+        for (Technician t : lTechnicians) {
+            comboBox_7.addItem(t);
+        }
 		JTextPane txtpnTechnicien = new JTextPane();
 		txtpnTechnicien.setText("Technicien :");
 		txtpnTechnicien.setFont(new Font("Tahoma", Font.BOLD, 13));

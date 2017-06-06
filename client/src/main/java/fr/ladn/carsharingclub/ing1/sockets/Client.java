@@ -3,6 +3,7 @@ package fr.ladn.carsharingclub.ing1.sockets;
 import fr.ladn.carsharingclub.ing1.model.Operation;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.model.Reparation;
+import fr.ladn.carsharingclub.ing1.model.Technician;
 import fr.ladn.carsharingclub.ing1.model.Vehicle;
 import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import fr.ladn.carsharingclub.ing1.utils.Container;
@@ -148,6 +149,41 @@ public class Client extends Thread {
             logger.error("Failed to get parts from the server: " + e.getMessage());
         } catch (NullPointerException e) {
             logger.error("No part was returned from the server.");
+        }
+        return null;
+    }
+    public Technician getTechnician(int id) {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.READ_TECHNICIAN, new Technician(id)));
+            Technician technician = (Technician) getData(socketClient).getObject();
+            socketClient.close();
+            return technician;
+        } catch (IOException e) {
+            logger.error("Failed to get technician #" + id + " from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No technician was returned from the server.");
+        }
+        return null;
+    }
+
+    /**
+     * Gets all the existing parts transmitted by the server.
+     *
+     * @return the list of all the existing parts.
+     */
+    public ArrayList<Technician> getTechnicians() {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.READ_TECHNICIAN, new Technician(-1)));
+            Container<ArrayList<Technician>> receivedContainer = getData(socketClient);
+            ArrayList<Technician> technicians = receivedContainer.getObject();
+            socketClient.close();
+            return technicians;
+        } catch (IOException e) {
+            logger.error("Failed to get technicians from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No technicians was returned from the server.");
         }
         return null;
     }

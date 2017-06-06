@@ -55,7 +55,15 @@ public class Technician implements Serializable {
         this.password = password;
         this.rights = rights;
     }
-
+    public Technician(int id) {
+        logger.info("Creating new instance of Technician...");
+        this.id = id;
+        this.firstName = "";
+        this.lastName = "";
+        this.phoneNumber = "";
+        this.password = "";
+        this.rights = TechnicianRights.valueOf("TECHNICIAN");
+    }
     /**
      * Instantiates a technician without ID and phone number.
      *

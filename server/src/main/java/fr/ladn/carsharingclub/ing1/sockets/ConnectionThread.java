@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
+import fr.ladn.carsharingclub.ing1.db.TechnicianDAO;
 import fr.ladn.carsharingclub.ing1.db.VehicleDAO;
 import fr.ladn.carsharingclub.ing1.db.OperationDAO;
 import fr.ladn.carsharingclub.ing1.model.*;
@@ -36,6 +37,7 @@ public class ConnectionThread extends Thread {
     private PartDAO partDAO;
     private OperationDAO repDAO;
     private VehicleDAO vecDAO;
+    private TechnicianDAO techDAO;
 
     /**
      * Gets the socket initialized by the server.
@@ -49,6 +51,7 @@ public class ConnectionThread extends Thread {
         this.partDAO = new PartDAO(connectionPool);
         this.repDAO = new OperationDAO(connectionPool);
         this.vecDAO = new VehicleDAO(connectionPool);
+        this.techDAO = new TechnicianDAO(connectionPool);
     }
 
     /**
@@ -88,6 +91,12 @@ public class ConnectionThread extends Thread {
                     int id = ((Part) container.getObject()).getId();
                     if (id > 0) sendData(new Container<>(CRUD.PING, partDAO.read(id)));
                     else sendData(new Container<>(CRUD.PING, partDAO.readAll()));
+                    break;
+                case READ_TECHNICIAN:
+                	logger.info("Attempt to read technician from database.");
+                    int id_tech = ((Technician) container.getObject()).getId();
+                    if (id_tech > 0) sendData(new Container<>(CRUD.PING, techDAO.read(id_tech)));
+                    else sendData(new Container<>(CRUD.PING, techDAO.readAll()));
                     break;
                 case UPDATE:
                     logger.info("Attempt to update part in database.");

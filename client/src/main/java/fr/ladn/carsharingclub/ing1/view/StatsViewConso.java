@@ -19,6 +19,7 @@ import javax.swing.border.LineBorder;
 import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
+import fr.ladn.carsharingclub.ing1.model.Technician;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 
 public class StatsViewConso extends JPanel {
@@ -115,7 +116,10 @@ public class StatsViewConso extends JPanel {
 		txtpnPanne.setBackground(SystemColor.menu);
 		
 		JComboBox comboBox_7 = new JComboBox();
-		
+		ArrayList<Technician> lTechnicians = client.getTechnicians();
+        for (Technician t : lTechnicians) {
+            comboBox_7.addItem(t);
+        }
 		
 		JTextPane txtpnTechnicien = new JTextPane();
 		txtpnTechnicien.setText("Technicien :");

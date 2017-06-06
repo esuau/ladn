@@ -5,6 +5,7 @@ import javax.swing.border.LineBorder;
 
 import org.apache.log4j.Logger;
 
+import fr.ladn.carsharingclub.ing1.model.Technician;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 
 import java.awt.Color;
@@ -20,6 +21,7 @@ import java.awt.GridLayout;
 import java.awt.SystemColor;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class StatsViewNbOp extends JPanel {
@@ -109,6 +111,10 @@ public class StatsViewNbOp extends JPanel {
 		txtpnPanne.setBackground(SystemColor.menu);
 		
 		JComboBox comboBox_7 = new JComboBox();
+		ArrayList<Technician> lTechnicians = client.getTechnicians();
+        for (Technician t : lTechnicians) {
+            comboBox_7.addItem(t);
+        }
 		
 		JTextPane txtpnTechnicien = new JTextPane();
 		txtpnTechnicien.setText("Technicien :");

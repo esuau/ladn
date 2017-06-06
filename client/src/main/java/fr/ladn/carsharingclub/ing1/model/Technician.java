@@ -55,6 +55,10 @@ public class Technician implements Serializable {
         this.password = password;
         this.rights = rights;
     }
+    public Technician(int id){
+    	logger.info("Creating new instance of Technician...");
+    	this.id=id;
+    }
 
     /**
      * Instantiates a technician without ID and phone number.
@@ -137,4 +141,8 @@ public class Technician implements Serializable {
     public void setRights(TechnicianRights rights) {
         this.rights = rights;
     }
+    public String toString() {
+        return getFirstName()+" "+getLastName();
+    }
+
 }
