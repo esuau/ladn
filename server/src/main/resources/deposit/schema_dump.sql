@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 05 Juin 2017 à 20:24
+-- Généré le :  Mer 07 Juin 2017 à 19:55
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -46,7 +46,8 @@ CREATE TABLE IF NOT EXISTS `commande` (
   `prix_commande_TTC` decimal(15,3) DEFAULT NULL,
   `id_technicien` int(11) DEFAULT NULL,
   PRIMARY KEY (`num_commande`),
-  KEY `FK_Commandes_id_technicien` (`id_technicien`)
+  KEY `FK_Commandes_id_technicien` (`id_technicien`),
+  KEY `id_technicien` (`id_technicien`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -133,15 +134,17 @@ CREATE TABLE IF NOT EXISTS `panne` (
   PRIMARY KEY (`id_panne`),
   UNIQUE KEY `pannes_id_panne_uindex` (`id_panne`),
   KEY `pannes_type_panne_index` (`type_panne`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Contenu de la table `panne`
 --
 
 INSERT INTO `panne` (`id_panne`, `intitule`, `type_panne`, `descriptif_protocole`, `temps_estime`) VALUES
-(1, 'PNEU CREVE', 3, NULL, NULL),
-(2, 'PAREBRISE CASSE', NULL, NULL, NULL);
+(1, 'PNEU CREVE', 3, NULL, '00:01:00'),
+(2, 'PAREBRISE CASSE', NULL, NULL, '01:04:00'),
+(3, 'PANNE MOTEUR', 1, 'Retirer le moteur, remettre un moteur neuf', '02:00:00'),
+(4, 'BRIS DE GLACE - PHARE', 3, 'Remplacer le phare', '00:45:00');
 
 -- --------------------------------------------------------
 
@@ -169,7 +172,7 @@ INSERT INTO `piece` (`id_piece`, `libelle_piece`, `fabricant`, `valeur_piece`, `
 (4, 'RETROVISEUR', 'RETROGLASS', '19.000', 50),
 (5, 'PARE-BRISE', 'CARGLASS', '30.000', 120),
 (6, 'CLE', 'ELRUN', '14.000', 24),
-(7, 'VOLANT', 'ELRUN', '32.000', 12),
+(7, 'VOLANT', 'ELRUN', '32.000', 11),
 (8, 'BATTERIE', 'ELRUN', '60.000', 20),
 (9, 'CÂBLE', 'ELECC2', '1.000', 80),
 (10, 'ANTENNE', 'PHILIPS', '3.000', 12),
@@ -256,7 +259,9 @@ CREATE TABLE IF NOT EXISTS `reparer` (
   `date_sortie_vehicule` datetime DEFAULT NULL,
   PRIMARY KEY (`id_reparation`),
   UNIQUE KEY `reparer_id_reparation_uindex` (`id_reparation`),
-  KEY `reparation_place_id_place_fk` (`id_place`)
+  KEY `reparation_place_id_place_fk` (`id_place`),
+  KEY `id_technicien` (`id_technicien`),
+  KEY `id_place` (`id_place`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
@@ -264,9 +269,9 @@ CREATE TABLE IF NOT EXISTS `reparer` (
 --
 
 INSERT INTO `reparer` (`id_reparation`, `id_technicien`, `id_place`, `id_vehicule`, `statut_reparation`, `priorite_reparation`, `commentaire`, `date_entree_vehicule`, `date_sortie_vehicule`) VALUES
-(1, 0, -1, 1, 'réparation en cours', NULL, 'C le pre a pé é boi', '0000-00-00 00:00:00', NULL),
-(2, 1, 1, 1, NULL, NULL, NULL, NULL, NULL),
-(3, 2, 3, 2, NULL, NULL, NULL, NULL, NULL);
+(1, 1, -1, 1, 'réparation en cours', NULL, 'C le pre a pé é boi', '0000-00-00 00:00:00', NULL),
+(2, 2, 1, 1, NULL, NULL, NULL, NULL, NULL),
+(3, 3, 3, 2, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -275,20 +280,20 @@ INSERT INTO `reparer` (`id_reparation`, `id_technicien`, `id_place`, `id_vehicul
 --
 
 CREATE TABLE IF NOT EXISTS `technicien` (
-  `id_technicen` int(11) NOT NULL AUTO_INCREMENT,
+  `id_technicien` int(11) NOT NULL AUTO_INCREMENT,
   `prenom` varchar(25) NOT NULL,
   `nom` varchar(25) NOT NULL,
   `num_tel` varchar(10) NOT NULL,
   `mot_de_passe` varchar(10) NOT NULL,
   `rights` enum('MANAGER','TECHNICIAN') NOT NULL,
-  PRIMARY KEY (`id_technicen`)
+  PRIMARY KEY (`id_technicien`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Contenu de la table `technicien`
 --
 
-INSERT INTO `technicien` (`id_technicen`, `prenom`, `nom`, `num_tel`, `mot_de_passe`, `rights`) VALUES
+INSERT INTO `technicien` (`id_technicien`, `prenom`, `nom`, `num_tel`, `mot_de_passe`, `rights`) VALUES
 (1, 'Ambre', 'WODLING', '0678984565', 'password', 'MANAGER'),
 (2, 'Louis', 'ENDELICHER', '0783456734', 'louis', 'TECHNICIAN'),
 (3, 'Djouher', 'KAHEL', '0786745634', 'djodjo', 'TECHNICIAN'),
@@ -309,6 +314,12 @@ INSERT INTO `technicien` (`id_technicen`, `prenom`, `nom`, `num_tel`, `mot_de_pa
 --
 ALTER TABLE `assoc_reparation_panne`
   ADD CONSTRAINT `assoc_reparation_panne_panne_id_panne_fk` FOREIGN KEY (`id_reparation`) REFERENCES `panne` (`id_panne`);
+
+--
+-- Contraintes pour la table `commande`
+--
+ALTER TABLE `commande`
+  ADD CONSTRAINT `foreign_commande` FOREIGN KEY (`id_technicien`) REFERENCES `technicien` (`id_technicien`);
 
 --
 -- Contraintes pour la table `etre_composee_de`
@@ -347,6 +358,7 @@ ALTER TABLE `reparation_histo_temps`
 -- Contraintes pour la table `reparer`
 --
 ALTER TABLE `reparer`
+  ADD CONSTRAINT `foreign_rep_tech` FOREIGN KEY (`id_technicien`) REFERENCES `technicien` (`id_technicien`),
   ADD CONSTRAINT `reparation_place_id_place_fk` FOREIGN KEY (`id_place`) REFERENCES `place` (`id_place`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
