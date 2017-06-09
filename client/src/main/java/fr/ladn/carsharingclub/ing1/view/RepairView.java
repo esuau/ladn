@@ -224,7 +224,12 @@ class RepairView extends JFrame implements ActionListener {
         this.getContentPane().add(commentaire, BorderLayout.SOUTH);
         operation.setParkingSpace(-1);
         operation.setStatus(OperationStatus.INPROGRESS);
+        operation.setDateBS(new java.sql.Timestamp(new Date().getTime()));
+        
         client.updateOperation(operation);
+        client.updateWorkflow(operation);
+        client.createWorkflow(operation);
+        operation.setOldStatus(operation.getStatus());
 
         this.setSize(680, 680);
         this.setLocationRelativeTo(null);
@@ -313,7 +318,7 @@ class RepairView extends JFrame implements ActionListener {
                     client.createWorkflow(operation);
                         
                     this.dispose();
-                }  catch (Exception exception) {
+                } catch (Exception exception) {
                     
                 }
             }
