@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -222,4 +223,47 @@ public class OperationDAO {
             return null;
         }
     }
+    
+    /**
+     * Creates a new operation in database.
+     * 
+     * @return the identifier of an empty parking spot.
+     * @throws SQLException in case of issue with the SQL request.
+     */
+    public int createOperation(Operation operation) throws Exception {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+        
+        int spaceId = this.readEmptySpace();
+
+        logger.info("Preparing SQL statement to create operation in database...");
+        PreparedStatement ps = pool.getConnection().prepareStatement("INSERT INTO reparer (id_place, id_vehicle, statut_reparation, priorite_reparation, date_entree_vehicule) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        ps.setInt(1, spaceId);
+        ps.setInt(2, operation.getVehicle().getId());
+        ps.setString(3, OperationStatus.DIAGNOSED.toString());
+        ps.setInt(4, operation.getPriority().getPriorityLevel());
+        ps.setTimestamp(5, operation.getDateEntry());
+        ps.executeUpdate();
+        logger.info("Database request has been executed.");
+
+        ResultSet rs = ps.getGeneratedKeys();
+        
+        if (rs.next()) { 
+        	int lastInsertedId = rs.getInt(1);
+        }
+        
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+
+        if (rs.next()) {
+            Integer idEmptySpace = rs.getInt("id_place");
+            logger.info("Successfully get empty place #" + idEmptySpace + " from database.");
+            return idEmptySpace;
+        } else {
+            logger.error("Database request did not return any space information.");
+            return -1;
+        }
+    }
+    
 }

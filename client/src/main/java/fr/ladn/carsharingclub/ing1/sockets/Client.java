@@ -332,4 +332,14 @@ public class Client extends Thread {
             logger.error("Failed to send operation #" + operation.getId() + " to the server: " + e.getMessage());
         }
     }
+    
+    public void createRepairWork(Operation operation) {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.CREATE_REPARATION, operation));
+            socketClient.close();
+        } catch (IOException e) {
+            logger.error("Failed to send operation #" + operation.getId() + " to the server: " + e.getMessage());
+        }
+    }
 }

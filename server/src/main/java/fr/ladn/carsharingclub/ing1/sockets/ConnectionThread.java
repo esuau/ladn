@@ -137,6 +137,10 @@ public class ConnectionThread extends Thread {
                     logger.info("Attempt to update operation status in database > reparation_histo_temps.");
                     repDAO.createWorkflow((Operation) container.getObject());
                     break;
+                case CREATE_REPARATION:
+                    logger.info("Attempt to create operation in database.");
+                    repDAO.createOperation((Operation) container.getObject());
+                    break;
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }
