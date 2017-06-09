@@ -43,6 +43,11 @@ public class Vehicle implements Serializable {
         this.manufacturer = manufacturer;
         this.version = version;
     }
+    
+    public Vehicle(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
 
     /**
      * Instantiates a new vehicle with ID.

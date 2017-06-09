@@ -108,9 +108,8 @@ public class ConnectionThread extends Thread {
                     break;
                 case READ_OPERATION_S:
                     logger.info("Attempt to read operation in database.");
-                    ArrayList<String> statuts = ((Reparation)container.getObject()).getList();
-                    //int iden = ((Reparation) container.getObject()).getId_reparation();
-                   /* if (iden < 0)*/ sendData(new Container<>(CRUD.PING, repDAO.displayVehicleByStatus(statuts)));
+                    String status=((Operation) (container.getObject())).getStatusStr();
+                    sendData(new Container<>(CRUD.PING, repDAO.displayVehicleByStatus(status)));
                     break;
                 case READ_PARTS_FAILURE:
                     logger.info("Attempt to read assoc_reparation_pannes.");

@@ -26,7 +26,10 @@ public class Operation implements Serializable {
 
     /** The priority level of the operation. */
     private OperationPriority priority;
-
+    
+     /** The priority level of the operation. */
+    private int priorityStr;
+    
     /** The date of entry of the vehicle in the deposit. */
     private java.sql.Timestamp dateEntry;
 
@@ -47,6 +50,9 @@ public class Operation implements Serializable {
     
     /** The old status of the operation to be used when searching the operation status in reparation_histo_temps */
     private OperationStatus oldStatus;
+    
+    /** The old status of the operation to be used when searching the operation status in reparation_histo_temps */
+    private String statusStr;
 
     /**
      * Default constructor.
@@ -111,6 +117,20 @@ public class Operation implements Serializable {
         this.dateExit = dateExit;
         this.parkingSpace = parkingSpace;
     }
+    
+    public Operation(int id,String statut_reparation,int priorite,java.sql.Timestamp date_entree_vehicule,java.sql.Timestamp date_sortie, Technician id_technicien,Vehicle id_vehicule,int id_place) {
+        
+        this.id = id;
+        this.dateEntry = date_entree_vehicule;
+        this.priorityStr=priorite;
+        this.statusStr =statut_reparation ;
+        this.dateExit = date_sortie;
+        this.technician = id_technicien;
+        this.vehicle=id_vehicule;
+        this.parkingSpace=id_place;
+      
+    }
+
 
     /**
      * Constructor of the operation.
@@ -241,6 +261,14 @@ public class Operation implements Serializable {
         return priority;
     }
 
+    public void setStatusStr(String statusStr) {
+        this.statusStr = statusStr;
+    }
+
+    public String getStatusStr() {
+        return statusStr;
+    }
+
     public void setPriority(OperationPriority priority) {
         this.priority = priority;
     }
@@ -279,6 +307,14 @@ public class Operation implements Serializable {
     
     public OperationStatus getOldStatus() {
         return oldStatus;
+    }
+
+    public void setPriorityStr(int priorityStr) {
+        this.priorityStr = priorityStr;
+    }
+
+    public int getPriorityStr() {
+        return priorityStr;
     }
 
     public void setOldStatus(OperationStatus oldStatus) {
