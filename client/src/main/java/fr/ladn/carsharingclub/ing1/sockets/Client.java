@@ -214,14 +214,15 @@ public class Client extends Thread {
      * @param l the list of operations.
      * @return the corresponding list of operation.
      */
-    public ArrayList<Reparation> getOperationsStatus(ArrayList<String> l) {
+    public ArrayList<Operation> getOperationsStatus(String s) {
         try {
+            
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(CRUD.READ_OPERATION_S, new Reparation(-1, l)));
-            Container<ArrayList<Reparation>> receivedContainer = getData(socketClient);
-            ArrayList<Reparation> reparations;
-            reparations = receivedContainer.getObject();
-            socketClient.close();
+             sendData(socketClient, new Container<>(CRUD.READ_OPERATION_S, new Operation(0,s,0,null,null,null,null,0)));
+             Container<ArrayList<Operation>> receivedContainer = getData(socketClient);
+             ArrayList<Operation> reparations=new ArrayList<>();
+             reparations.addAll(receivedContainer.getObject());
+             socketClient.close();
             return reparations;
         } catch (IOException e) {
             logger.error("Failed to get operations from the server: " + e.getMessage());

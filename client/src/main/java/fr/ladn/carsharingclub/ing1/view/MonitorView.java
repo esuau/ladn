@@ -1,36 +1,39 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package fr.ladn.carsharingclub.ing1.view;
 
+import fr.ladn.carsharingclub.ing1.model.Operation;
 import fr.ladn.carsharingclub.ing1.model.Reparation;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
-
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.*;
 import java.awt.*;
-
 import org.apache.log4j.Logger;
-
 /**
- * The view for monitoring the deposit activity.
- * Allows to access the list of ongoing operations by status.
+ *
+ * @author kahel
  */
-class MonitorView extends javax.swing.JPanel {
-
-    /** The logger. */
-    private final static Logger logger = Logger.getLogger(MonitorView.class.getName());
-
-    /** The client. */
+public class MonitorView extends javax.swing.JPanel {
+    
+    ArrayList<Operation> reparations;
+    ArrayList<Operation> diag;
+    ArrayList<Operation> encour;
+    ArrayList<Operation> susp;
+    ArrayList<Operation> rep;
     private Client client;
-
-    /** The list of selected status. */
-    private ArrayList<String> statusList;
-
-    /** Instanciates the view for monitoring. */
-    MonitorView(Client client) {
-        this.client = client;
-        initComponents();
-        statusList = new ArrayList<>();
-        logger.info("Monitor tab has been initialized and is included to the main view.");
+    private final static Logger logger = Logger.getLogger(MonitorView.class.getName());
+    /**
+     * Creates new form Monitor
+     */
+    public MonitorView(Client client){
+               this.client=client;
+               initComponents();
+               reparations=new ArrayList<>();
+              
     }
 
     /**
@@ -42,22 +45,38 @@ class MonitorView extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        buttonGroup3 = new javax.swing.ButtonGroup();
+        buttonGroup4 = new javax.swing.ButtonGroup();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
         jCheckBox4 = new javax.swing.JCheckBox();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
-        jCheckBox1.setText("Diagnostiqué");
+        jLabel1.setText("Filtrer par statut (cochez ci-dessous) : ");
+
+        jLabel2.setText("AFFICHAGE PAR STATUT PRIORISE DES OPERATIONS");
+
+        jButton1.setText("Afficher");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jCheckBox1.setText("DiagnostiquÃ©");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox1ActionPerformed(evt);
             }
         });
 
-        jCheckBox2.setText("En cours de réparation");
+        jCheckBox2.setText("En cours de rÃ©paration");
         jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox2ActionPerformed(evt);
@@ -71,133 +90,139 @@ class MonitorView extends javax.swing.JPanel {
             }
         });
 
-        jCheckBox4.setText("Réparer");
+        jCheckBox4.setText("RÃ©parer");
         jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox4ActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Filtrer par statut (cochez ci-dessous) : ");
-
-        jLabel2.setText("AFFICHER LES OPERATION SUR LES VEHICULES ACTUELLEMENT DANS LE DEPOT");
-
-        jButton1.setText("Afficher");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jLabel3.setText("SUR LES VEHICULE ACTUELLEMENT DANS LE DEPOT");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGap(20, 20, 20)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jCheckBox4)
-                                                        .addComponent(jLabel1)
-                                                        .addComponent(jCheckBox2)
-                                                        .addComponent(jCheckBox1)
-                                                        .addComponent(jCheckBox3)))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGap(223, 223, 223)
-                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGap(271, 271, 271)
-                                                .addComponent(jButton1)))
-                                .addContainerGap(228, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jCheckBox1)
+                            .addComponent(jCheckBox2)
+                            .addComponent(jCheckBox3)
+                            .addComponent(jCheckBox4)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(260, 260, 260)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(179, 179, 179)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))))
+                .addContainerGap(272, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(24, 24, 24)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox4)
-                                .addGap(21, 21, 21)
-                                .addComponent(jButton1)
-                                .addContainerGap(274, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addGap(41, 41, 41)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox4)
+                .addGap(29, 29, 29)
+                .addComponent(jButton1)
+                .addContainerGap(244, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+         try {
+              String[] tableHeader = {"id_reparation","statut","priorite","date entree","date sortie","id technicien","id vehicule","id place"};
+
+                        JFrame fenetre = new JFrame();
+
+                        reparations.clear();
+                        fenetre.setTitle("Operation en cours");
+                        if(jCheckBox1.isSelected())reparations.addAll(client.getOperationsStatus("diagnostiqué"));
+                        if(jCheckBox2.isSelected())reparations.addAll(client.getOperationsStatus("réparation en cours"));
+                        if(jCheckBox3.isSelected())reparations.addAll(client.getOperationsStatus("réparation suspendue"));
+                        if(jCheckBox4.isSelected())reparations.addAll(client.getOperationsStatus("reparé"));
+                        
+                        
+                        Object[][] donnees = new Object[reparations.size()][tableHeader.length];
+                        for (int i = 0; i < reparations.size(); i++) {
+                            donnees[i][0] = reparations.get(i).getId();
+                            donnees[i][1] = reparations.get(i).getStatusStr();
+                            donnees[i][2] = reparations.get(i).getPriorityStr();
+                            donnees[i][3] = reparations.get(i).getDateEntry();
+                            donnees[i][4] = reparations.get(i).getDateExit();
+                            donnees[i][5] = reparations.get(i).getTechnician().getId();
+                            donnees[i][6] = reparations.get(i).getVehicle().getId();
+                            donnees[i][7] = reparations.get(i).getParkingSpace();
+                            
+                        }
+                        JTable tableau = new JTable(donnees, tableHeader);
+                        JScrollPane menuder = new JScrollPane(tableau);
+                        fenetre.getContentPane().add(tableau.getTableHeader(), BorderLayout.NORTH);
+                        fenetre.getContentPane().add(menuder, BorderLayout.CENTER);
+                        fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        fenetre.pack();
+                        if (donnees.length == 0) JOptionPane.showMessageDialog(null, "Il n'y a pas d'operations correspondant à  vos criteres");
+                        fenetre.setVisible(true);
+                        
+                        
+              //new AppView(client).display();
+              
+               
+                } catch (Exception err) {
+                    JOptionPane.showMessageDialog(null, "erreur lors de la lecture des operations.");
+                    logger.error("Failed to read part. Exception: " + err.getMessage());
+                }
+            
+
+        
+  
+
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jCheckBox4ActionPerformed
+
+    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jCheckBox3ActionPerformed
+
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        statusList.add("diagnostique");
+        // TODO add your handling code here:
+
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
-        statusList.add("en cours");
+        // TODO add your handling code here:
+
     }//GEN-LAST:event_jCheckBox2ActionPerformed
-
-    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
-        statusList.add("en suspend");
-    }//GEN-LAST:event_jCheckBox3ActionPerformed
-
-    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
-        statusList.add("reparer");
-    }//GEN-LAST:event_jCheckBox4ActionPerformed
-
-    /**
-     * Listens for actions on the button "Afficher".
-     * Displays the current operations in progress.
-     *
-     * @param evt the event on the button.
-     */
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        try {
-            String[] tableHeader = {"id_reparation", "statut", "priorite", "date entree", "date sortie", "id technicien", "id vehicule", "id panne", "id place"};
-
-            JFrame fenetre = new JFrame();
-
-            fenetre.setTitle("Opération en cours");
-            ArrayList<Reparation> reparations = client.getOperationsStatus(statusList);
-            Object[][] donnees = new Object[reparations.size()][tableHeader.length];
-
-            for (int i = 0; i < reparations.size(); i++) {
-                donnees[i][0] = reparations.get(i).getId_reparation();
-                donnees[i][1] = reparations.get(i).getStatut_reparation();
-                donnees[i][2] = reparations.get(i).getPriorite();
-                donnees[i][3] = reparations.get(i).getDate_entrée_vehicule();
-                donnees[i][4] = reparations.get(i).getDate_sortie();
-                donnees[i][5] = reparations.get(i).getId_technicien();
-                donnees[i][6] = reparations.get(i).getId_vehicule();
-                donnees[i][7] = reparations.get(i).getId_panne();
-                donnees[i][8] = reparations.get(i).getId_place();
-            }
-
-            JTable tableau = new JTable(donnees, tableHeader);
-            JScrollPane menuder = new JScrollPane(tableau);
-            fenetre.getContentPane().add(tableau.getTableHeader(), BorderLayout.NORTH);
-            fenetre.getContentPane().add(menuder, BorderLayout.CENTER);
-            fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            fenetre.pack();
-
-            if (donnees.length == 0)
-                JOptionPane.showMessageDialog(null, "Il n'y a pas d'opérations correspondant à vos critères.");
-
-            fenetre.setVisible(true);
-        } catch (Exception err) {
-            JOptionPane.showMessageDialog(null, "Erreur lors de la lecture des opérations.");
-            logger.error("Failed to read part. Exception: " + err.getMessage());
-        }
-
-
-    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
+    private javax.swing.ButtonGroup buttonGroup4;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
@@ -205,5 +230,6 @@ class MonitorView extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
 }

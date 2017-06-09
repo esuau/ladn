@@ -154,5 +154,9 @@ public class Reparation implements Serializable {
         this.id_place = id_place;
     }
 
+    public Object getDate_entree_vehicule() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 }
