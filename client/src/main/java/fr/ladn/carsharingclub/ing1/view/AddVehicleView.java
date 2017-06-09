@@ -1,8 +1,10 @@
 package fr.ladn.carsharingclub.ing1.view;
 
+import fr.ladn.carsharingclub.ing1.model.Failure;
 import fr.ladn.carsharingclub.ing1.model.Operation;
 import fr.ladn.carsharingclub.ing1.model.OperationPriority;
 import fr.ladn.carsharingclub.ing1.model.OperationStatus;
+import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.model.Vehicle;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 import org.apache.log4j.Logger;
@@ -15,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 
 class AddVehicleView extends JPanel {
@@ -100,7 +103,16 @@ class AddVehicleView extends JPanel {
         date.setEditable(false);
         date.setColumns(10);
 
-        JComboBox panne = new JComboBox();
+        JComboBox<Failure> panne ;
+        
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        ArrayList<Failure> fails = client.getFailures();
+        
+        for (Failure f : fails) {
+            model.addElement(f);
+        }
+        panne = new JComboBox<Failure>(model);
+        panne.setToolTipText("Sélectionner une pièce");
 
         JButton btnNewButton = new JButton("Ajouter panne");
 

@@ -1,5 +1,6 @@
 package fr.ladn.carsharingclub.ing1.sockets;
 
+import fr.ladn.carsharingclub.ing1.model.Failure;
 import fr.ladn.carsharingclub.ing1.model.Operation;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.model.Reparation;
@@ -342,5 +343,26 @@ public class Client extends Thread {
         } catch (IOException e) {
             logger.error("Failed to send operation #" + operation.getId() + " to the server: " + e.getMessage());
         }
+    }
+    
+    /**
+     * Gets all the existing Failures transmitted by the server.
+     *
+     * @return the list of all the existing failures.
+     */
+    public ArrayList<Failure> getFailures() {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.READ_FAILURES, new Failure(0,"", null, "", null)));
+            Container<ArrayList<Failure>> receivedContainer = getData(socketClient);
+            ArrayList<Failure> failure = receivedContainer.getObject();
+            socketClient.close();
+            return failure;
+        } catch (IOException e) {
+            logger.error("Failed to get failures from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No failure was returned from the server.");
+        }
+        return null;
     }
 }
