@@ -68,8 +68,10 @@ public class ConnectionThread extends Thread {
     }
 
     /**
-     * Turns the XML sent by the client into a 
-     * @see Part
+     * Operates actions depending on the instructions received from the client.
+     *
+     * @see CRUD
+     * @see Container
      */
     private void getData() {
         try {
@@ -138,7 +140,9 @@ public class ConnectionThread extends Thread {
                     break;
                 case CREATE_REPARATION:
                     logger.info("Attempt to create operation in database.");
-                    repDAO.createOperation((Operation) container.getObject());
+                    Operation operation = (Operation) container.getObject();
+                    operation.setId(repDAO.createOperation(operation));
+                    sendData(new Container<>(CRUD.PING, operation));
                     break;
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
