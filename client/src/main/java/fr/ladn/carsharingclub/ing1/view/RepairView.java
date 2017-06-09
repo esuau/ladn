@@ -232,8 +232,10 @@ class RepairView extends JFrame implements ActionListener {
         operation.setOldStatus(operation.getStatus());
 
         this.setSize(680, 680);
+        this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
     
     public String setStringPartsFailure(ArrayList<Part> lParts) {

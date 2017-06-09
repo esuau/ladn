@@ -54,16 +54,6 @@ public class AppView extends JPanel implements ActionListener {
         // Add the tabbed pane to this panel.
         add(tabbedPane);
 
-        
-        JPanel panel4 = new Delete(client);
-        panel4.setPreferredSize(new Dimension(410, 50));
-        tabbedPane.addTab("Supprimer une pièce", null, panel4, "Supprimer une ou plusieurs pièces.");
-        tabbedPane.setMnemonicAt(4, KeyEvent.VK_5);
-        
-
-        // Add the tabbed pane to this panel.
-        add(tabbedPane);
-
         // The following line enables to use scrolling tabs.
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
