@@ -7,8 +7,8 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +17,7 @@ import java.util.Date;
  * The RepairView.
  * Manages the view for operation execution.
  */
-class RepairView extends JPanel {
+class RepairView extends JFrame implements ActionListener {
 
     /** The logger. */
     private final static Logger logger = Logger.getLogger(RepairView.class.getName());
@@ -187,7 +187,7 @@ class RepairView extends JPanel {
         btnValider.setPreferredSize(new Dimension(150, 25));
 
         pannes.setBorder(BorderFactory.createTitledBorder("Opération"));
-        pannes.setPreferredSize(new Dimension(650, 350));
+        pannes.setPreferredSize(new Dimension(650, 320));
         spPannes.setPreferredSize(new Dimension(600, 120));
         tabPannes.setPreferredSize(new Dimension(600, 100));
         pannes.add(tabPannes.getTableHeader());
@@ -215,18 +215,19 @@ class RepairView extends JPanel {
         commentaire.add(btnSuspendre);
         commentaire.add(btnTerminer);
 
-        Listener listener = new Listener();
-        btnValider.addActionListener(listener);
-        btnSuspendre.addActionListener(listener);
-        btnTerminer.addActionListener(listener);
+        btnValider.addActionListener(this);
+        btnSuspendre.addActionListener(this);
+        btnTerminer.addActionListener(this);
 
-        this.add(infos, BorderLayout.NORTH);
-        this.add(pannes, BorderLayout.CENTER);
-        this.add(commentaire, BorderLayout.SOUTH);
+        this.getContentPane().add(infos, BorderLayout.NORTH);
+        this.getContentPane().add(pannes, BorderLayout.CENTER);
+        this.getContentPane().add(commentaire, BorderLayout.SOUTH);
         operation.setParkingSpace(-1);
         operation.setStatus(OperationStatus.INPROGRESS);
         client.updateOperation(operation);
 
+        this.setSize(680, 680);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
     
@@ -247,65 +248,73 @@ class RepairView extends JPanel {
         return partsForFailure;
     }
 
-    private class Listener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == btnValider && !nbPieces.getText().isEmpty()) {
-                Part mPart = (Part) cbPieces.getSelectedItem();
-                int qtPart = Integer.valueOf(nbPieces.getText());
-                
-                if (qtPart > 0) {
-                    String space = "";
-                    if(!tCommentaire.getText().equals("")) {
-                        space = " ";
-                    }
-                    
-                    mPart.setAvailableQuantity(mPart.getAvailableQuantity() - qtPart);
-                    client.updatePart(mPart);
-                    
-                    tCommentaire.setText(tCommentaire.getText() + space + "+" + qtPart + "x" + mPart);
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnValider && !nbPieces.getText().isEmpty()) {
+            Part mPart = (Part) cbPieces.getSelectedItem();
+            mPart = client.getPart(mPart.getId());
+            int qtPart = Integer.valueOf(nbPieces.getText());
+            
+            if (qtPart > 0) {
+                String space = "";
+                if(!tCommentaire.getText().equals("")) {
+                    space = " ";
                 }
-            }
-
-            if (e.getSource() == btnSuspendre || e.getSource() == btnTerminer) {
-                operation.setComment(tCommentaire.getText());
-                operation.setDateBS(new java.sql.Timestamp(new Date().getTime()));
-                operation.setParkingSpace(client.getEmptySpace());
-
-                if (e.getSource() == btnSuspendre) {
-                    operation.setStatus(OperationStatus.PENDING);
                     
-                    client.updateOperation(operation);
+                mPart.setAvailableQuantity(mPart.getAvailableQuantity() - qtPart);
+                client.updatePart(mPart);
+                    
+                tCommentaire.setText(tCommentaire.getText() + space + "+" + qtPart + "x" + mPart);
+            }
+        }
+
+        if (e.getSource() == btnSuspendre || e.getSource() == btnTerminer) {
+            operation.setComment(tCommentaire.getText());
+            operation.setDateBS(new java.sql.Timestamp(new Date().getTime()));
+            operation.setParkingSpace(client.getEmptySpace());
+
+            if (e.getSource() == btnSuspendre) {
+                operation.setStatus(OperationStatus.PENDING);
                 
-                    if (!statusStart.equals(OperationStatus.PENDING)) {
+                client.updateOperation(operation);
+                
+                if (!statusStart.equals(OperationStatus.PENDING)) {
+                    try {
                         client.updateWorkflow(operation);
                         client.createWorkflow(operation);
+                        
+                        this.dispose();
+                    } catch (Exception exception) {
+                        
                     }
-                } else if (e.getSource() == btnTerminer) {
-                    operation.setStatus(OperationStatus.REPARED);
+                }
+            } else if (e.getSource() == btnTerminer) {
+                operation.setStatus(OperationStatus.REPARED);
                     
-                    ArrayList<Part> lParts = client.getParts();
+                ArrayList<Part> lParts = client.getParts();
                     
-                    ArrayList<Part> lPartsFailure = new ArrayList<>();
+                ArrayList<Part> lPartsFailure = new ArrayList<>();
                     
-                    for (Failure f : operation.getFailures()) {
-                        lPartsFailure.addAll(client.getPartsFailure(f.getId()));
-                    }
+                for (Failure f : operation.getFailures()) {
+                    lPartsFailure.addAll(client.getPartsFailure(f.getId()));
+                }
                     
-                    for(Part p : lParts) {
-                        for(Part removeParts : lPartsFailure) {
-                            if(p.getId() == removeParts.getId()) {
-                                p.setAvailableQuantity(p.getAvailableQuantity() - removeParts.getAvailableQuantity());
-                                client.updatePart(p);
-                            }
+                for(Part p : lParts) {
+                    for(Part removeParts : lPartsFailure) {
+                        if(p.getId() == removeParts.getId()) {
+                            p.setAvailableQuantity(p.getAvailableQuantity() - removeParts.getAvailableQuantity());
+                            client.updatePart(p);
                         }
                     }
+                }
                     
+                try {
                     client.updateOperation(operation);
                     client.updateWorkflow(operation);
                     client.createWorkflow(operation);
-
-                    revalidate();
-                    repaint();
+                        
+                    this.dispose();
+                }  catch (Exception exception) {
+                    
                 }
             }
         }
