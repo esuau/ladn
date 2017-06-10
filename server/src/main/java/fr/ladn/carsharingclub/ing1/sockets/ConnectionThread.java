@@ -39,8 +39,10 @@ public class ConnectionThread extends Thread {
     private OperationDAO repDAO;
     private VehicleDAO vecDAO;
     private TechnicianDAO techDAO;
+
     private WorkFlowDAO flowDAO;
     private FailureDAO failDAO;
+
 
     /**
      * Gets the socket initialized by the server.
@@ -55,6 +57,7 @@ public class ConnectionThread extends Thread {
         this.repDAO = new OperationDAO(connectionPool);
         this.vecDAO = new VehicleDAO(connectionPool);
         this.techDAO = new TechnicianDAO(connectionPool);
+
         this.flowDAO = new WorkFlowDAO(connectionPool);
         this.failDAO = new FailureDAO(connectionPool);
     }

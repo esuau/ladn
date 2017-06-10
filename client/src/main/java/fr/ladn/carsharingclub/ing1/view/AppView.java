@@ -65,6 +65,7 @@ public class AppView extends JPanel implements ActionListener {
         tabbedPane.addTab("Stats Manutentionnaire", null, panel6, "Stats Manutentionnaire");
         tabbedPane.setMnemonicAt(5, KeyEvent.VK_6);       
 
+        
         // Add the tabbed pane to this panel.
         add(tabbedPane);
 
