@@ -1,7 +1,6 @@
 package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.sockets.Client;
-import fr.ladn.carsharingclub.ing1.utils.Operation;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import org.apache.log4j.Logger;
 
@@ -39,6 +38,8 @@ class Create extends JPanel {
     /**
      * Sets up UI for part creation.
      * It basically includes a form with a submit button <code>createButton</code>.
+     *
+     * @param client the client singleton.
      */
     Create(Client client) {
         this.client = client;

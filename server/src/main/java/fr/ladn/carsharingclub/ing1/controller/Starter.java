@@ -7,6 +7,6 @@ import fr.ladn.carsharingclub.ing1.sockets.Server;
  */
 public class Starter {
     public static void main(String[] args) {
-        Server server = new Server();
+        new Server();
     }
 }

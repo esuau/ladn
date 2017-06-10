@@ -20,9 +20,6 @@ public class Server {
     /** The logger. */
     private final static Logger logger = Logger.getLogger(Server.class.getName());
 
-    /** The connection pool. */
-    private ConnectionPool connectionPool = new ConnectionPool();
-
     /**
      * Server constructor.
      * When starting, the server initializes the connection pool.
@@ -32,13 +29,17 @@ public class Server {
      */
     public Server() {
         logger.info("Server starting.");
+
+        // Connection pool initialization.
+        ConnectionPool connectionPool = new ConnectionPool();
+
         Properties properties = new Properties();
 
         try {
             InputStream input = this.getClass().getClassLoader().getResourceAsStream("configServer.properties");
             properties.load(input);
             input.close();
-            logger.error("Successfully loaded configuration file.");
+            logger.info("Successfully loaded configuration file.");
         } catch (IOException e) {
             logger.error("Failed to load configuration file: " + e.getMessage());
         }

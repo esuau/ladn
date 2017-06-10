@@ -69,6 +69,21 @@ public class Part implements Serializable {
         this.price = price;
     }
 
+    public Part(int id, int neededQuantity) {
+        logger.info("Creating new part instance...");
+        this.id = id;
+        this.availableQuantity = neededQuantity;
+    }
+    
+    /**
+     * Redefinition of toString method to be used with JComboBox<Part> in RepairView.
+     *
+     * @return the reference of the part.
+     */
+    public String toString() {
+        return getReference();
+    }
+
     /**
      * Gets part ID.
      *

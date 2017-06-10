@@ -1,8 +1,9 @@
 package fr.ladn.carsharingclub.ing1.model;
 
 import org.apache.log4j.Logger;
+
 import java.io.Serializable;
-import java.util.Date;
+import java.util.ArrayList;
 
 /**
  * Part business object
@@ -14,61 +15,69 @@ public class Reparation implements Serializable {
 
     /** The identifier of the reparation. */
     private int id_reparation;
-    
-    /** Caracteristics of reparation*/
-   
+
     private String statut_reparation;
     private int priorite;
-    private Date date_entrée_vehicule;
-    private Date date_sortie;
+    private java.sql.Date date_entrée_vehicule;
+    private java.sql.Date date_sortie;
     private int id_technicien;
     private int id_panne;
     private String id_vehicule;
     private int id_place;
-
+    private ArrayList<String> list;
 
     /**
      * The default constructor.
      * Never actually used in the project.
      * Allows serialization.
      */
-    public Reparation() { }
+    public Reparation() {
+    }
+
+    public Reparation(int id, ArrayList<String> l) {
+        this.id_reparation = id;
+        this.list = l;
+    }
+
 
     /**
      * Custom constructor.
      * Used to create a reparation with defined ID.
-     *
      */
-    public Reparation(int id,String statut_reparation,int priorite,Date date_entrée_vehicule,Date date_sortie, int id_technicien,int id_panne,String id_vehicule,int id_place) {
+    public Reparation(int id, String statut_reparation, int priorite, java.sql.Date date_entrée_vehicule, java.sql.Date date_sortie, int id_technicien, int id_panne, String id_vehicule, int id_place) {
         logger.info("Creating new reparation instance with custom ID...");
         this.id_reparation = id;
         this.date_entrée_vehicule = date_entrée_vehicule;
-        this.priorite=priorite;
-        this.statut_reparation =statut_reparation ;
+        this.priorite = priorite;
+        this.statut_reparation = statut_reparation;
         this.date_sortie = date_sortie;
         this.id_technicien = id_technicien;
-        this.id_panne=id_panne;
-        this.id_vehicule=id_vehicule;
-        this.id_place=id_place;
+        this.id_panne = id_panne;
+        this.id_vehicule = id_vehicule;
+        this.id_place = id_place;
     }
 
     /**
      * Custom constructor.
      * Used with undefined ID.
      */
-    public Reparation(Date date_entrée_vehicule,String statut_reparation,Date date_sortie, int id_technicien,int id_panne,String id_vehicule,int id_place) {
+    public Reparation(java.sql.Date date_entrée_vehicule, String statut_reparation, java.sql.Date date_sortie, int id_technicien, int id_panne, String id_vehicule, int id_place) {
         logger.info("Creating new reparation instance...");
         this.date_entrée_vehicule = date_entrée_vehicule;
-        this.statut_reparation =statut_reparation ;
+        this.statut_reparation = statut_reparation;
         this.date_sortie = date_sortie;
         this.id_technicien = id_technicien;
-        this.id_panne=id_panne;
-        this.id_vehicule=id_vehicule;
-        this.id_place=id_place;
+        this.id_panne = id_panne;
+        this.id_vehicule = id_vehicule;
+        this.id_place = id_place;
     }
 
     public static Logger getLogger() {
         return logger;
+    }
+
+    public ArrayList<String> getList() {
+        return list;
     }
 
     public void setPriorite(int priorite) {
@@ -83,7 +92,7 @@ public class Reparation implements Serializable {
         return id_reparation;
     }
 
-    public Date getDate_entrée_vehicule() {
+    public java.sql.Date getDate_entrée_vehicule() {
         return date_entrée_vehicule;
     }
 
@@ -91,7 +100,7 @@ public class Reparation implements Serializable {
         return statut_reparation;
     }
 
-    public Date getDate_sortie() {
+    public java.sql.Date getDate_sortie() {
         return date_sortie;
     }
 
@@ -115,7 +124,7 @@ public class Reparation implements Serializable {
         this.id_reparation = id_reparation;
     }
 
-    public void setDate_entrée_vehicule(Date date_entrée_vehicule) {
+    public void setDate_entrée_vehicule(java.sql.Date date_entrée_vehicule) {
         this.date_entrée_vehicule = date_entrée_vehicule;
     }
 
@@ -123,7 +132,7 @@ public class Reparation implements Serializable {
         this.statut_reparation = statut_reparation;
     }
 
-    public void setDate_sortie(Date date_sortie) {
+    public void setDate_sortie(java.sql.Date date_sortie) {
         this.date_sortie = date_sortie;
     }
 
@@ -143,5 +152,5 @@ public class Reparation implements Serializable {
         this.id_place = id_place;
     }
 
-    
+
 }

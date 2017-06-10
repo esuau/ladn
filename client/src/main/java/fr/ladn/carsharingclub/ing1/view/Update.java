@@ -2,7 +2,6 @@ package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
-import fr.ladn.carsharingclub.ing1.utils.Operation;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -47,6 +46,8 @@ class Update extends JPanel {
      * It includes a form where the user can edit the information of an existing part.
      * The current part data is first displayed in the appropriate fields.
      * The user can then edit one or several of these fields.
+     *
+     * @param client the client singleton.
      */
     Update(Client client) {
         this.client = client;
