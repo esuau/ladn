@@ -6,8 +6,10 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class AppView extends JPanel {
+public class AppView extends JPanel implements ActionListener {
 
     /** The logger. */
     private final static Logger logger = Logger.getLogger(AppView.class.getName());
@@ -15,6 +17,9 @@ public class AppView extends JPanel {
     /** The client singleton. */
     private Client client;
 
+    private JButton btnNewOperation;
+        
+    private RepairView rv;
     /**
      * AppView constructor.
      */
@@ -36,7 +41,11 @@ public class AppView extends JPanel {
         tabbedPane.addTab("Ajouter un véhicule", null, panel2, "Ajouter un véhicule entrant.");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
-        JPanel panel3 = new RepairView(client);
+        JPanel panel3 = new JPanel();
+        btnNewOperation = new JButton("Nouvelle opération");
+        btnNewOperation.setPreferredSize(new Dimension(200, 100));
+        btnNewOperation.addActionListener(this);
+        panel3.add(btnNewOperation);
         tabbedPane.addTab("Opérations", null, panel3, "Réaliser une opération de maintenance.");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
         
@@ -59,12 +68,15 @@ public class AppView extends JPanel {
         // Add the tabbed pane to this panel.
         add(tabbedPane);
 
+<<<<<<< HEAD
         
         
 
         // Add the tabbed pane to this panel.
         add(tabbedPane);
 
+=======
+>>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
         // The following line enables to use scrolling tabs.
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
@@ -105,6 +117,11 @@ public class AppView extends JPanel {
         logger.info("Displayed application GUI.");
     }
 
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnNewOperation) {
+            rv = new RepairView(client);
+        }
+    }
 }
 
 

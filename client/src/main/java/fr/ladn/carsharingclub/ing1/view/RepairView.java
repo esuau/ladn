@@ -7,8 +7,8 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +17,7 @@ import java.util.Date;
  * The RepairView.
  * Manages the view for operation execution.
  */
-class RepairView extends JPanel {
+class RepairView extends JFrame implements ActionListener {
 
     /** The logger. */
     private final static Logger logger = Logger.getLogger(RepairView.class.getName());
@@ -66,6 +66,7 @@ class RepairView extends JPanel {
         this.client = client;
         
         /* Variables*/
+        /* Delete object f1, f2, failures, operation t... here when Evan's function will be implemented here */
         //operation = client.getNewOperation();
         Failure f1 = new Failure(1, "Failure 1", new FailureType(1, "Moteur"), "Instructions", Duration.ofHours(10));
         Failure f2 = new Failure(2, "Failure 2", new FailureType(3, "Priority"), "Instructions", Duration.ofHours(10));
@@ -73,8 +74,12 @@ class RepairView extends JPanel {
         operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED, "C le pre a pé é boi");
         Technician t = new Technician("Louis", "Endelicher", "00000000", "LOL", TechnicianRights.TECHNICIAN);
         operation.setTechnician(t);
+        
+        // We keep in memory the status at the beginning to update the date of the end of this status in reparation_histo_temps
         operation.setOldStatus(operation.getStatus());
         
+        
+        // ArrayList containning all the parts needed for a failure
         ArrayList<Part> lPartsFailure = new ArrayList<>();
         
         for (Failure f : operation.getFailures()) {
@@ -96,6 +101,7 @@ class RepairView extends JPanel {
         nbPieces = new JTextField(5);
 
 		/* Definition of JComboBox*/
+        // We put an objet part in the JComboBox to simplify the manipulation/updates of the parts
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         ArrayList<Part> lParts = client.getParts();
         
@@ -112,11 +118,13 @@ class RepairView extends JPanel {
         btnTerminer = new JButton("Terminer");
 
 		/* Definition of JTextArea*/
+        // We get the comment of the operation because if it has been previously suspended it could have one
         tCommentaire = new JTextArea(operation.getComment());
 
 		/* Layout*/
         BorderLayout layout = new BorderLayout();
-
+        
+        // We get all the failures of the operation
         Failure[] tPannesOperation = operation.getFailures();
 
         JPanel infos = new JPanel();
@@ -187,7 +195,7 @@ class RepairView extends JPanel {
         btnValider.setPreferredSize(new Dimension(150, 25));
 
         pannes.setBorder(BorderFactory.createTitledBorder("Opération"));
-        pannes.setPreferredSize(new Dimension(650, 350));
+        pannes.setPreferredSize(new Dimension(650, 320));
         spPannes.setPreferredSize(new Dimension(600, 120));
         tabPannes.setPreferredSize(new Dimension(600, 100));
         pannes.add(tabPannes.getTableHeader());
@@ -215,21 +223,37 @@ class RepairView extends JPanel {
         commentaire.add(btnSuspendre);
         commentaire.add(btnTerminer);
 
-        Listener listener = new Listener();
-        btnValider.addActionListener(listener);
-        btnSuspendre.addActionListener(listener);
-        btnTerminer.addActionListener(listener);
+        btnValider.addActionListener(this);
+        btnSuspendre.addActionListener(this);
+        btnTerminer.addActionListener(this);
 
-        this.add(infos, BorderLayout.NORTH);
-        this.add(pannes, BorderLayout.CENTER);
-        this.add(commentaire, BorderLayout.SOUTH);
+        this.getContentPane().add(infos, BorderLayout.NORTH);
+        this.getContentPane().add(pannes, BorderLayout.CENTER);
+        this.getContentPane().add(commentaire, BorderLayout.SOUTH);
+        // We put the parkingSpace at -1 because java doesn't accept null as a value for an int, -1 here signifies no parking space so in progress
         operation.setParkingSpace(-1);
         operation.setStatus(OperationStatus.INPROGRESS);
+        // We define the timestamp of the beginning of the current status (also the end of the previous status) with the current date
+        operation.setDateBS(new java.sql.Timestamp(new Date().getTime()));
+        
+        // To update the operation status, parkingSpace... in reparation (DB)
         client.updateOperation(operation);
+        // To update the previous status in reparation_histo_temps (DB)
+        client.updateWorkflow(operation);
+        // To create a new status in reparation_histo_temps (DB)
+        client.createWorkflow(operation);
+        // Now we can put the oldStatus at INPROGRESS to be able to update the date of the end when we'll click on "Suspendre" or "Terminer"
+        operation.setOldStatus(operation.getStatus());
 
+        this.setSize(680, 680);
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
+        // DO_NOTHING_ON_CLOSE because if you close the JFrame without saving (Suspending/Finishing) the work, it could cause problems in DB with operations INPROGRESS whom are not
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
     
+    // We create the string of the parts to display in the first table of the interface
     public String setStringPartsFailure(ArrayList<Part> lParts) {
         String partsForFailure = "";
         int i = 1;
@@ -247,65 +271,81 @@ class RepairView extends JPanel {
         return partsForFailure;
     }
 
-    private class Listener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == btnValider && !nbPieces.getText().isEmpty()) {
-                Part mPart = (Part) cbPieces.getSelectedItem();
-                int qtPart = Integer.valueOf(nbPieces.getText());
-                
-                if (qtPart > 0) {
-                    String space = "";
-                    if(!tCommentaire.getText().equals("")) {
-                        space = " ";
-                    }
-                    
-                    mPart.setAvailableQuantity(mPart.getAvailableQuantity() - qtPart);
-                    client.updatePart(mPart);
-                    
-                    tCommentaire.setText(tCommentaire.getText() + space + "+" + qtPart + "x" + mPart);
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnValider && !nbPieces.getText().isEmpty()) {
+            // We get the item selected with the ComboBox
+            Part mPart = (Part) cbPieces.getSelectedItem();
+            mPart = client.getPart(mPart.getId());
+            int qtPart = Integer.valueOf(nbPieces.getText());
+            
+            // Manage the space (or not) before putting the information of additional parts in the comment area :  if it is empty we don't put space, if it isn't we put one...
+            if (qtPart > 0) {
+                String space = "";
+                if(!tCommentaire.getText().equals("")) {
+                    space = " ";
                 }
-            }
-
-            if (e.getSource() == btnSuspendre || e.getSource() == btnTerminer) {
-                operation.setComment(tCommentaire.getText());
-                operation.setDateBS(new java.sql.Timestamp(new Date().getTime()));
-                operation.setParkingSpace(client.getEmptySpace());
-
-                if (e.getSource() == btnSuspendre) {
-                    operation.setStatus(OperationStatus.PENDING);
-                    
-                    client.updateOperation(operation);
                 
-                    if (!statusStart.equals(OperationStatus.PENDING)) {
+                // We update in DB the stock of the part added
+                mPart.setAvailableQuantity(mPart.getAvailableQuantity() - qtPart);
+                client.updatePart(mPart);
+                    
+                tCommentaire.setText(tCommentaire.getText() + space + "+" + qtPart + "x" + mPart);
+            }
+        }
+
+        if (e.getSource() == btnSuspendre || e.getSource() == btnTerminer) {
+            operation.setComment(tCommentaire.getText());
+            operation.setDateBS(new java.sql.Timestamp(new Date().getTime()));
+            // We get a emply parking space
+            operation.setParkingSpace(client.getEmptySpace());
+
+            if (e.getSource() == btnSuspendre) {
+                operation.setStatus(OperationStatus.PENDING);
+                
+                client.updateOperation(operation);
+                
+                if (!statusStart.equals(OperationStatus.PENDING)) {
+                    try {
                         client.updateWorkflow(operation);
                         client.createWorkflow(operation);
+                        
+                        // We close the JFrame to be able to open another one and call, again Evan's function
+                        this.dispose();
+                    } catch (Exception exception) {
+                        
                     }
-                } else if (e.getSource() == btnTerminer) {
-                    operation.setStatus(OperationStatus.REPARED);
+                }
+            } else if (e.getSource() == btnTerminer) {
+                operation.setStatus(OperationStatus.REPARED);
                     
-                    ArrayList<Part> lParts = client.getParts();
+                ArrayList<Part> lParts = client.getParts();
                     
-                    ArrayList<Part> lPartsFailure = new ArrayList<>();
+                ArrayList<Part> lPartsFailure = new ArrayList<>();
                     
-                    for (Failure f : operation.getFailures()) {
-                        lPartsFailure.addAll(client.getPartsFailure(f.getId()));
-                    }
-                    
-                    for(Part p : lParts) {
-                        for(Part removeParts : lPartsFailure) {
-                            if(p.getId() == removeParts.getId()) {
-                                p.setAvailableQuantity(p.getAvailableQuantity() - removeParts.getAvailableQuantity());
-                                client.updatePart(p);
-                            }
+                for (Failure f : operation.getFailures()) {
+                    lPartsFailure.addAll(client.getPartsFailure(f.getId()));
+                }
+                 
+                
+                // We update the stock of the parts we use by default for this operation  
+                // We could add "volatile" for lParts to avoid eventual concurential access 
+                for(Part p : lParts) {
+                    for(Part removeParts : lPartsFailure) {
+                        if(p.getId() == removeParts.getId()) {
+                            p.setAvailableQuantity(p.getAvailableQuantity() - removeParts.getAvailableQuantity());
+                            client.updatePart(p);
                         }
                     }
+                }
                     
+                try {
                     client.updateOperation(operation);
                     client.updateWorkflow(operation);
                     client.createWorkflow(operation);
-
-                    revalidate();
-                    repaint();
+                        
+                    this.dispose();
+                } catch (Exception exception) {
+                    
                 }
             }
         }

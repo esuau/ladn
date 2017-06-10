@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -139,13 +140,13 @@ public class OperationDAO {
      * @return the identifier of an empty parking spot.
      * @throws SQLException in case of issue with the SQL request.
      */
-    public Integer readEmptySpace() throws Exception {
+    public Integer readEmptySpace() throws SQLException {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement to get empty space from database...");
-        PreparedStatement ps = pool.getConnection().prepareStatement("SELECT id_place FROM place WHERE id_place NOT IN (SELECT id_place FROM reparer) AND id_place != -1 LIMIT 1");
+        PreparedStatement ps = pool.getConnection().prepareStatement("SELECT id_place FROM place WHERE id_place NOT IN (SELECT id_place FROM reparer WHERE date_sortie_vehicule = '') AND id_place != -1 LIMIT 1");
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been executed. The empty space has been returned.");
 
@@ -161,4 +162,45 @@ public class OperationDAO {
             return null;
         }
     }
+    
+    /**
+     * Creates a new operation in database.
+     * 
+     * @return the identifier of the newly created operation.
+     * @throws SQLException in case of issue with the SQL request.
+     */
+    public int createOperation(Operation operation) throws SQLException {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        // Get a free parking space to store the added vehicle
+        int spaceId = this.readEmptySpace();
+
+        logger.info("Preparing SQL statement to create operation in database...");
+        PreparedStatement ps = pool.getConnection().prepareStatement("INSERT INTO reparer (id_place, id_vehicule, statut_reparation, priorite_reparation, date_entree_vehicule) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        ps.setInt(1, spaceId);
+        ps.setInt(2, operation.getVehicle().getId());
+        ps.setString(3, OperationStatus.DIAGNOSED.toString());
+        ps.setInt(4, operation.getPriority().getPriorityLevel());
+        ps.setTimestamp(5, operation.getDateEntry());
+        ps.executeUpdate();
+        logger.info("The database request has been executed.");
+
+        ResultSet rs = ps.getGeneratedKeys();
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+        
+        if (rs.next()) { 
+        	int lastInsertedId = rs.getInt(1);
+            logger.info("Successfully created new operation with id #" + lastInsertedId + ".");
+            return lastInsertedId;
+        }
+
+        logger.error("Database request did not return any information about the newly created operation.");
+        return -1;
+
+    }
+    
 }

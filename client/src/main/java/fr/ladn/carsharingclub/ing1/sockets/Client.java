@@ -1,11 +1,15 @@
 package fr.ladn.carsharingclub.ing1.sockets;
 
+<<<<<<< HEAD
 import fr.ladn.carsharingclub.ing1.model.Operation;
 import fr.ladn.carsharingclub.ing1.model.Part;
 import fr.ladn.carsharingclub.ing1.model.Reparation;
 import fr.ladn.carsharingclub.ing1.model.Technician;
 import fr.ladn.carsharingclub.ing1.model.Vehicle;
 import fr.ladn.carsharingclub.ing1.model.WorkFlowRep;
+=======
+import fr.ladn.carsharingclub.ing1.model.*;
+>>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
 import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import fr.ladn.carsharingclub.ing1.utils.Container;
 import fr.ladn.carsharingclub.ing1.utils.XML;
@@ -212,7 +216,7 @@ public class Client extends Thread {
     /**
      * Gets the operations having the selected status.
      *
-     * @param l the list of operations.
+     * @param s the status of the operation.
      * @return the corresponding list of operation.
      */
     public ArrayList<Operation> getOperationsStatus(String s) {
@@ -356,6 +360,7 @@ public class Client extends Thread {
         }
         return null;
     }
+<<<<<<< HEAD
 
     public ArrayList<WorkFlowRep> getCalculStat(int choix) {
         try {
@@ -379,5 +384,41 @@ public class Client extends Thread {
     }
 
     
+=======
+    
+    public Operation createRepairWork(Operation operation) {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.CREATE_REPARATION, operation));
+            Operation operationWithId = (Operation) getData(socketClient).getObject();
+            socketClient.close();
+            return operationWithId;
+        } catch (IOException e) {
+            logger.error("Failed to send operation #" + operation.getId() + " to the server: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    /**
+     * Gets all the existing Failures transmitted by the server.
+     *
+     * @return the list of all the existing failures.
+     */
+    public ArrayList<Failure> getFailures() {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.READ_FAILURES, new Failure(0,"", null, "", null)));
+            Container<ArrayList<Failure>> receivedContainer = getData(socketClient);
+            ArrayList<Failure> failure = receivedContainer.getObject();
+            socketClient.close();
+            return failure;
+        } catch (IOException e) {
+            logger.error("Failed to get failures from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No failure was returned from the server.");
+        }
+        return null;
+    }
+>>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
 }
 

@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 
 import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
+import fr.ladn.carsharingclub.ing1.db.FailureDAO;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
 import fr.ladn.carsharingclub.ing1.db.TechnicianDAO;
 import fr.ladn.carsharingclub.ing1.db.VehicleDAO;
@@ -39,7 +39,11 @@ public class ConnectionThread extends Thread {
     private OperationDAO repDAO;
     private VehicleDAO vecDAO;
     private TechnicianDAO techDAO;
+<<<<<<< HEAD
     private WorkFlowDAO flowDAO;
+=======
+    private FailureDAO failDAO;
+>>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
 
     /**
      * Gets the socket initialized by the server.
@@ -54,7 +58,11 @@ public class ConnectionThread extends Thread {
         this.repDAO = new OperationDAO(connectionPool);
         this.vecDAO = new VehicleDAO(connectionPool);
         this.techDAO = new TechnicianDAO(connectionPool);
+<<<<<<< HEAD
         this.flowDAO = new WorkFlowDAO(connectionPool);
+=======
+        this.failDAO = new FailureDAO(connectionPool);
+>>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
     }
 
     /**
@@ -71,8 +79,10 @@ public class ConnectionThread extends Thread {
     }
 
     /**
-     * Turns the XML sent by the client into a 
-     * @see Part
+     * Operates actions depending on the instructions received from the client.
+     *
+     * @see CRUD
+     * @see Container
      */
     private void getData() {
         try {
@@ -139,6 +149,7 @@ public class ConnectionThread extends Thread {
                     logger.info("Attempt to update operation status in database > reparation_histo_temps.");
                     repDAO.createWorkflow((Operation) container.getObject());
                     break;
+<<<<<<< HEAD
                 case READ_CAR_F:
                     logger.info("Attempt to read cars in the workflow database.");
                     int v=((WorkFlowRep) (container.getObject())).getId_vehicule();
@@ -151,6 +162,17 @@ public class ConnectionThread extends Thread {
                     sendData(new Container<>(CRUD.PING, flowDAO.calculStats(choix)));
                     break;
  
+=======
+                case CREATE_REPARATION:
+                    logger.info("Attempt to create operation in database.");
+                    Operation operation = (Operation) container.getObject();
+                    operation.setId(repDAO.createOperation(operation));
+                    sendData(new Container<>(CRUD.PING, operation));
+                    break;
+                case READ_FAILURES:
+                    logger.info("Attempt to read all failures from database.");
+                    sendData(new Container<>(CRUD.PING, failDAO.getFailures()));
+>>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }
