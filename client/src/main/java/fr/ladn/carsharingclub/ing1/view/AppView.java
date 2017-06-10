@@ -64,19 +64,10 @@ public class AppView extends JPanel implements ActionListener {
        // panel4.setPreferredSize(new Dimension(410, 50));
         tabbedPane.addTab("Stats Manutentionnaire", null, panel6, "Stats Manutentionnaire");
         tabbedPane.setMnemonicAt(5, KeyEvent.VK_6);       
-        
-        // Add the tabbed pane to this panel.
-        add(tabbedPane);
-
-<<<<<<< HEAD
-        
-        
 
         // Add the tabbed pane to this panel.
         add(tabbedPane);
 
-=======
->>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
         // The following line enables to use scrolling tabs.
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }

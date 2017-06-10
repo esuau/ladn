@@ -39,11 +39,8 @@ public class ConnectionThread extends Thread {
     private OperationDAO repDAO;
     private VehicleDAO vecDAO;
     private TechnicianDAO techDAO;
-<<<<<<< HEAD
     private WorkFlowDAO flowDAO;
-=======
     private FailureDAO failDAO;
->>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
 
     /**
      * Gets the socket initialized by the server.
@@ -58,11 +55,8 @@ public class ConnectionThread extends Thread {
         this.repDAO = new OperationDAO(connectionPool);
         this.vecDAO = new VehicleDAO(connectionPool);
         this.techDAO = new TechnicianDAO(connectionPool);
-<<<<<<< HEAD
         this.flowDAO = new WorkFlowDAO(connectionPool);
-=======
         this.failDAO = new FailureDAO(connectionPool);
->>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
     }
 
     /**
@@ -149,7 +143,6 @@ public class ConnectionThread extends Thread {
                     logger.info("Attempt to update operation status in database > reparation_histo_temps.");
                     repDAO.createWorkflow((Operation) container.getObject());
                     break;
-<<<<<<< HEAD
                 case READ_CAR_F:
                     logger.info("Attempt to read cars in the workflow database.");
                     int v=((WorkFlowRep) (container.getObject())).getId_vehicule();
@@ -161,8 +154,6 @@ public class ConnectionThread extends Thread {
                     int choix=((WorkFlowRep) (container.getObject())).getId_reparation();
                     sendData(new Container<>(CRUD.PING, flowDAO.calculStats(choix)));
                     break;
- 
-=======
                 case CREATE_REPARATION:
                     logger.info("Attempt to create operation in database.");
                     Operation operation = (Operation) container.getObject();
@@ -172,7 +163,6 @@ public class ConnectionThread extends Thread {
                 case READ_FAILURES:
                     logger.info("Attempt to read all failures from database.");
                     sendData(new Container<>(CRUD.PING, failDAO.getFailures()));
->>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }

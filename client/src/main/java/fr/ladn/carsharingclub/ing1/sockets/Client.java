@@ -1,15 +1,6 @@
 package fr.ladn.carsharingclub.ing1.sockets;
 
-<<<<<<< HEAD
-import fr.ladn.carsharingclub.ing1.model.Operation;
-import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.model.Reparation;
-import fr.ladn.carsharingclub.ing1.model.Technician;
-import fr.ladn.carsharingclub.ing1.model.Vehicle;
-import fr.ladn.carsharingclub.ing1.model.WorkFlowRep;
-=======
 import fr.ladn.carsharingclub.ing1.model.*;
->>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
 import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import fr.ladn.carsharingclub.ing1.utils.Container;
 import fr.ladn.carsharingclub.ing1.utils.XML;
@@ -360,7 +351,6 @@ public class Client extends Thread {
         }
         return null;
     }
-<<<<<<< HEAD
 
     public ArrayList<WorkFlowRep> getCalculStat(int choix) {
         try {
@@ -382,9 +372,6 @@ public class Client extends Thread {
         }
         return null;
     }
-
-    
-=======
     
     public Operation createRepairWork(Operation operation) {
         try {
@@ -419,6 +406,5 @@ public class Client extends Thread {
         }
         return null;
     }
->>>>>>> 946942d5b97202e692ae8a51026a544c5d158190
 }
 
