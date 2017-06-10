@@ -1,11 +1,6 @@
 package fr.ladn.carsharingclub.ing1.sockets;
 
-import fr.ladn.carsharingclub.ing1.model.Failure;
-import fr.ladn.carsharingclub.ing1.model.Operation;
-import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.model.Reparation;
-import fr.ladn.carsharingclub.ing1.model.Technician;
-import fr.ladn.carsharingclub.ing1.model.Vehicle;
+import fr.ladn.carsharingclub.ing1.model.*;
 import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import fr.ladn.carsharingclub.ing1.utils.Container;
 import fr.ladn.carsharingclub.ing1.utils.XML;
@@ -212,7 +207,7 @@ public class Client extends Thread {
     /**
      * Gets the operations having the selected status.
      *
-     * @param l the list of operations.
+     * @param s the status of the operation.
      * @return the corresponding list of operation.
      */
     public ArrayList<Operation> getOperationsStatus(String s) {
@@ -335,14 +330,17 @@ public class Client extends Thread {
         }
     }
     
-    public void createRepairWork(Operation operation) {
+    public Operation createRepairWork(Operation operation) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
             sendData(socketClient, new Container<>(CRUD.CREATE_REPARATION, operation));
+            Operation operationWithId = (Operation) getData(socketClient).getObject();
             socketClient.close();
+            return operationWithId;
         } catch (IOException e) {
             logger.error("Failed to send operation #" + operation.getId() + " to the server: " + e.getMessage());
         }
+        return null;
     }
     
     /**

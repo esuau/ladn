@@ -109,7 +109,7 @@ class AddVehicleView extends JPanel {
         ArrayList<Failure> fails = client.getFailures();
         
         for (Failure f : fails) {
-            model.addElement(f);
+            model.addElement(f.getName());
         }
         panne = new JComboBox<Failure>(model);
         panne.setToolTipText("Sélectionner une pièce");
@@ -123,8 +123,8 @@ class AddVehicleView extends JPanel {
         btnEnregistrer.addActionListener(e -> {
             Operation o = new Operation(vehicle, OperationStatus.DIAGNOSED, OperationPriority.CRITICAL, new java.sql.Timestamp(now.getTime()));
             logger.info("Attempting to create new operation in database...");
-            client.createRepairWork(o);
-            JOptionPane.showMessageDialog(null, "La pièce " + o.getId() + " a bien été ajoutée dans la base.");
+            o = client.createRepairWork(o);
+            JOptionPane.showMessageDialog(null, "L'opération " + o.getId() + " a bien été enregistrée.");
         });
 
         JButton btnReset = new JButton("Reset");

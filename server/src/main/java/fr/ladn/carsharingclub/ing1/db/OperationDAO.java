@@ -146,7 +146,7 @@ public class OperationDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement to get empty space from database...");
-        PreparedStatement ps = pool.getConnection().prepareStatement("SELECT id_place FROM place WHERE id_place NOT IN (SELECT id_place FROM reparer) AND id_place != -1 LIMIT 1");
+        PreparedStatement ps = pool.getConnection().prepareStatement("SELECT id_place FROM place WHERE id_place NOT IN (SELECT id_place FROM reparer WHERE date_sortie_vehicule = '') AND id_place != -1 LIMIT 1");
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been executed. The empty space has been returned.");
 

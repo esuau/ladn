@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 
 import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import org.apache.log4j.Logger;
@@ -54,6 +53,7 @@ public class ConnectionThread extends Thread {
         this.repDAO = new OperationDAO(connectionPool);
         this.vecDAO = new VehicleDAO(connectionPool);
         this.techDAO = new TechnicianDAO(connectionPool);
+        this.failDAO = new FailureDAO(connectionPool);
     }
 
     /**
@@ -148,8 +148,7 @@ public class ConnectionThread extends Thread {
                     break;
                 case READ_FAILURES:
                     logger.info("Attempt to read all failures from database.");
-                    Failure f = ((Failure) container.getObject());
-                    sendData(new Container<>(CRUD.PING, failDAO.readAll()));
+                    sendData(new Container<>(CRUD.PING, failDAO.getFailures()));
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }
