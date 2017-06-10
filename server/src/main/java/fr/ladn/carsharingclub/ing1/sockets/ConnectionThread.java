@@ -10,6 +10,7 @@ import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import org.apache.log4j.Logger;
 
 import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
+import fr.ladn.carsharingclub.ing1.db.FailureDAO;
 import fr.ladn.carsharingclub.ing1.db.PartDAO;
 import fr.ladn.carsharingclub.ing1.db.TechnicianDAO;
 import fr.ladn.carsharingclub.ing1.db.VehicleDAO;
@@ -38,6 +39,7 @@ public class ConnectionThread extends Thread {
     private OperationDAO repDAO;
     private VehicleDAO vecDAO;
     private TechnicianDAO techDAO;
+    private FailureDAO failDAO;
 
     /**
      * Gets the socket initialized by the server.
@@ -68,8 +70,10 @@ public class ConnectionThread extends Thread {
     }
 
     /**
-     * Turns the XML sent by the client into a 
-     * @see Part
+     * Operates actions depending on the instructions received from the client.
+     *
+     * @see CRUD
+     * @see Container
      */
     private void getData() {
         try {
@@ -138,8 +142,14 @@ public class ConnectionThread extends Thread {
                     break;
                 case CREATE_REPARATION:
                     logger.info("Attempt to create operation in database.");
-                    repDAO.createOperation((Operation) container.getObject());
+                    Operation operation = (Operation) container.getObject();
+                    operation.setId(repDAO.createOperation(operation));
+                    sendData(new Container<>(CRUD.PING, operation));
                     break;
+                case READ_FAILURES:
+                    logger.info("Attempt to read all failures from database.");
+                    Failure f = ((Failure) container.getObject());
+                    sendData(new Container<>(CRUD.PING, failDAO.readAll()));
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }

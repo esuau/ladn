@@ -92,30 +92,26 @@ public class Operation implements Serializable {
 
     /**
      * Instantiates an operation without defined ID.
+     * This constructor is used for the operation registration.
      *
      * @param vehicle      the vehicle corresponding to the operation.
-     * @param failures     the failures corresponding to the operation.
+     * // @param failures     the failures corresponding to the operation.
      * @param status       the status of the operation.
-     * @param technician   the technician in charge of the operation.
      * @param priority     the priority level of the operation.
      * @param dateEntry    the entry date of the vehicle.
-     * @param dateExit     the exit date of the vehicle.
-     * @param parkingSpace the ID of the parking spot.
      *
      * @see Vehicle
      * @see Failure
      * @see OperationStatus
      * @see Technician
      */
-    public Operation(Vehicle vehicle, Failure[] failures, OperationStatus status, Technician technician, OperationPriority priority, java.sql.Timestamp dateEntry, java.sql.Timestamp dateExit, int parkingSpace) {
+    public Operation(Vehicle vehicle, OperationStatus status, OperationPriority priority, java.sql.Timestamp dateEntry) {
         this.vehicle = vehicle;
-        this.failures = failures;
+        // TODO Add failure selection.
+        // this.failures = failures;
         this.status = status;
-        this.technician = technician;
         this.priority = priority;
         this.dateEntry = dateEntry;
-        this.dateExit = dateExit;
-        this.parkingSpace = parkingSpace;
     }
     
     public Operation(int id,String statut_reparation,int priorite,java.sql.Timestamp date_entree_vehicule,java.sql.Timestamp date_sortie, Technician id_technicien,Vehicle id_vehicule,int id_place) {
