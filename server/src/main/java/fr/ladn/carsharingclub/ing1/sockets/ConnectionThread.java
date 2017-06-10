@@ -14,6 +14,7 @@ import fr.ladn.carsharingclub.ing1.db.PartDAO;
 import fr.ladn.carsharingclub.ing1.db.TechnicianDAO;
 import fr.ladn.carsharingclub.ing1.db.VehicleDAO;
 import fr.ladn.carsharingclub.ing1.db.OperationDAO;
+import fr.ladn.carsharingclub.ing1.db.WorkFlowDAO;
 import fr.ladn.carsharingclub.ing1.model.*;
 import fr.ladn.carsharingclub.ing1.utils.Container;
 import fr.ladn.carsharingclub.ing1.utils.XML;
@@ -38,6 +39,7 @@ public class ConnectionThread extends Thread {
     private OperationDAO repDAO;
     private VehicleDAO vecDAO;
     private TechnicianDAO techDAO;
+    private WorkFlowDAO flowDAO;
 
     /**
      * Gets the socket initialized by the server.
@@ -52,6 +54,7 @@ public class ConnectionThread extends Thread {
         this.repDAO = new OperationDAO(connectionPool);
         this.vecDAO = new VehicleDAO(connectionPool);
         this.techDAO = new TechnicianDAO(connectionPool);
+        this.flowDAO = new WorkFlowDAO(connectionPool);
     }
 
     /**
@@ -136,6 +139,18 @@ public class ConnectionThread extends Thread {
                     logger.info("Attempt to update operation status in database > reparation_histo_temps.");
                     repDAO.createWorkflow((Operation) container.getObject());
                     break;
+                case READ_CAR_F:
+                    logger.info("Attempt to read cars in the workflow database.");
+                    int v=((WorkFlowRep) (container.getObject())).getId_vehicule();
+                    if(v<0)sendData(new Container<>(CRUD.PING, flowDAO.displayCars()));
+                    else sendData(new Container<>(CRUD.PING, flowDAO.WorkflowCar(v)));
+                    break;
+                case READ_STAT:
+                    logger.info("Attempt to read cars in the workflow database.");
+                    int choix=((WorkFlowRep) (container.getObject())).getId_reparation();
+                    sendData(new Container<>(CRUD.PING, flowDAO.calculStats(choix)));
+                    break;
+ 
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }

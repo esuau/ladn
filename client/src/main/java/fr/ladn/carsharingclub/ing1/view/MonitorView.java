@@ -69,14 +69,14 @@ public class MonitorView extends javax.swing.JPanel {
             }
         });
 
-        jCheckBox1.setText("DiagnostiquÃ©");
+        jCheckBox1.setText("Diagnostique");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox1ActionPerformed(evt);
             }
         });
 
-        jCheckBox2.setText("En cours de rÃ©paration");
+        jCheckBox2.setText("En cours de reparation");
         jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox2ActionPerformed(evt);
@@ -90,7 +90,7 @@ public class MonitorView extends javax.swing.JPanel {
             }
         });
 
-        jCheckBox4.setText("RÃ©parer");
+        jCheckBox4.setText("Reparer");
         jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox4ActionPerformed(evt);

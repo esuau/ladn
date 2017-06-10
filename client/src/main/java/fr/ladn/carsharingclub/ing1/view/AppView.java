@@ -27,8 +27,10 @@ public class AppView extends JPanel {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         JPanel panel1 = new MonitorView(client);
-        tabbedPane.addTab("Consulter une opérations", null, panel1, "Consulter les information d'une operation.");
+        tabbedPane.addTab("Consulter les Opérations", null, panel1, "Consulter Opérations.");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+        
+        
 
         JPanel panel2 = new AddVehicleView(client);
         tabbedPane.addTab("Ajouter un véhicule", null, panel2, "Ajouter un véhicule entrant.");
@@ -37,19 +39,27 @@ public class AppView extends JPanel {
         JPanel panel3 = new RepairView(client);
         tabbedPane.addTab("Opérations", null, panel3, "Réaliser une opération de maintenance.");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
+        
 
         JPanel panel5 = new StatsView(client);
         panel5.setPreferredSize(new Dimension(410, 50));
         tabbedPane.addTab("Statistiques", null, panel5, "Consulter les statistiques de l'activité du dépôt");
         tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
+        
+        JPanel panel4 = new WorkFlowView(client);
+       // panel4.setPreferredSize(new Dimension(410, 50));
+        tabbedPane.addTab("Consulter le WorkFlow d'un véhicule", null, panel4, "WorkFlow véhicule");
+        tabbedPane.setMnemonicAt(4, KeyEvent.VK_5);
+        
+        JPanel panel6 = new StatistiqueView(client);
+       // panel4.setPreferredSize(new Dimension(410, 50));
+        tabbedPane.addTab("Stats Manutentionnaire", null, panel6, "Stats Manutentionnaire");
+        tabbedPane.setMnemonicAt(5, KeyEvent.VK_6);       
+        
         // Add the tabbed pane to this panel.
         add(tabbedPane);
 
         
-        JPanel panel4 = new Delete(client);
-        panel4.setPreferredSize(new Dimension(410, 50));
-        tabbedPane.addTab("Supprimer une pièce", null, panel4, "Supprimer une ou plusieurs pièces.");
-        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
         
 
         // Add the tabbed pane to this panel.

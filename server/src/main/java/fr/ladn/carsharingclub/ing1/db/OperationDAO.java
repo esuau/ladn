@@ -66,7 +66,7 @@ public class OperationDAO {
             java.sql.Timestamp dtentre = rs.getTimestamp("date_entree_vehicule");
             java.sql.Timestamp dtsortie = rs.getTimestamp("date_sortie_vehicule");
             int technicien = rs.getInt("id_technicien");
-            String vehicule = rs.getString("id_vehicule");
+            int vehicule = rs.getInt("id_vehicule");
             int place = rs.getInt("id_place");
             
             logger.info("Successfully get part #" + id + " information from database.");

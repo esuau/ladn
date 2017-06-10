@@ -9,6 +9,8 @@ public enum CRUD {
     UPDATE,
     DELETE,
     READ_OPERATION_S,
+    READ_CAR_F,
+    READ_STAT,
     READ_PARTS_FAILURE,
     READ_EMPTY_SPACE,
     PING,
