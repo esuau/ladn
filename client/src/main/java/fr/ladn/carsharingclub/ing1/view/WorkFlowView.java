@@ -127,6 +127,7 @@ public class WorkFlowView extends javax.swing.JPanel {
        ArrayList<WorkFlowRep>  work=new ArrayList<>(); 
         int car=Integer.parseInt(jComboBox1.getSelectedItem().toString());
         work.addAll(client.getCarFlow(car));
+        if(!work.isEmpty()){
         String s="";
         String fin;
         WorkFlowRep dernier=work.get(work.size()-1);
@@ -138,7 +139,8 @@ public class WorkFlowView extends javax.swing.JPanel {
             s=s+wf.getDate_deb()+" -> <"+wf.getStatut()+"> -> "+fin+" \n";
            
         }
-        jTextArea1.setText(s);
+        jTextArea1.setText(s);}
+        else JOptionPane.showMessageDialog(null, "La table de workflow est vide.");
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
