@@ -103,7 +103,7 @@ class AddVehicleView extends JPanel {
         date.setEditable(false);
         date.setColumns(10);
 
-        JComboBox<Failure> panne ;
+        JComboBox<Failure> panne;
         
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         ArrayList<Failure> fails = client.getFailures();

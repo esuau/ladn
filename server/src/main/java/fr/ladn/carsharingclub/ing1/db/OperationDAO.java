@@ -19,10 +19,14 @@ import java.util.Iterator;
  */
 public class OperationDAO {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private final static Logger logger = Logger.getLogger(OperationDAO.class.getName());
 
-    /** The connection pool. */
+    /**
+     * The connection pool.
+     */
     private ConnectionPool pool;
 
     /**
@@ -49,7 +53,7 @@ public class OperationDAO {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-        PreparedStatement ps ;
+        PreparedStatement ps;
         ps = conn.prepareStatement("SELECT* FROM reparer WHERE statut_reparation = ? ORDER BY priorite_reparation");
         ps.setString(1, status);
         ResultSet rs = ps.executeQuery();
@@ -58,7 +62,7 @@ public class OperationDAO {
         pool.returnConnection(conn);
         logger.info("Connection " + conn + " returned to the connection pool.");
 
-       ArrayList<Operation> reparation = new ArrayList<>();
+        ArrayList<Operation> reparation = new ArrayList<>();
 
         while (rs.next()) {
             int id = rs.getInt("id_reparation");
@@ -69,9 +73,9 @@ public class OperationDAO {
             int technicien = rs.getInt("id_technicien");
             int vehicule = rs.getInt("id_vehicule");
             int place = rs.getInt("id_place");
-            
+
             logger.info("Successfully get part #" + id + " information from database.");
-            reparation.add(new Operation(id,statut,priorite,dtentre,dtsortie,new Technician(technicien),new Vehicle(vehicule),place));
+            reparation.add(new Operation(id, statut, priorite, dtentre, dtsortie, new Technician(technicien), new Vehicle(vehicule), place));
         }
         return reparation;
 
@@ -96,32 +100,32 @@ public class OperationDAO {
 
         pool.returnConnection(conn);
     }
-    
+
     public void updateWorkflow(Operation o) throws Exception {
-        
+
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-        
+
         logger.info("Preparing SQL statement to update operation #" + o.getId() + " in reparation_histo_temps");
         PreparedStatement ps = pool.getConnection().prepareStatement("UPDATE reparation_histo_temps SET date_fin = ? WHERE id_reparation = ? AND statut = ?");
         ps.setTimestamp(1, o.getDateBS());
         ps.setInt(2, o.getId());
         ps.setString(3, o.getOldStatus().toString());
         System.out.println(o.getOldStatus() + " " + o.getDateBS());
-        
+
         ps.execute();
         logger.info("Database request has been executed. The operation #" + o.getId() + " has been updated in database > reparation_histo_temps.");
     }
-    
+
     public void createWorkflow(Operation o) throws Exception {
         int id = o.getId();
         String status = o.getStatus().toString();
         java.sql.Timestamp date = o.getDateBS();
         int parkingSpace = o.getParkingSpace();
-        
+
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
-        
+
         logger.info("Preparing SQL statement for operation #" + o.getId() + " new status creation in reparation_histo_temps...");
         PreparedStatement ps = conn.prepareStatement("INSERT INTO reparation_histo_temps ( id_reparation, statut, date_debut, id_place ) VALUES ( ?, ?, ?, ? )");
         ps.setInt(1, id);
@@ -162,10 +166,10 @@ public class OperationDAO {
             return null;
         }
     }
-    
+
     /**
      * Creates a new operation in database.
-     * 
+     *
      * @return the identifier of the newly created operation.
      * @throws SQLException in case of issue with the SQL request.
      */
@@ -191,10 +195,16 @@ public class OperationDAO {
 
         pool.returnConnection(conn);
         logger.info("Connection " + conn + " returned to the connection pool.");
-        
-        if (rs.next()) { 
-        	int lastInsertedId = rs.getInt(1);
+
+        if (rs.next()) {
+            int lastInsertedId = rs.getInt(1);
             logger.info("Successfully created new operation with id #" + lastInsertedId + ".");
+            Operation op = new Operation(lastInsertedId, operation.getDateEntry(), null, OperationStatus.DIAGNOSED);
+            op.setParkingSpace(spaceId);
+            try {
+                this.createWorkflow(op);
+            } catch (Exception e) {
+            }
             return lastInsertedId;
         }
 
@@ -202,5 +212,5 @@ public class OperationDAO {
         return -1;
 
     }
-    
+
 }

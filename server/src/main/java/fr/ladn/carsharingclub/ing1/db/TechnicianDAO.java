@@ -1,16 +1,14 @@
 package fr.ladn.carsharingclub.ing1.db;
 
+import fr.ladn.carsharingclub.ing1.model.Technician;
+import fr.ladn.carsharingclub.ing1.model.TechnicianRights;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import org.apache.log4j.Logger;
-
-import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.model.Technician;
-import fr.ladn.carsharingclub.ing1.model.TechnicianRights;
 
 public class TechnicianDAO {
 	/** The logger. */
@@ -44,7 +42,7 @@ public class TechnicianDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for part #" + id + " reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM techncien WHERE id_technicien = ?");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM technicien WHERE id_technicien = ?");
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");

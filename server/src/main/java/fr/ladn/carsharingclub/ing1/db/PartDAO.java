@@ -67,9 +67,9 @@ public class PartDAO {
      *
      * @param id of the part to be read.
      * @return the information on the part.
-     * @throws Exception if a connection issue is encountered.
+     * @throws SQLException if a connection issue is encountered.
      */
-    public Part read(int id) throws Exception {
+    public Part read(int id) throws SQLException {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
