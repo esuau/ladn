@@ -22,11 +22,9 @@ public class Failure implements Serializable {
     private String instructions;
 
     /** The estimated time for the repair work. */
-    private Duration estimatedTime;
+    private int estimatedTime;
 
-    /**
-     * Default constructor
-     */
+    /** Default constructor */
     public Failure() { }
 
     /**
@@ -36,14 +34,14 @@ public class Failure implements Serializable {
      * @param instructions  the instructions corresponding to the repair work.
      * @param estimatedTime the estimated time to complete the repair work.
      */
-    public Failure(String name, FailureType type, String instructions, Duration estimatedTime) {
+    public Failure(String name, FailureType type, String instructions, int estimatedTime) {
         this.name = name;
         this.type = type;
         this.instructions = instructions;
         this.estimatedTime = estimatedTime;
     }
-    
-    public Failure(int id, String name, FailureType type, String instructions, Duration estimatedTime) {
+
+    public Failure(int id, String name, FailureType type, String instructions, int estimatedTime) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -83,11 +81,11 @@ public class Failure implements Serializable {
         this.instructions = instructions;
     }
 
-    public Duration getEstimatedTime() {
+    public int getEstimatedTime() {
         return estimatedTime;
     }
 
-    public void setEstimatedTime(Duration estimatedTime) {
+    public void setEstimatedTime(int estimatedTime) {
         this.estimatedTime = estimatedTime;
     }
 }

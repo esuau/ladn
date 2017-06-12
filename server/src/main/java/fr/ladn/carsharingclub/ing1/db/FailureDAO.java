@@ -12,21 +12,17 @@ import java.time.Duration;
 import java.util.ArrayList;
 
 /**
- * DOA object for Failure.
+ * DOA object for failures.
  * Contains SQL statements for CRUD on table <tt>reparer</tt> in database.
  *
  * @see Failure
  */
 public class FailureDAO {
 
-    /**
-     * The logger.
-     */
+    /** The logger. */
     private final static Logger logger = Logger.getLogger(OperationDAO.class.getName());
 
-    /**
-     * The connection pool.
-     */
+    /** The connection pool. */
     private ConnectionPool pool;
 
     /**
@@ -53,7 +49,7 @@ public class FailureDAO {
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
         logger.info("Preparing SQL statement for all existing failures reading...");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM panne");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM panne, assoc_reparation_panne, reparer WHERE panne.id_panne = assoc_reparation_panne.id_panne AND reparer.id_reparation = assoc_reparation_panne.id_reparation");
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");
 
@@ -70,7 +66,7 @@ public class FailureDAO {
             int duration = rs.getInt("temps_estime");
 
             logger.info("Successfully get failure #" + id + " information from database.");
-            failures.add(new Failure(id, intitule, this.getFailureType(failureTypeId), instructions, Duration.ofMinutes(duration)));
+            failures.add(new Failure(id, intitule, this.getFailureType(failureTypeId), instructions, duration));
         }
         return failures;
     }
@@ -79,10 +75,10 @@ public class FailureDAO {
      * Gets a failure type by its identifier.
      *
      * @param id the identifier of the failure type.
-     * @return the corresponding FailureType object.
+     * @return the corresponding fr.ladn.carsharingclub.ing1.definitions.FailureType object.
      * @throws SQLException in case of issue with the database request.
      */
-    public FailureType getFailureType(int id) throws SQLException {
+    private FailureType getFailureType(int id) throws SQLException {
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
 
@@ -106,6 +102,45 @@ public class FailureDAO {
 
         logger.error("Database request did not return any failure type.");
         return null;
+    }
+
+    /**
+     * Gets failures related to a given operation ID.
+     *
+     * @param operationId the id of the operation.
+     * @return the array of corresponding failures.
+     * @throws SQLException when a request issue is encountered.
+     */
+    Failure[] getFailuresByOperation(int operationId) throws SQLException {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        logger.info("Preparing SQL statement for all existing failures reading...");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM panne, assoc_reparation_panne, reparer WHERE panne.id_panne = assoc_reparation_panne.id_panne AND reparer.id_reparation = assoc_reparation_panne.id_reparation AND reparer.id_reparation = ?");
+        ps.setInt(1, operationId);
+        ResultSet rs = ps.executeQuery();
+        logger.info("Database request has been successfully executed.");
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+
+        ArrayList<Failure> failures = new ArrayList<>();
+
+        while (rs.next()) {
+            int failureId = rs.getInt("id_panne");
+            String name = rs.getString("intitule");
+            int failureType = rs.getInt("type_panne");
+            String instructions = rs.getString("descriptif_protocole");
+            int estimatedTime = rs.getInt("temps_estime");
+
+            failures.add(new Failure(failureId, name, getFailureType(failureType), instructions, estimatedTime));
+            logger.info("Successfully get failure failure #" + failureId + " information from database.");
+
+        }
+
+        Failure[] failuresTable = new Failure[failures.size()];
+        return failures.toArray(failuresTable);
     }
 
 }

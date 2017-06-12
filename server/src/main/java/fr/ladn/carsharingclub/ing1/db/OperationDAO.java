@@ -3,13 +3,8 @@ package fr.ladn.carsharingclub.ing1.db;
 import fr.ladn.carsharingclub.ing1.model.*;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * DOA object for Operations.
@@ -19,18 +14,14 @@ import java.util.Iterator;
  */
 public class OperationDAO {
 
-    /**
-     * The logger.
-     */
+    /** The logger. */
     private final static Logger logger = Logger.getLogger(OperationDAO.class.getName());
 
-    /**
-     * The connection pool.
-     */
+    /** The connection pool. */
     private ConnectionPool pool;
 
     /**
-     * Constructor. References connection pool.
+     * Constructor. References the connection pool.
      *
      * @param p The connection pool.
      * @see ConnectionPool
@@ -43,18 +34,18 @@ public class OperationDAO {
 
 
     /**
-     * Gets a filtered list of vehicles relatively to their status.
+     * Gets a filtered list of operations relatively to their status.
      *
      * @param status the list of selected status.
-     * @return the list of corresponding vehicles.
+     * @return the list of corresponding operations.
      * @throws SQLException if a database request issue is encountered.
      */
-    public ArrayList<Operation> displayVehicleByStatus(String status) throws SQLException {
+    public ArrayList<Operation> getOperationsByStatus(String status) throws SQLException {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");
         PreparedStatement ps;
-        ps = conn.prepareStatement("SELECT* FROM reparer WHERE statut_reparation = ? ORDER BY priorite_reparation");
+        ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation = ? ORDER BY priorite_reparation");
         ps.setString(1, status);
         ResultSet rs = ps.executeQuery();
         logger.info("Database request has been successfully executed.");
@@ -79,6 +70,69 @@ public class OperationDAO {
         }
         return reparation;
 
+    }
+
+    /**
+     * Gets a sorted list of operation filtered by status.
+     *
+     * @param status the status filter.
+     * @return a sorted operation list.
+     * @throws SQLException in case of issue with the database request.
+     */
+    public OperationList getOperationListByStatus(OperationStatus status) throws SQLException {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        PreparedStatement ps ;
+        ps = conn.prepareStatement("SELECT * FROM reparer WHERE statut_reparation = ?");
+        ps.setString(1, status.toString());
+        ResultSet rs = ps.executeQuery();
+        logger.info("Database request has been successfully executed.");
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+
+        OperationList operations = new OperationList();
+        VehicleDAO vehicleDAO = new VehicleDAO(pool);
+        FailureDAO failureDAO = new FailureDAO(pool);
+
+        while (rs.next()) {
+            int id = rs.getInt("id_reparation");
+            int vehicle = rs.getInt("id_vehicule");
+            int priority = rs.getInt("priorite_reparation");
+            java.sql.Timestamp entryDate = rs.getTimestamp("date_entree_vehicule");
+            int parkingSpace = rs.getInt("id_place");
+            String comment = rs.getString("commentaire");
+            comment = comment == null ? "" : comment;
+
+            logger.info("Successfully get operation #" + id + " information from database.");
+            operations.add(new Operation(id, vehicleDAO.getVehiclesByOperation(vehicle), failureDAO.getFailuresByOperation(id), status, getPriority(priority), parkingSpace, entryDate, comment));
+        }
+        return operations;
+    }
+
+    /**
+     * Gets priority given a priority level.
+     *
+     * @param priorityLevel the priority level from 1 to 0.
+     * @return the corresponding priority.
+     */
+    private OperationPriority getPriority(int priorityLevel) {
+        switch (priorityLevel) {
+            case 1:
+                return OperationPriority.URGENT;
+            case 2:
+                return OperationPriority.CRITICAL;
+            case 3:
+                return OperationPriority.MAJOR;
+            case 4:
+                return OperationPriority.NORMAL;
+            case 5:
+                return OperationPriority.MINOR;
+            default:
+                return null;
+        }
     }
 
 
@@ -115,8 +169,8 @@ public class OperationDAO {
 
         ps.execute();
         logger.info("Database request has been executed. The operation #" + o.getId() + " has been updated in database > reparation_histo_temps.");
-        
-         pool.returnConnection(conn);
+
+        pool.returnConnection(conn);
     }
 
     public void createWorkflow(Operation o) throws Exception {

@@ -1,7 +1,6 @@
 package fr.ladn.carsharingclub.ing1.model;
 
 import java.io.Serializable;
-import java.time.Duration;
 
 /**
  * The class CRUD.
@@ -167,34 +166,6 @@ public class Operation implements Serializable {
 
     public Operation(int id) {
         this.id = id;
-    }
-
-    /**
-     * Gets the biggest and most urgent failure to repair for the operation.
-     *
-     * @return the most urgent failure to repair.
-     */
-    public Failure getBiggestFailure() {
-        int index = 0;
-        for (int i = 0; i < failures.length; i++) {
-            if (failures[i].getType().getPriority() < failures[index].getType().getPriority()) {
-                index = i;
-            }
-        }
-        return failures[index];
-    }
-
-    /**
-     * Gets the total estimated duration of the operation given all the failures.
-     *
-     * @return the total theoretical duration of the operation.
-     */
-    public Duration getTotalEstimatedDuration() {
-        Duration totalEstimatedDuration = Duration.ofMinutes(0);
-        for (Failure failure : failures) {
-            totalEstimatedDuration = totalEstimatedDuration.plus(failure.getEstimatedTime());
-        }
-        return totalEstimatedDuration;
     }
 
     public int getId() {

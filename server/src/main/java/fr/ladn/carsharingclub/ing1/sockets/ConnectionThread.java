@@ -8,16 +8,9 @@ import java.net.*;
 import fr.ladn.carsharingclub.ing1.utils.CRUD;
 import org.apache.log4j.Logger;
 
-import fr.ladn.carsharingclub.ing1.db.ConnectionPool;
-import fr.ladn.carsharingclub.ing1.db.FailureDAO;
-import fr.ladn.carsharingclub.ing1.db.PartDAO;
-import fr.ladn.carsharingclub.ing1.db.TechnicianDAO;
-import fr.ladn.carsharingclub.ing1.db.VehicleDAO;
-import fr.ladn.carsharingclub.ing1.db.OperationDAO;
-import fr.ladn.carsharingclub.ing1.db.WorkFlowDAO;
+import fr.ladn.carsharingclub.ing1.db.*;
 import fr.ladn.carsharingclub.ing1.model.*;
-import fr.ladn.carsharingclub.ing1.utils.Container;
-import fr.ladn.carsharingclub.ing1.utils.XML;
+import fr.ladn.carsharingclub.ing1.utils.*;
 
 /**
  * The ConnectionThread class.
@@ -39,10 +32,12 @@ public class ConnectionThread extends Thread {
     private OperationDAO repDAO;
     private VehicleDAO vecDAO;
     private TechnicianDAO techDAO;
-
     private WorkFlowDAO flowDAO;
     private FailureDAO failDAO;
 
+
+    /** The list of diagnosed operations. */
+    private OperationList operations;
 
     /**
      * Gets the socket initialized by the server.
@@ -50,16 +45,16 @@ public class ConnectionThread extends Thread {
      * @param clientSocket the socket provided by the server
      * @see Server
      */
-    ConnectionThread(Socket clientSocket, ConnectionPool connectionPool) {
+    ConnectionThread(Socket clientSocket, ConnectionPool connectionPool, OperationList operations) {
         logger.info("Initializing connection.");
         this.clientSocket = clientSocket;
         this.partDAO = new PartDAO(connectionPool);
         this.repDAO = new OperationDAO(connectionPool);
         this.vecDAO = new VehicleDAO(connectionPool);
         this.techDAO = new TechnicianDAO(connectionPool);
-
         this.flowDAO = new WorkFlowDAO(connectionPool);
         this.failDAO = new FailureDAO(connectionPool);
+        this.operations = operations;
     }
 
     /**
@@ -119,7 +114,7 @@ public class ConnectionThread extends Thread {
                 case READ_OPERATION_S:
                     logger.info("Attempt to read operation in database.");
                     String status=((Operation) (container.getObject())).getStatusStr();
-                    sendData(new Container<>(CRUD.PING, repDAO.displayVehicleByStatus(status)));
+                    sendData(new Container<>(CRUD.PING, repDAO.getOperationsByStatus(status)));
                     break;
                 case READ_PARTS_FAILURE:
                     logger.info("Attempt to read assoc_reparation_pannes.");
@@ -166,6 +161,11 @@ public class ConnectionThread extends Thread {
                 case READ_FAILURES:
                     logger.info("Attempt to read all failures from database.");
                     sendData(new Container<>(CRUD.PING, failDAO.getFailures()));
+                    break;
+                case GET_NEW_OPERATION:
+                    logger.info("Attempt to get most urgent operation.");
+                    sendData(new Container<>(CRUD.PING, operations.getElements().first()));
+                    break;
                 default:
                     logger.info("Sorry. This operation is not covered yet.");
             }

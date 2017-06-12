@@ -1,18 +1,7 @@
 package fr.ladn.carsharingclub.ing1.sockets;
 
-
 import fr.ladn.carsharingclub.ing1.model.*;
-
-import fr.ladn.carsharingclub.ing1.model.Operation;
-import fr.ladn.carsharingclub.ing1.model.Part;
-
-import fr.ladn.carsharingclub.ing1.model.Technician;
-import fr.ladn.carsharingclub.ing1.model.Vehicle;
-import fr.ladn.carsharingclub.ing1.model.WorkFlowRep;
-
-import fr.ladn.carsharingclub.ing1.utils.CRUD;
-import fr.ladn.carsharingclub.ing1.utils.Container;
-import fr.ladn.carsharingclub.ing1.utils.XML;
+import fr.ladn.carsharingclub.ing1.utils.*;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -26,13 +15,19 @@ import java.util.Properties;
  */
 public class Client extends Thread {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private final static Logger logger = Logger.getLogger(Client.class.getName());
 
-    /** The server address. */
+    /**
+     * The server address.
+     */
     private String serverAddress = "";
 
-    /** The server port. */
+    /**
+     * The server port.
+     */
     private int serverPort = 0;
 
     /**
@@ -157,6 +152,13 @@ public class Client extends Thread {
         }
         return null;
     }
+
+    /**
+     * Gets a technician by his identifier.
+     *
+     * @param id the ID of the technician to get.
+     * @return the corresponding technician.
+     */
     public Technician getTechnician(int id) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
@@ -192,7 +194,7 @@ public class Client extends Thread {
         }
         return null;
     }
-    
+
     /**
      * Gets a vehicle object by ID from the server.
      *
@@ -221,13 +223,13 @@ public class Client extends Thread {
      */
     public ArrayList<Operation> getOperationsStatus(String s) {
         try {
-            
+
             Socket socketClient = new Socket(serverAddress, serverPort);
-             sendData(socketClient, new Container<>(CRUD.READ_OPERATION_S, new Operation(0,s,0,null,null,null,null,0)));
-             Container<ArrayList<Operation>> receivedContainer = getData(socketClient);
-             ArrayList<Operation> reparations=new ArrayList<>();
-             reparations.addAll(receivedContainer.getObject());
-             socketClient.close();
+            sendData(socketClient, new Container<>(CRUD.READ_OPERATION_S, new Operation(0, s, 0, null, null, null, null, 0)));
+            Container<ArrayList<Operation>> receivedContainer = getData(socketClient);
+            ArrayList<Operation> reparations = new ArrayList<>();
+            reparations.addAll(receivedContainer.getObject());
+            socketClient.close();
             return reparations;
         } catch (IOException e) {
             logger.error("Failed to get operations from the server: " + e.getMessage());
@@ -267,7 +269,7 @@ public class Client extends Thread {
             logger.error("Failed to get part #" + part.getId() + " from the server: " + e.getMessage());
         }
     }
-    
+
     /**
      * Gets an ArrayList of Parts needed for the operation in parameter.
      *
@@ -300,7 +302,7 @@ public class Client extends Thread {
             sendData(socketClient, new Container<>(CRUD.READ_EMPTY_SPACE, new Object()));
             Integer i = (Integer) getData(socketClient).getObject();
             socketClient.close();
-            return i.intValue();
+            return i;
         } catch (IOException e) {
             logger.error("Failed to get space from the server: " + e.getMessage());
         } catch (NullPointerException e) {
@@ -308,9 +310,9 @@ public class Client extends Thread {
         }
         return 0;
     }
-    
+
     public void updateOperation(Operation operation) {
-         try {
+        try {
             Socket socketClient = new Socket(serverAddress, serverPort);
             sendData(socketClient, new Container<>(CRUD.UPDATE_OPERATION, operation));
             socketClient.close();
@@ -318,7 +320,12 @@ public class Client extends Thread {
             logger.error("Failed to get operation #" + operation.getId() + " from the server: " + e.getMessage());
         }
     }
-    
+
+    /**
+     * Updates the workflow corresponding to an operation.
+     *
+     * @param operation the operation related to the workflow.
+     */
     public void updateWorkflow(Operation operation) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
@@ -328,7 +335,12 @@ public class Client extends Thread {
             logger.error("Failed to get operation #" + operation.getId() + " from the server: " + e.getMessage());
         }
     }
-    
+
+    /**
+     * Creates a new workflow for an operation.
+     *
+     * @param operation the operation corresponding to the new workflow.
+     */
     public void createWorkflow(Operation operation) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
@@ -337,21 +349,28 @@ public class Client extends Thread {
         } catch (IOException e) {
             logger.error("Failed to send operation #" + operation.getId() + " to the server: " + e.getMessage());
         }
-    }   
-        
+    }
+
+    /**
+     * Gets a workflow related to a vehicle.
+     *
+     * @param v identifier of the vehicle.
+     * @return the corresponding workflow.
+     */
     public ArrayList<WorkFlowRep> getCarFlow(int v) {
         try {
-            
+
             Socket socketClient = new Socket(serverAddress, serverPort);
-             if(v<0)sendData(socketClient, new Container<>(CRUD.READ_CAR_F, new WorkFlowRep(0,"",null,0,null,-1,"")));
-             else sendData(socketClient, new Container<>(CRUD.READ_CAR_F, new WorkFlowRep(0,"",null,0,null,v,"")));
-             Container<ArrayList<WorkFlowRep>> receivedContainer = getData(socketClient);
-             for (WorkFlowRep r : receivedContainer.getObject()) {
-                 System.out.println(r.getId_vehicule()+" test");
+            if (v < 0)
+                sendData(socketClient, new Container<>(CRUD.READ_CAR_F, new WorkFlowRep(0, "", null, 0, null, -1, "")));
+            else sendData(socketClient, new Container<>(CRUD.READ_CAR_F, new WorkFlowRep(0, "", null, 0, null, v, "")));
+            Container<ArrayList<WorkFlowRep>> receivedContainer = getData(socketClient);
+            for (WorkFlowRep r : receivedContainer.getObject()) {
+                System.out.println(r.getId_vehicule() + " test");
             }
-             ArrayList<WorkFlowRep> vehicule=new ArrayList<>();
-             vehicule.addAll(receivedContainer.getObject());
-             socketClient.close();
+            ArrayList<WorkFlowRep> vehicule = new ArrayList<>();
+            vehicule.addAll(receivedContainer.getObject());
+            socketClient.close();
             return vehicule;
         } catch (IOException e) {
             logger.error("Failed to get cars from the server: " + e.getMessage());
@@ -361,18 +380,19 @@ public class Client extends Thread {
         return null;
     }
 
+
     public ArrayList<WorkFlowRep> getCalculStat(int choix) {
         try {
-            
+
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(CRUD.READ_STAT, new WorkFlowRep(choix,"",null,0,null,0,"")));
+            sendData(socketClient, new Container<>(CRUD.READ_STAT, new WorkFlowRep(choix, "", null, 0, null, 0, "")));
             Container<ArrayList<WorkFlowRep>> receivedContainer = getData(socketClient);
             /* for (WorkFlowRep r : receivedContainer.getObject()) {
                  System.out.println(r.getId_vehicule()+" test");
             }*/
-             ArrayList<WorkFlowRep> vehicule=new ArrayList<>();
-             vehicule.addAll(receivedContainer.getObject());
-             socketClient.close();
+            ArrayList<WorkFlowRep> vehicule = new ArrayList<>();
+            vehicule.addAll(receivedContainer.getObject());
+            socketClient.close();
             return vehicule;
         } catch (IOException e) {
             logger.error("Failed to get stat from the server: " + e.getMessage());
@@ -382,7 +402,12 @@ public class Client extends Thread {
         return null;
     }
 
-    
+    /**
+     * Creates a new operation.
+     *
+     * @param operation the operation to create.
+     * @return The identifier of the newly created operation.
+     */
     public Operation createRepairWork(Operation operation) {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
@@ -395,7 +420,7 @@ public class Client extends Thread {
         }
         return null;
     }
-    
+
     /**
      * Gets all the existing Failures transmitted by the server.
      *
@@ -404,7 +429,7 @@ public class Client extends Thread {
     public ArrayList<Failure> getFailures() {
         try {
             Socket socketClient = new Socket(serverAddress, serverPort);
-            sendData(socketClient, new Container<>(CRUD.READ_FAILURES, new Failure(0,"", null, "", null)));
+            sendData(socketClient, new Container<>(CRUD.READ_FAILURES, new Failure(0, "", null, "", 0)));
             Container<ArrayList<Failure>> receivedContainer = getData(socketClient);
             ArrayList<Failure> failure = receivedContainer.getObject();
             socketClient.close();
@@ -413,6 +438,24 @@ public class Client extends Thread {
             logger.error("Failed to get failures from the server: " + e.getMessage());
         } catch (NullPointerException e) {
             logger.error("No failure was returned from the server.");
+        }
+        return null;
+    }
+
+    /**
+     * Gets the most urgent operation.
+     *
+     * @return the operation to allocate to the technician.
+     */
+    public Operation getNewOperation() {
+        try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.GET_NEW_OPERATION, null));
+            return (Operation) getData(socketClient).getObject();
+        } catch (IOException e) {
+            logger.error("Failed to get new operation from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No operation was returned from the server.");
         }
         return null;
     }
