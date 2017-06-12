@@ -20,7 +20,7 @@ public class ConnectionPool {
     private final static Logger logger = Logger.getLogger(ConnectionPool.class.getName());
 
     /** Maximum connection possible in connection pool. */
-    private static final int MAX_POOL_SIZE = 10;
+    private static final int MAX_POOL_SIZE = 100;
 
     /** The list of available opened connections. */
     private ArrayList<Connection> connectionsList = new ArrayList<>();

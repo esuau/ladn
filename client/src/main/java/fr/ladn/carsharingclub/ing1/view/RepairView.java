@@ -73,6 +73,7 @@ class RepairView extends JFrame implements ActionListener {
         Failure[] failures = {f1, f2};
         operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED, "C le pre a pé é boi");
         Technician t = new Technician("Louis", "Endelicher", "00000000", "LOL", TechnicianRights.technicien);
+
         operation.setTechnician(t);
         
         // We keep in memory the status at the beginning to update the date of the end of this status in reparation_histo_temps
@@ -296,7 +297,7 @@ class RepairView extends JFrame implements ActionListener {
         if (e.getSource() == btnSuspendre || e.getSource() == btnTerminer) {
             operation.setComment(tCommentaire.getText());
             operation.setDateBS(new java.sql.Timestamp(new Date().getTime()));
-            // We get a emply parking space
+            // We get an empty parking space
             operation.setParkingSpace(client.getEmptySpace());
 
             if (e.getSource() == btnSuspendre) {
@@ -317,6 +318,7 @@ class RepairView extends JFrame implements ActionListener {
                 }
             } else if (e.getSource() == btnTerminer) {
                 operation.setStatus(OperationStatus.REPARED);
+                System.out.println(operation.getStatus());
                     
                 ArrayList<Part> lParts = client.getParts();
                     

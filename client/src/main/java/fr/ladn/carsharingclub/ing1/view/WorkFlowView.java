@@ -7,6 +7,7 @@ package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.model.WorkFlowRep;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
+
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,43 +15,36 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
 import org.apache.log4j.Logger;
 
 /**
- *
  * @author kahel
  */
 public class WorkFlowView extends javax.swing.JPanel {
     private Client client;
     private final static Logger logger = Logger.getLogger(WorkFlowView.class.getName());
-      ArrayList<WorkFlowRep> r=new ArrayList<>();
+    ArrayList<WorkFlowRep> r = new ArrayList<>();
 
     /**
      * Creates new form WorkFlowView
+     *
      * @param c
      */
     public WorkFlowView(Client c) {
-        this.client=c;
+        this.client = c;
         initComponents();
         jComboBox1.removeAllItems();
         r.addAll(client.getCarFlow(-1));
         Iterator<WorkFlowRep> it = r.iterator();
         //int i=0;
-         while (it.hasNext()) {
-            Integer a=it.next().getId_vehicule();
-        System.out.println(a);  
-          jComboBox1.addItem(a.toString());
+        while (it.hasNext()) {
+            Integer a = it.next().getId_vehicule();
+            jComboBox1.addItem(a.toString());
         }
     }
-       
-       
-       
-        
-        
-    
-    
-    
-       
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -69,7 +63,7 @@ public class WorkFlowView extends javax.swing.JPanel {
 
         jLabel1.setText("AFFICHAGE DU WORKFLOW D'UN VEHICULE");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel2.setText("Choisir  un vehicule ");
 
@@ -87,60 +81,60 @@ public class WorkFlowView extends javax.swing.JPanel {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 139, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jButton1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(212, 212, 212)
-                .addComponent(jLabel1)
-                .addGap(0, 0, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(42, 42, 42)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 139, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(30, 30, 30)
+                                                .addComponent(jButton1)
+                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(212, 212, 212)
+                                .addComponent(jLabel1)
+                                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jLabel1)
-                .addGap(65, 65, 65)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(jLabel1)
+                                .addGap(65, 65, 65)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jButton1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(36, 36, 36))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-       ArrayList<WorkFlowRep>  work=new ArrayList<>(); 
-        int car=Integer.parseInt(jComboBox1.getSelectedItem().toString());
+        ArrayList<WorkFlowRep> work = new ArrayList<>();
+        int car = Integer.parseInt(jComboBox1.getSelectedItem().toString());
         work.addAll(client.getCarFlow(car));
-        if(!work.isEmpty()){
-        String s="";
-        String fin;
-        WorkFlowRep dernier=work.get(work.size()-1);
-        s=s+"Le vehicule  actuellement dans le depot sous le statut "+dernier.getStatut().toUpperCase()+" garée à la place numero "+dernier.getId_place()+".\n\n";
-        s=s+"Voici son WorkFlow :\n\n";
-        for (WorkFlowRep wf : work){
-            if(wf.getDate_fin()==null) fin=" En Attente de fin du Statut ";
-            else fin=wf.getDate_fin().toString();
-            s=s+wf.getDate_deb()+" -> <"+wf.getStatut()+"> -> "+fin+" \n";
-           
-        }
-        jTextArea1.setText(s);}
-        else JOptionPane.showMessageDialog(null, "La table de workflow est vide.");
+        if (!work.isEmpty()) {
+            String s = "";
+            String fin;
+            WorkFlowRep dernier = work.get(work.size() - 1);
+            s = s + "Le vehicule  actuellement dans le depot sous le statut " + dernier.getStatut().toUpperCase() + " garée à la place numero " + dernier.getId_place() + ".\n\n";
+            s = s + "Voici son WorkFlow :\n\n";
+            for (WorkFlowRep wf : work) {
+                if (wf.getDate_fin() == null) fin = " En Attente de fin du Statut ";
+                else fin = wf.getDate_fin().toString();
+                s = s + wf.getDate_deb() + " -> <" + wf.getStatut() + "> -> " + fin + " \n";
+
+            }
+            jTextArea1.setText(s);
+        } else JOptionPane.showMessageDialog(null, "La table de workflow est vide.");
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

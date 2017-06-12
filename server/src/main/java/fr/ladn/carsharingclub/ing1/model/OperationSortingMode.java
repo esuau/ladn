@@ -6,7 +6,12 @@ package fr.ladn.carsharingclub.ing1.model;
 public enum OperationSortingMode {
 
     /**
-     * Sorting by failure  type only.
+     * The default sorting manner.
+     */
+    DEFAULT,
+
+    /**
+     * Sorting by failure type only.
      */
     FAILURE_TYPE,
 
