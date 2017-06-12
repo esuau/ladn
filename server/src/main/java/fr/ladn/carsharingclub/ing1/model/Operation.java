@@ -1,7 +1,6 @@
 package fr.ladn.carsharingclub.ing1.model;
 
 import java.io.Serializable;
-import java.time.Duration;
 
 /**
  * The class CRUD.
@@ -26,31 +25,31 @@ public class Operation implements Serializable {
 
     /** The priority level of the operation. */
     private OperationPriority priority;
-    
+
      /** The priority level of the operation. */
     private int priorityStr;
-    
+
     /** The date of entry of the vehicle in the deposit. */
     private java.sql.Timestamp dateEntry;
 
     /** The actual exit date of the vehicle. */
     private java.sql.Timestamp dateExit;
-    
+
      /** The actual exit date of the vehicle. */
     private String comment;
-    
+
     /** The begin date of the actual status of the operation. */
     private java.sql.Timestamp dateBS;
-    
+
     /** The end date of the actual status of the operation. */
     private java.sql.Timestamp dateES;
 
     /** The identifier of the parking space. */
     private int parkingSpace;
-    
+
     /** The old status of the operation to be used when searching the operation status in reparation_histo_temps */
     private OperationStatus oldStatus;
-    
+
     /** The old status of the operation to be used when searching the operation status in reparation_histo_temps */
     private String statusStr;
 
@@ -117,18 +116,29 @@ public class Operation implements Serializable {
         this.dateExit = dateExit;
         this.parkingSpace = parkingSpace;
     }
-    
-    public Operation(int id,String statut_reparation,int priorite,java.sql.Timestamp date_entree_vehicule,java.sql.Timestamp date_sortie, Technician id_technicien,Vehicle id_vehicule,int id_place) {
-        
+
+    /**
+     * Instantiates an operation.
+     * Used when getting operation by status.
+     *
+     * @param id              the identifier of the operation.
+     * @param status          the operation status.
+     * @param priority        the priority of the vehicle.
+     * @param dateEntry       the entry date of the vehicle.
+     * @param dateExit        the exit date of the vehicle.
+     * @param technician      the technician in charge.
+     * @param vehicleId       the identifier of the vehicle.
+     * @param parkingSpaceId  the identifier of the parking space.
+     */
+    public Operation(int id, String status, int priority, java.sql.Timestamp dateEntry, java.sql.Timestamp dateExit, Technician technician, Vehicle vehicleId, int parkingSpaceId) {
         this.id = id;
-        this.dateEntry = date_entree_vehicule;
-        this.priorityStr=priorite;
-        this.statusStr =statut_reparation ;
-        this.dateExit = date_sortie;
-        this.technician = id_technicien;
-        this.vehicle=id_vehicule;
-        this.parkingSpace=id_place;
-      
+        this.dateEntry = dateEntry;
+        this.priorityStr = priority;
+        this.statusStr = status ;
+        this.dateExit = dateExit;
+        this.technician = technician;
+        this.vehicle = vehicleId;
+        this.parkingSpace = parkingSpaceId;
     }
 
 
@@ -145,12 +155,28 @@ public class Operation implements Serializable {
         this.failures = failures;
         this.status = status;
     }
-    
-    public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status, String comment) {
+
+    /**
+     * Instantiates a vehicle.
+     * Used when initializing the OperationList.
+     *
+     * @param id           the identifier of the operation.
+     * @param vehicle      the vehicle corresponding to the operation.
+     * @param failures     the failures leading the operations.
+     * @param status       the operation status (normally DIAGNOSED).
+     * @param priority     the operation priority.
+     * @param parkingSpace the parking space of the vehicle.
+     * @param dateEntry    the entry date of the vehicle.
+     * @param comment      a comment leaved during the diagnosis.
+     */
+    public Operation(int id, Vehicle vehicle, Failure[] failures, OperationStatus status, OperationPriority priority, int parkingSpace, java.sql.Timestamp dateEntry, String comment) {
         this.id = id;
         this.vehicle = vehicle;
         this.failures = failures;
         this.status = status;
+        this.priority = priority;
+        this.parkingSpace = parkingSpace;
+        this.dateEntry = dateEntry;
         this.comment = comment;
     }
 
@@ -178,7 +204,7 @@ public class Operation implements Serializable {
      *
      * @return the most urgent failure to repair.
      */
-    public Failure getBiggestFailure() {
+    Failure getBiggestFailure() {
         int index = 0;
         for (int i = 0; i < failures.length; i++) {
             if (failures[i].getType().getPriority() < failures[index].getType().getPriority()) {
@@ -193,10 +219,10 @@ public class Operation implements Serializable {
      *
      * @return the total theoretical duration of the operation.
      */
-    public Duration getTotalEstimatedDuration() {
-        Duration totalEstimatedDuration = Duration.ofMinutes(0);
+    int getTotalEstimatedDuration() {
+        int totalEstimatedDuration = 0;
         for (Failure failure : failures) {
-            totalEstimatedDuration = totalEstimatedDuration.plus(failure.getEstimatedTime());
+            totalEstimatedDuration += failure.getEstimatedTime();
         }
         return totalEstimatedDuration;
     }
@@ -272,27 +298,27 @@ public class Operation implements Serializable {
     public void setPriority(OperationPriority priority) {
         this.priority = priority;
     }
-    
+
     public java.sql.Timestamp getDateBS() {
         return dateBS;
     }
-    
+
     public void setDateBS(java.sql.Timestamp dateBS) {
         this.dateBS = dateBS;
     }
-    
+
     public java.sql.Timestamp getDateES() {
         return dateES;
     }
-    
+
     public void setDateES(java.sql.Timestamp dateES) {
         this.dateES = dateES;
     }
-    
+
     public String getComment() {
         return comment;
     }
-    
+
     public void setComment(String comment) {
         this.comment = comment;
     }
@@ -304,7 +330,7 @@ public class Operation implements Serializable {
     public void setParkingSpace(int parkingSpace) {
         this.parkingSpace = parkingSpace;
     }
-    
+
     public OperationStatus getOldStatus() {
         return oldStatus;
     }

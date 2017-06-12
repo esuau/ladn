@@ -147,4 +147,15 @@ public class OperationList implements Serializable {
         this.elements = elements;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder("\n");
+        str.append(String.format("%-5s %-30s %-5s %10s\n", "ID", "Category", "Duration", "Entry date"));
+        str.append("--------------------------------------------------\n");
+        for (Operation operation : elements) {
+            str.append(String.format("%-5s %-30s %-5s %10s\n", operation.getId(), operation.getBiggestFailure().getType().getName(), operation.getTotalEstimatedDuration(), operation.getDateEntry()));
+        }
+        return str.toString();
+    }
+
 }
