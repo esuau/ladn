@@ -173,7 +173,7 @@ public class ConnectionThread extends Thread {
         } catch (IOException e) {
             logger.error("Failed to get data from client: " + e.getMessage());
         } catch (Exception e) {
-            logger.error("Failed to execute database operation: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

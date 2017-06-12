@@ -115,6 +115,8 @@ public class OperationDAO {
 
         ps.execute();
         logger.info("Database request has been executed. The operation #" + o.getId() + " has been updated in database > reparation_histo_temps.");
+        
+         pool.returnConnection(conn);
     }
 
     public void createWorkflow(Operation o) throws Exception {
