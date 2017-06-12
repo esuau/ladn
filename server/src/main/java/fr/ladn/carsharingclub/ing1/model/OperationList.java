@@ -1,6 +1,7 @@
 package fr.ladn.carsharingclub.ing1.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -15,10 +16,8 @@ public class OperationList implements Serializable {
      */
     private OperationSortingMode mode;
 
-    /**
-     * The list of operations.
-     */
-    private SortedSet<Operation> elements = new TreeSet<Operation>() {
+    /** The list of operations. */
+    private SortedSet<Operation> elements = new TreeSet<>(new Comparator<Operation>() {
 
         /**
          * The sorting method.
@@ -51,15 +50,14 @@ public class OperationList implements Serializable {
                     return compareFailureTypes(o1, o2);
             }
         }
-
-    };
+    });
 
     /**
      * Default constructor.
-     * Allows serialization.
+     * Initializes the sorting mode to default.
      */
     public OperationList() {
-
+        this.mode = OperationSortingMode.DEFAULT;
     }
 
     /**
@@ -112,7 +110,7 @@ public class OperationList implements Serializable {
      * @return the comparator value, negative if less, positive if greater.
      */
     private int compareEstimatedTimes(Operation o1, Operation o2) {
-        return o1.getTotalEstimatedDuration().compareTo(o2.getTotalEstimatedDuration());
+        return Integer.compare(o1.getTotalEstimatedDuration(), o2.getTotalEstimatedDuration());
     }
 
     /**
@@ -122,6 +120,15 @@ public class OperationList implements Serializable {
      */
     private int compareEntryDates(Operation o1, Operation o2) {
         return o1.getDateEntry().compareTo(o2.getDateEntry());
+    }
+
+    /**
+     * Adds operations to the list.
+     *
+     * @param operation the operation to add.
+     */
+    public synchronized void add(Operation operation) {
+        elements.add(operation);
     }
 
     public OperationSortingMode getMode() {
