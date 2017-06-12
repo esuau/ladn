@@ -46,14 +46,14 @@ public class StatsResFrame extends JFrame {
 		textPane.setBackground(SystemColor.menu);
 		
 		
-		ParamNbOp param = new ParamNbOp(Date.valueOf("2017-4-1"),Date.valueOf("2017-6-1"),tech,fail);
+		ParamNbOp param = new ParamNbOp(début,fin,tech,fail);
 				
 		 String[] entetesRes = {"Technicien", "Panne", "Date de début","Date de fin","Nombre d'opérations"};
 	     Object[][] dataRes = new Object[1][4];
 	            dataRes[0][0] = tech.toString();
 	            dataRes[0][1] = fail.getName();
-	            dataRes[0][2] = "01/04/2017";
-	            dataRes[0][3] = "01/06/2017";
+	            dataRes[0][2] = début;
+	            dataRes[0][3] = fin;
 	            dataRes[0][2] = client.getNbOp(param);
 	            JTable tabbedPane = new JTable(dataRes,entetesRes);
 				

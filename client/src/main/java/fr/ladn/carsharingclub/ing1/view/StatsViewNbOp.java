@@ -18,6 +18,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.UIManager;
 import java.awt.Font;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.BoxLayout;
 import java.awt.GridLayout;
@@ -28,6 +29,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.awt.event.ActionEvent;
 
 public class StatsViewNbOp extends JPanel {
@@ -438,11 +440,16 @@ public class StatsViewNbOp extends JPanel {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					try {
+						if((comboBox_1.getSelectedItem()!=null)&&(comboBox.getSelectedItem()!=null)&&(comboBox_1.getSelectedItem()!=null)&&(comboBox_2.getSelectedItem()!=null)&&(comboBox_3.getSelectedItem()!=null)&&(comboBox_4.getSelectedItem()!=null)&&(comboBox_5.getSelectedItem()!=null)){
+					
 						Date début = new Date((Integer)comboBox_1.getSelectedItem(), (Integer)comboBox.getSelectedItem(),(Integer)comboBox_2.getSelectedItem());
 						Date fin = new Date((Integer)comboBox_3.getSelectedItem(), (Integer)comboBox_4.getSelectedItem(),(Integer)comboBox_5.getSelectedItem());
+						
 						StatsResFrame frame = new StatsResFrame(client, début, fin,(Technician)comboBox_7.getSelectedItem(),(Failure)comboBox_6.getSelectedItem());
 						frame.setVisible(true);
-					} catch (Exception e) {
+						}
+						JOptionPane.showMessageDialog(null,"Erreur", "Vous n'avez pas saisi de date", JOptionPane.INFORMATION_MESSAGE);
+						} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
