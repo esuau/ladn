@@ -30,6 +30,9 @@ public class Server {
     /** The operation list. */
     private OperationList operationList;
 
+    /** The server socket. */
+    private ServerSocket serverSocket;
+
     /**
      * Server constructor.
      * When starting, the server initializes the connection pool.
@@ -42,9 +45,6 @@ public class Server {
 
         // Connection pool initialization.
         connectionPool = new ConnectionPool();
-
-        // Operation list initialization.
-        initializeOperationList();
 
         Properties properties = new Properties();
 
@@ -60,14 +60,15 @@ public class Server {
         int serverPort = Integer.parseInt(properties.getProperty("serverPort"));
 
         try {
-            ServerSocket serverSocket = new ServerSocket(serverPort);
+            serverSocket = new ServerSocket(serverPort);
             logger.info("Server started on port " + serverPort + ".");
             while (true) {
                 Socket clientSocket = serverSocket.accept();
+                // Operation list refreshing.
+                refreshOperationList();
                 logger.info("Launching new connection thread.");
                 Thread connectionThread = new ConnectionThread(clientSocket, connectionPool, operationList);
                 connectionThread.start();
-                updateOperationList();
             }
         } catch (IOException e) {
             logger.error("Failed to start connection. " + e.getMessage());
@@ -79,28 +80,13 @@ public class Server {
      *
      * @see OperationList
      */
-    private void initializeOperationList() {
+    private void refreshOperationList() {
         try {
             OperationDAO operationDAO = new OperationDAO(connectionPool);
             operationList = operationDAO.getOperationListByStatus(OperationStatus.DIAGNOSED);
             logger.info(operationList.toString());
         } catch (SQLException e) {
-            logger.error("Failed to initialize the operation list: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Initializes the list of operations not started.
-     *
-     * @see OperationList
-     */
-    private void updateOperationList() {
-        try {
-            OperationDAO operationDAO = new OperationDAO(connectionPool);
-            operationList = operationDAO.getOperationListByStatus(OperationStatus.DIAGNOSED);
-            logger.info(operationList.toString());
-        } catch (SQLException e) {
-            logger.error("Failed to update the operation list: " + e.getMessage());
+            logger.error("Failed to refresh the operation list: " + e.getMessage());
         }
     }
 
