@@ -53,11 +53,11 @@ public class TechnicianDAO {
         logger.info("Connection " + conn + " returned to the connection pool.");
 
         if (rs.next()) {
-            String firstName = rs.getString("prenom");
-            String lastName = rs.getString("nom");
-            String phone_number = rs.getString("num_tel");
-            String password = rs.getString("mot_de_passe");
-            String rights_inter = rs.getString("rights");            
+            String firstName = rs.getString("prenom_technicien");
+            String lastName = rs.getString("nom_technicien");
+            String phone_number = rs.getString("num_tel_technicien");
+            String password = rs.getString("password_technicien");
+            String rights_inter = rs.getString("droits_technicien");            
             TechnicianRights rights = TechnicianRights.valueOf(rights_inter);
             logger.info("Successfully get technician #" + id + " information from database.");
             return new Technician(id, firstName, lastName, phone_number, password, rights);
@@ -84,11 +84,11 @@ public class TechnicianDAO {
 
         while (rs.next()) {
             int id = rs.getInt("id_technicien");
-        	String firstName = rs.getString("prenom");
-            String lastName = rs.getString("nom");
-            String phone_number = rs.getString("num_tel");
-            String password = rs.getString("mot_de_passe");
-            String rights_inter = rs.getString("rights");            
+        	String firstName = rs.getString("prenom_technicien");
+            String lastName = rs.getString("nom_technicien");
+            String phone_number = rs.getString("num_tel_technicien");
+            String password = rs.getString("password_technicien");
+            String rights_inter = rs.getString("droits_technicien");            
             TechnicianRights rights = TechnicianRights.valueOf(rights_inter);
 
             logger.info("Successfully get technician #" + id + " information from database.");

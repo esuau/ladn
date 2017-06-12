@@ -5,10 +5,13 @@ import javax.swing.border.LineBorder;
 
 import org.apache.log4j.Logger;
 
+import fr.ladn.carsharingclub.ing1.model.Failure;
 import fr.ladn.carsharingclub.ing1.model.Technician;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 
 import java.awt.Color;
+import java.awt.EventQueue;
+
 import javax.swing.JTextPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -21,6 +24,9 @@ import java.awt.GridLayout;
 import java.awt.SystemColor;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
@@ -78,7 +84,126 @@ public class StatsViewNbOp extends JPanel {
 		
 		JComboBox comboBox_5 = new JComboBox();
 		panel_1.add(comboBox_5);
+		ArrayList<Integer> mois = new ArrayList<Integer>();
+		mois.add(1);
+		mois.add(2);
+		mois.add(3);
+		mois.add(4);
+		mois.add(5);
+		mois.add(6);
+		mois.add(7);
+		mois.add(8);
+		mois.add(9);
+		mois.add(10);
+		mois.add(11);
+		mois.add(12);
+		ArrayList<Integer> année = new ArrayList<Integer>();
+		for(int i=2017; i<=2099;i++){
+			année.add(i);
+		}
+		ArrayList<Integer> jour1 = new ArrayList<Integer>();
+		for(int i=1; i<=31;i++){
+			jour1.add(i);
+		}
+		ArrayList<Integer> jour2 = new ArrayList<Integer>();
+		for(int i=1; i<=30;i++){
+			jour2.add(i);
+		}
+		ArrayList<Integer> jour3 = new ArrayList<Integer>();
+		for(int i=1; i<=28;i++){
+			jour3.add(i);
+		}
+		ArrayList<Integer> jour4 = new ArrayList<Integer>();
+		for(int i=1; i<=29;i++){
+			jour4.add(i);
+		}
+		comboBox_4.addItem(null);
+		for(int m: mois){
+			comboBox_4.addItem(m);
+		}
+		comboBox_5.addItem(null);
+		for(int a: année){
+			comboBox_5.addItem(a);
+		}
 		
+		comboBox_4.addItemListener(new ItemListener(){	
+			public void itemStateChanged(ItemEvent e){
+
+				if(((Integer)comboBox_4.getSelectedItem()==1)||((Integer)comboBox_4.getSelectedItem()==3)||((Integer)comboBox_4.getSelectedItem()==5)||((Integer)comboBox_4.getSelectedItem()==7)||((Integer)comboBox_4.getSelectedItem()==8)||((Integer)comboBox_4.getSelectedItem()==10)||((Integer)comboBox_4.getSelectedItem()==12)){
+					comboBox_3.removeAllItems();
+					for(int j : jour1){
+						comboBox_3.addItem(j);
+						logger.info("selected 1st type of months");
+
+
+					}
+					comboBox_3.repaint();
+				}
+				if(((Integer)comboBox_4.getSelectedItem()==4)||((Integer)comboBox_4.getSelectedItem()==6)||((Integer)comboBox_4.getSelectedItem()==9)||((Integer)comboBox_4.getSelectedItem()==11)){
+					comboBox_3.removeAllItems();
+					for(int j : jour2){
+						comboBox_3.addItem(j);
+						logger.info("selected 2nd type of months");
+
+					}
+					comboBox_3.repaint();
+				}
+				if((Integer)comboBox_4.getSelectedItem()==2){
+					comboBox_3.removeAllItems();
+					if((Integer)comboBox_5.getSelectedItem()%4==0)
+						logger.info("selected february29");
+						for(int j : jour4){
+						comboBox_3.addItem(j);
+						
+
+					}
+					
+					comboBox_3.repaint();
+					
+				}
+
+				if((Integer)comboBox_4.getSelectedItem()==2){
+					comboBox_3.removeAllItems();
+					if((Integer)comboBox_5.getSelectedItem()%4!=0)
+						logger.info("selected february28");
+
+					for(int j : jour3){
+						comboBox_3.addItem(j);
+					
+					}
+					
+					comboBox_3.repaint();
+					
+				}
+}
+			});
+		comboBox_5.addItemListener(new ItemListener(){	
+			public void itemStateChanged(ItemEvent e){
+
+				if(((Integer)comboBox_5.getSelectedItem()%4==0)&&((Integer)comboBox_4.getSelectedItem()==2)){
+					comboBox_3.removeAllItems();
+					logger.info("selected year bissectial");
+
+					for(int j : jour4){
+						comboBox_3.addItem(j);
+
+
+					}
+					comboBox_3.repaint();
+				}
+				if(((Integer)comboBox_5.getSelectedItem()%4!=0)&&((Integer)comboBox_4.getSelectedItem()==2)){
+					comboBox_3.removeAllItems();
+					logger.info("selected year non-bissectial");
+
+					for(int j : jour3){
+						comboBox_3.addItem(j);
+
+
+					}
+					comboBox_3.repaint();
+				}
+			}
+		});
 		JTextPane txtpnDateDeDbut = new JTextPane();
 		txtpnDateDeDbut.setDisabledTextColor(UIManager.getColor("TextPane.caretForeground"));
 		txtpnDateDeDbut.setEnabled(false);
@@ -101,7 +226,12 @@ public class StatsViewNbOp extends JPanel {
 		
 		JButton btnLancer = new JButton("Lancer");
 		
+		
 		JComboBox comboBox_6 = new JComboBox();
+		ArrayList<Failure> lFailures = client.getFailures();
+        for (Failure f : lFailures) {
+            comboBox_6.addItem(f);
+        }
 		
 		JTextPane txtpnPanne = new JTextPane();
 		txtpnPanne.setDisabledTextColor(UIManager.getColor("TextPane.caretForeground"));
@@ -212,6 +342,112 @@ public class StatsViewNbOp extends JPanel {
 		JComboBox comboBox_2 = new JComboBox();
 		panel.add(comboBox_2);
 		setLayout(groupLayout);
+		comboBox.addItem(null);
+		for(int m: mois){
+			comboBox.addItem(m);
+		}
+		comboBox_2.addItem(null);
+		for(int a: année){
+			comboBox_2.addItem(a);
+		}
 
+		comboBox.addItemListener(new ItemListener(){	
+			public void itemStateChanged(ItemEvent e){
+
+				if(((Integer)comboBox.getSelectedItem()==1)||((Integer)comboBox.getSelectedItem()==3)||((Integer)comboBox.getSelectedItem()==5)||((Integer)comboBox.getSelectedItem()==7)||((Integer)comboBox.getSelectedItem()==8)||((Integer)comboBox.getSelectedItem()==10)||((Integer)comboBox.getSelectedItem()==12)){
+					comboBox_1.removeAllItems();
+					for(int j : jour1){
+						comboBox_1.addItem(j);
+						logger.info("selected 1st type of months");
+
+
+					}
+					comboBox_1.repaint();
+				}
+				if(((Integer)comboBox.getSelectedItem()==4)||((Integer)comboBox.getSelectedItem()==6)||((Integer)comboBox.getSelectedItem()==9)||((Integer)comboBox.getSelectedItem()==11)){
+					comboBox_1.removeAllItems();
+					for(int j : jour2){
+						comboBox_1.addItem(j);
+						logger.info("selected 2nd type of months");
+
+					}
+					comboBox_1.repaint();
+				}
+				if((Integer)comboBox.getSelectedItem()==2){
+					comboBox_1.removeAllItems();
+					if((Integer)comboBox_2.getSelectedItem()%4==0)
+						logger.info("selected february29");
+						for(int j : jour4){
+						comboBox_1.addItem(j);
+						
+
+					}
+					
+					comboBox_1.repaint();
+					
+				}
+
+				if((Integer)comboBox.getSelectedItem()==2){
+					comboBox_1.removeAllItems();
+					if((Integer)comboBox_2.getSelectedItem()%4!=0)
+						logger.info("selected february28");
+
+					for(int j : jour3){
+						comboBox_1.addItem(j);
+					
+					}
+					
+					comboBox_1.repaint();
+					
+				}
+}
+			});
+		comboBox_2.addItemListener(new ItemListener(){	
+			public void itemStateChanged(ItemEvent e){
+
+				if(((Integer)comboBox_2.getSelectedItem()%4==0)&&((Integer)comboBox.getSelectedItem()==2)){
+					comboBox_1.removeAllItems();
+					logger.info("selected year bissectial");
+
+					for(int j : jour4){
+						comboBox_1.addItem(j);
+
+
+					}
+					comboBox_1.repaint();
+				}
+				if(((Integer)comboBox_2.getSelectedItem()%4!=0)&&((Integer)comboBox.getSelectedItem()==2)){
+					comboBox_1.removeAllItems();
+					logger.info("selected year non-bissectial");
+
+					for(int j : jour3){
+						comboBox_1.addItem(j);
+
+
+					}
+					comboBox_1.repaint();
+				}
+			}
+		});
+				
+		/**
+		 * Launch the result.
+		 */
+		btnLancer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						Date début = new Date((Integer)comboBox_1.getSelectedItem(), (Integer)comboBox.getSelectedItem(),(Integer)comboBox_2.getSelectedItem());
+						Date fin = new Date((Integer)comboBox_3.getSelectedItem(), (Integer)comboBox_4.getSelectedItem(),(Integer)comboBox_5.getSelectedItem());
+						StatsResFrame frame = new StatsResFrame(client, début, fin,(Technician)comboBox_7.getSelectedItem(),(Failure)comboBox_6.getSelectedItem());
+						frame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+		});
 	}
 }
