@@ -3,7 +3,6 @@ package fr.ladn.carsharingclub.ing1.view;
 import fr.ladn.carsharingclub.ing1.model.*;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
