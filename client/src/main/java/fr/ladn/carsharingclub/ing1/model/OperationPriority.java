@@ -92,4 +92,9 @@ public enum OperationPriority {
     public String getPriorityLabel() {
         return priorityLabel;
     }
+
+    @Override
+    public String toString() {
+        return priorityLabel;
+    }
 }

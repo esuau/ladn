@@ -88,4 +88,9 @@ public class Failure implements Serializable {
     public void setEstimatedTime(int estimatedTime) {
         this.estimatedTime = estimatedTime;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

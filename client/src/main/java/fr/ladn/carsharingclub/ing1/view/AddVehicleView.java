@@ -1,22 +1,15 @@
 package fr.ladn.carsharingclub.ing1.view;
 
-import fr.ladn.carsharingclub.ing1.model.Failure;
-import fr.ladn.carsharingclub.ing1.model.Operation;
-import fr.ladn.carsharingclub.ing1.model.OperationPriority;
-import fr.ladn.carsharingclub.ing1.model.OperationStatus;
-import fr.ladn.carsharingclub.ing1.model.Part;
-import fr.ladn.carsharingclub.ing1.model.Vehicle;
+import fr.ladn.carsharingclub.ing1.model.*;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -105,23 +98,48 @@ class AddVehicleView extends JPanel {
 
         JComboBox<Failure> panne;
         
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<Failure> model = new DefaultComboBoxModel<>();
         ArrayList<Failure> fails = client.getFailures();
         
         for (Failure f : fails) {
-            model.addElement(f.getName());
+            model.addElement(f);
         }
-        panne = new JComboBox<Failure>(model);
+        panne = new JComboBox<>(model);
         panne.setToolTipText("Sélectionner une pièce");
 
         JButton btnNewButton = new JButton("Ajouter panne");
 
+        // The failures to add to the operation.
+        ArrayList<Failure> failures =  new ArrayList<>();
+
+        btnNewButton.addActionListener(e -> {
+            failures.add((Failure) panne.getSelectedItem());
+            logger.info("Adding failure #" + ((Failure) panne.getSelectedItem()).getName() + ".");
+        });
+
         JSeparator separator_1 = new JSeparator();
+
+        // Set operation priorities
+        JLabel lblPriorites = new JLabel("Prioritées");
+
+        JComboBox<OperationPriority> comboBox = new JComboBox<>();
+        comboBox.addItem(OperationPriority.URGENT);
+        comboBox.addItem(OperationPriority.CRITICAL);
+        comboBox.addItem(OperationPriority.MAJOR);
+        comboBox.addItem(OperationPriority.NORMAL);
+        comboBox.addItem(OperationPriority.MINOR);
+        comboBox.setToolTipText("Sélectionner une priorité d'opération.");
 
         JButton btnEnregistrer = new JButton("Enregistrer");
 
         btnEnregistrer.addActionListener(e -> {
-            Operation o = new Operation(vehicle, OperationStatus.DIAGNOSED, OperationPriority.CRITICAL, new java.sql.Timestamp(now.getTime()));
+            Failure[] failuresArray = new Failure[failures.size()];
+            int i = 0;
+            for (Failure failure : failures) {
+                failuresArray[i] = failure;
+                i++;
+            }
+            Operation o = new Operation(vehicle, failuresArray, OperationStatus.DIAGNOSED, (OperationPriority) comboBox.getSelectedItem(), new java.sql.Timestamp(now.getTime()));
             logger.info("Attempting to create new operation in database...");
             o = client.createRepairWork(o);
             JOptionPane.showMessageDialog(null, "L'opération " + o.getId() + " a bien été enregistrée.");
@@ -130,11 +148,6 @@ class AddVehicleView extends JPanel {
         JButton btnReset = new JButton("Reset");
 
         btnReset.addActionListener(e -> reset());
-        
-        JComboBox<Failure> comboBox = new JComboBox<Failure>((ComboBoxModel) null);
-        comboBox.setToolTipText("Sélectionner une pièce");
-        
-        JLabel lblPriorites = new JLabel("Prioritées");
 
         GroupLayout groupLayout = new GroupLayout(this);
         groupLayout.setHorizontalGroup(

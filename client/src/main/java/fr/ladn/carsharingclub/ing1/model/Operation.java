@@ -104,10 +104,9 @@ public class Operation implements Serializable {
      * @see OperationStatus
      * @see Technician
      */
-    public Operation(Vehicle vehicle, OperationStatus status, OperationPriority priority, java.sql.Timestamp dateEntry) {
+    public Operation(Vehicle vehicle, Failure[] failures, OperationStatus status, OperationPriority priority, java.sql.Timestamp dateEntry) {
         this.vehicle = vehicle;
-        // TODO Add failure selection.
-        // this.failures = failures;
+        this.failures = failures;
         this.status = status;
         this.priority = priority;
         this.dateEntry = dateEntry;
