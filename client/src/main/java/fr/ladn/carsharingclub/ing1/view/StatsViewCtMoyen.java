@@ -18,6 +18,7 @@ import javax.swing.border.LineBorder;
 
 import org.apache.log4j.Logger;
 
+import fr.ladn.carsharingclub.ing1.model.Failure;
 import fr.ladn.carsharingclub.ing1.model.Technician;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 
@@ -46,6 +47,11 @@ public class StatsViewCtMoyen extends JPanel {
 		JButton btnLancer = new JButton("Lancer");
 		
 		JComboBox comboBox_6 = new JComboBox();
+		ArrayList<Failure> lFailures = client.getFailures();
+        for (Failure f : lFailures) {
+            comboBox_6.addItem(f);
+        }
+		
 		
 		JTextPane txtpnPanne = new JTextPane();
 		txtpnPanne.setDisabledTextColor(UIManager.getColor("TextPane.caretForeground"));

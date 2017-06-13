@@ -441,6 +441,23 @@ public class Client extends Thread {
         }
         return null;
     }
+    
+    public Integer getNbOp(ParamNbOp param) {
+		// TODO Auto-generated method stub
+		try {
+            Socket socketClient = new Socket(serverAddress, serverPort);
+            sendData(socketClient, new Container<>(CRUD.GET_NB_OP, param));
+            Container<Integer> receivedContainer = getData(socketClient);
+            Integer res = receivedContainer.getObject();
+            socketClient.close();
+            return res;
+        } catch (IOException e) {
+            logger.error("Failed to get result with that parameters from the server: " + e.getMessage());
+        } catch (NullPointerException e) {
+            logger.error("No result was returned from the server with that parameters.");
+        }
+        return null;
+	}
 
     /**
      * Gets the most urgent operation.

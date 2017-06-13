@@ -103,6 +103,7 @@ public class ConnectionThread extends Thread {
                     if (id_tech > 0) sendData(new Container<>(CRUD.PING, techDAO.read(id_tech)));
                     else sendData(new Container<>(CRUD.PING, techDAO.readAll()));
                     break;
+                    
                 case UPDATE:
                     logger.info("Attempt to update part in database.");
                     partDAO.update((Part) container.getObject());

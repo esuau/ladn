@@ -9,10 +9,10 @@ public enum TechnicianRights {
      * A manager of the deposit.
      * Allows to get the monitor view.
      */
-    MANAGER,
+    manager,
 
     /**
      * A regular technician.
      */
-    TECHNICIAN
+    technicien
 }

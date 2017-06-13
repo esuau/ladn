@@ -67,12 +67,13 @@ class RepairView extends JFrame implements ActionListener {
         
         /* Variables*/
         /* Delete object f1, f2, failures, operation t... here when Evan's function will be implemented here */
+
         operation = client.getNewOperation();
         // Failure f1 = new Failure(1, "Failure 1", new FailureType(1, "Moteur"), "Instructions", 10);
         // Failure f2 = new Failure(2, "Failure 2", new FailureType(3, "Priority"), "Instructions", 10);
         // Failure[] failures = {f1, f2};
         // operation = new Operation(1, new Vehicle("MZX-YS-34", "Peugeot", "manufacturer", "306"), failures, OperationStatus.DIAGNOSED, "C le pre a pé é boi");
-        Technician t = new Technician(1, "Louis", "Endelicher", "00000000", "LOL", TechnicianRights.TECHNICIAN);
+        Technician t = new Technician(1, "Louis", "Endelicher", "00000000", "LOL", TechnicianRights.technicien);
         // operation.setTechnician(t);
         
         // We keep in memory the status at the beginning to update the date of the end of this status in reparation_histo_temps
