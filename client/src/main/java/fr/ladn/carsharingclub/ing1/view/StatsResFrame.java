@@ -49,14 +49,24 @@ public class StatsResFrame extends JFrame {
 		ParamNbOp param = new ParamNbOp(début,fin,tech,fail);
 				
 		 String[] entetesRes = {"Technicien", "Panne", "Date de début","Date de fin","Nombre d'opérations"};
-	     Object[][] dataRes = new Object[1][4];
+		 Integer res = client.getNbOp(param);
+	     Object[][] dataRes = new Object[1][5];
+
+		 if(res!=null){
 	            dataRes[0][0] = tech.toString();
 	            dataRes[0][1] = fail.getName();
 	            dataRes[0][2] = début;
 	            dataRes[0][3] = fin;
-	            dataRes[0][2] = client.getNbOp(param);
+	            dataRes[0][4] = client.getNbOp(param);
+		 }else{
+	            dataRes[0][0] = tech.toString();
+	            dataRes[0][1] = fail.getName();
+	            dataRes[0][2] = début;
+	            dataRes[0][3] = fin;
+	            dataRes[0][4] = "données inexistantes pour la sélection"; 
+		 }
 	            JTable tabbedPane = new JTable(dataRes,entetesRes);
-				
+		 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -76,6 +86,7 @@ public class StatsResFrame extends JFrame {
 					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 521, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(43, Short.MAX_VALUE))
 		);
+		
 		contentPane.setLayout(gl_contentPane);
 	}
 }

@@ -78,13 +78,13 @@ public class StatsViewNbOp extends JPanel {
 		textPane_2.setText("Année");
 		panel_1.add(textPane_2);
 		
-		JComboBox comboBox_3 = new JComboBox();
+		JComboBox<Integer> comboBox_3 = new JComboBox<Integer>();
 		panel_1.add(comboBox_3);
 		
-		JComboBox comboBox_4 = new JComboBox();
+		JComboBox<Integer> comboBox_4 = new JComboBox<Integer>();
 		panel_1.add(comboBox_4);
 		
-		JComboBox comboBox_5 = new JComboBox();
+		JComboBox<Integer> comboBox_5 = new JComboBox<Integer>();
 		panel_1.add(comboBox_5);
 		ArrayList<Integer> mois = new ArrayList<Integer>();
 		mois.add(1);
@@ -229,7 +229,7 @@ public class StatsViewNbOp extends JPanel {
 		JButton btnLancer = new JButton("Lancer");
 		
 		
-		JComboBox comboBox_6 = new JComboBox();
+		JComboBox<Failure> comboBox_6 = new JComboBox<Failure>();
 		ArrayList<Failure> lFailures = client.getFailures();
         for (Failure f : lFailures) {
             comboBox_6.addItem(f);
@@ -242,7 +242,7 @@ public class StatsViewNbOp extends JPanel {
 		txtpnPanne.setFont(new Font("Tahoma", Font.BOLD, 13));
 		txtpnPanne.setBackground(SystemColor.menu);
 		
-		JComboBox comboBox_7 = new JComboBox();
+		JComboBox<Technician> comboBox_7 = new JComboBox<Technician>();
 		ArrayList<Technician> lTechnicians = client.getTechnicians();
         for (Technician t : lTechnicians) {
             comboBox_7.addItem(t);
@@ -335,13 +335,13 @@ public class StatsViewNbOp extends JPanel {
 		txtpnAnne.setText("Année");
 		panel.add(txtpnAnne);
 		
-		JComboBox comboBox_1 = new JComboBox();
+		JComboBox<Integer> comboBox_1 = new JComboBox<Integer>();
 		panel.add(comboBox_1);
 		
-		JComboBox comboBox = new JComboBox();
+		JComboBox<Integer> comboBox = new JComboBox<Integer>();
 		panel.add(comboBox);
 		
-		JComboBox comboBox_2 = new JComboBox();
+		JComboBox<Integer> comboBox_2 = new JComboBox<Integer>();
 		panel.add(comboBox_2);
 		setLayout(groupLayout);
 		comboBox.addItem(null);
@@ -447,8 +447,9 @@ public class StatsViewNbOp extends JPanel {
 						
 						StatsResFrame frame = new StatsResFrame(client, début, fin,(Technician)comboBox_7.getSelectedItem(),(Failure)comboBox_6.getSelectedItem());
 						frame.setVisible(true);
+						}else{
+						JOptionPane.showMessageDialog(null,"Vous n'avez pas saisi de date", "Erreur", JOptionPane.INFORMATION_MESSAGE);
 						}
-						JOptionPane.showMessageDialog(null,"Erreur", "Vous n'avez pas saisi de date", JOptionPane.INFORMATION_MESSAGE);
 						} catch (Exception e) {
 						e.printStackTrace();
 					}
