@@ -66,7 +66,8 @@ public class OperationDAO {
             int place = rs.getInt("id_place");
 
             logger.info("Successfully get part #" + id + " information from database.");
-            reparation.add(new Operation(id, statut, priorite, dtentre, dtsortie, new Technician(technicien), new Vehicle(vehicule), place));
+            TechnicianDAO tech = new TechnicianDAO(pool);
+            reparation.add(new Operation(id, statut, priorite, dtentre, dtsortie, tech.read(1), new Vehicle(vehicule), place));
         }
         return reparation;
 

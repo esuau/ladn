@@ -6,6 +6,7 @@
 package fr.ladn.carsharingclub.ing1.view;
 
 import fr.ladn.carsharingclub.ing1.model.Operation;
+import fr.ladn.carsharingclub.ing1.model.OperationStatus;
 import fr.ladn.carsharingclub.ing1.model.Reparation;
 import fr.ladn.carsharingclub.ing1.sockets.Client;
 import java.util.ArrayList;

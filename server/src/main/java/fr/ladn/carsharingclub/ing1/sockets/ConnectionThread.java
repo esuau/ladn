@@ -161,7 +161,7 @@ public class ConnectionThread extends Thread {
                     break;
                 case READ_FAILURES:
                     logger.info("Attempt to read all failures from database.");
-                    sendData(new Container<>(CRUD.PING, failDAO.getFailures()));
+                    sendData(new Container<>(CRUD.PING, failDAO.getAllFailures()));
                     break;
                 case GET_NEW_OPERATION:
                     logger.info("Attempt to get most urgent operation.");

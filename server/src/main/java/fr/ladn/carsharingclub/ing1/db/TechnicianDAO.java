@@ -36,7 +36,7 @@ public class TechnicianDAO {
      * @return the information on the technician.
      * @throws Exception if a connection issue is encountered.
      */
-    public Technician read(int id) throws Exception {
+    public Technician read(int id) throws SQLException {
 
         Connection conn = pool.getConnection();
         logger.info("Successfully pulled connection " + conn + " from the connection pool.");

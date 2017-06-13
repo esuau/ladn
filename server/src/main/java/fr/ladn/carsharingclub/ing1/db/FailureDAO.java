@@ -43,6 +43,40 @@ public class FailureDAO {
      * @return the list of all the existing failures.
      * @throws SQLException if a database request issue is encountered.
      */
+    public ArrayList<Failure> getAllFailures() throws SQLException {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        logger.info("Preparing SQL statement for all existing failures reading...");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM panne");
+        ResultSet rs = ps.executeQuery();
+        logger.info("Database request has been successfully executed.");
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
+
+        ArrayList<Failure> failures = new ArrayList<>();
+
+        while (rs.next()) {
+            int id = rs.getInt("id_panne");
+            String intitule = rs.getString("intitule");
+            int failureTypeId = rs.getInt("type_panne");
+            String instructions = rs.getString("descriptif_protocole");
+            int duration = rs.getInt("temps_estime");
+
+            logger.info("Successfully get failure #" + id + " information from database.");
+            failures.add(new Failure(id, intitule, this.getFailureType(failureTypeId), instructions, duration));
+        }
+        return failures;
+    }
+
+    /**
+     * Gets the data on all the existing failures in the database.
+     *
+     * @return the list of all the existing failures.
+     * @throws SQLException if a database request issue is encountered.
+     */
     public ArrayList<Failure> getFailures() throws SQLException {
 
         Connection conn = pool.getConnection();
