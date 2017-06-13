@@ -173,7 +173,7 @@ public class OperationDAO {
         pool.returnConnection(conn);
     }
 
-    public void createWorkflow(Operation o) throws Exception {
+    public void createWorkflow(Operation o) throws SQLException {
         int id = o.getId();
         String status = o.getStatus().toString();
         java.sql.Timestamp date = o.getDateBS();
@@ -252,21 +252,48 @@ public class OperationDAO {
         pool.returnConnection(conn);
         logger.info("Connection " + conn + " returned to the connection pool.");
 
+        int lastInsertedId = -1;
+
         if (rs.next()) {
-            int lastInsertedId = rs.getInt(1);
+            lastInsertedId = rs.getInt(1);
             logger.info("Successfully created new operation with id #" + lastInsertedId + ".");
             Operation op = new Operation(lastInsertedId, operation.getDateEntry(), null, OperationStatus.DIAGNOSED);
             op.setParkingSpace(spaceId);
-            try {
-                this.createWorkflow(op);
-            } catch (Exception e) {
-            }
-            return lastInsertedId;
+            this.createWorkflow(op);
+        } else {
+            logger.error("Database request did not return any information about the newly created operation.");
         }
 
-        logger.error("Database request did not return any information about the newly created operation.");
-        return -1;
+        // Link failures to operation.
+        for (Failure failure : operation.getFailures()) {
+            linkFailuresToOperations(lastInsertedId, failure.getId());
+        }
 
+        return lastInsertedId;
+
+    }
+
+    /**
+     * Links an operation to its corresponding failures.
+     *
+     * @param operationId the identifier of the operation.
+     * @param failureId   the identifier of the failure to link.
+     * @throws SQLException when a request issue is encountered.
+     */
+    private void linkFailuresToOperations(int operationId, int failureId) throws SQLException {
+
+        Connection conn = pool.getConnection();
+        logger.info("Successfully pulled connection " + conn + " from the connection pool.");
+
+        logger.info("Preparing SQL statement for linking operation #" + operationId + " and failure #" + failureId + " ...");
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO assoc_reparation_panne ( id_reparation, id_panne ) VALUES ( ?, ? )");
+        ps.setInt(1, operationId);
+        ps.setInt(2, failureId);
+        ps.execute();
+        logger.info("Database request has been executed. The failure #" + failureId + " has been linked to the operation #" + operationId + ".");
+
+        pool.returnConnection(conn);
+        logger.info("Connection " + conn + " returned to the connection pool.");
     }
 
 }
